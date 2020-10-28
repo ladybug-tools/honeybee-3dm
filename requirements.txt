@@ -1,0 +1,2 @@
+honeybee-core==1.39.4
+rhino3dm==0.13.0
