@@ -45,10 +45,9 @@ layer_index = [layer.Index for layer in layers]
 layer_dict = dict(zip(layer_name, layer_index))
 
 
-# Gathering surfaces / extrusions / meshes in the rhino file to create honeybee
-# surfaces
+# Gathering planar geometries from Rhino layer named "wall"
 faces = [object for object in file.Objects if object.Attributes.LayerIndex ==
-         layer_dict["wall_interior"]]
+         layer_dict["wall"]]
 
 # Creating face names
 face_names = []
@@ -61,15 +60,17 @@ for count, geo in enumerate(faces):
 
 # Honeybee faces will be collected here
 hb_faces = []
-# for each rhino geometry selected
+# for each rhino geometry gathered
 for i in range(len(faces)):
     face = faces[i].Geometry
-    lb_face = to_face3d(face)[0]
-    # print(isinstance(lb_face, Face3D))
-    hb_face = Face(clean_and_id_string('{}_{}'.format(
-        face_names[i], i)), lb_face)
-    hb_face.display_name = '{}_{}'.format(face_names[i], i)
-    hb_faces.append(hb_face)
+    # Converting the Rhino3dm geometry into a Ladybug Face3D object
+    lb_face = to_face3d(face)
+    for j in range(len(lb_face)):
+        # Converting Ladybug Face3D into Honeybee Face
+        hb_face = Face(clean_and_id_string('{}_{}'.format(
+            face_names[i], i)), lb_face[j])
+        hb_face.display_name = '{}_{}'.format(face_names[i], i)
+        hb_faces.append(hb_face)
 
-
+print("All went well")
 publish_json(hb_faces)
