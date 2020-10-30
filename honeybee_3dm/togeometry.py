@@ -33,39 +33,67 @@ def to_face3d(geo, meshing_parameters=None):
         If None, Rhino3dm's Default Meshing Parameters will be used.
     """
 
-    faces = []  # converted list of faces will be stored here.
+    # This is a container
+    faces = []
 
-    # If it's a mesh, get all the vertices
+    # If it's a Mesh
     if isinstance(geo, rhino3dm.Mesh):
-        pts = [to_point3d(geo.Vertices[i]) for i in range(len(geo.Vertices))]
-        faces.append(Face3D(pts))
+        print("I am a Mesh")
+        mesh = geo
+        # Get all the vertices
+        pts = [to_point3d(mesh.Vertices[i]) for i in range(len(mesh.Vertices))]
+        for j in range(len(mesh.Faces)):
+            face = mesh.Faces[j]
+            if len(face) == 4:
+                all_verts = (pts[face[0]], pts[face[1]],
+                             pts[face[2]], pts[face[3]])
+            else:
+                all_verts = (pts[face[0]], pts[face[1]], pts[face[2]])
+            # Create Ladybug Face3D objects based on tuples of vertices
+            faces.append(Face3D(all_verts))
 
-    # If it's a Rhino Surface, Rhino trimmed surface or rhino open polysurface
-    # Convert into mesh and get all the vertices
-    elif isinstance(geo, rhino3dm.Brep):
+    # If it's an Extrusion
+    if isinstance(geo, rhino3dm.Extrusion):
+        print("I am an Extrusion")
+        # Convert it into a Mesh first
+        mesh = geo.GetMesh(rhino3dm.MeshType.Default)
+        if isinstance(mesh, rhino3dm.Mesh):
+            # Get all the vertices
+            pts = [to_point3d(mesh.Vertices[i])
+                   for i in range(len(mesh.Vertices))]
+            for j in range(len(mesh.Faces)):
+                face = mesh.Faces[j]
+                if len(face) == 4:
+                    all_verts = (pts[face[0]], pts[face[1]],
+                                 pts[face[2]], pts[face[3]])
+                else:
+                    all_verts = (pts[face[0]], pts[face[1]], pts[face[2]])
+                # Create Ladybug Face3D objects based on tuples of vertices
+                faces.append(Face3D(all_verts))
 
-        mesh_type = rhino3dm.MeshType.Default
-        # geo = geo.Faces[0].GetMesh(mesh_type)
-        # point = geo.Vertices[0]                          # For plane creation
-        # point3d = to_point3d(point)                      # For plane creation
-        # vectors = geo.Normals  # For plane creation
-        # pts = [to_point3d(geo.Vertices[i]) for i in range(len(geo.Vertices))]
-        # vector = vectors[0]                              # For plane creation
-        # vector3d = to_vector3d(vector)                   # For plane creation
-        # plane = Plane(vector3d, point3d)                 # For plane creation
-        # faces.append(Face3D(pts, plane))
-        for i in range(len(geo.Faces)):
-            face = geo.Faces[i].GetMesh(mesh_type)
-            pts = [to_point3d(face.Vertices[j])
-                   for j in range(len(face.Vertices))]
-            print(pts)
-            faces.append(Face3D(pts))
+    # If it's a Brep
+    if isinstance(geo, rhino3dm.Brep):
+        print("I am a Brep")
+        # Convert it into a list of Meshes
+        meshes = [geo.Faces[f].GetMesh(rhino3dm.MeshType.Any) for f in range(
+            len(geo.Faces)) if type(geo.Faces[f]) != list]
 
-        # If it's rhino extrusion, convert into mesh and get all vertices
-    elif isinstance(geo, rhino3dm.Extrusion):
-        mesh_type = rhino3dm.MeshType.Default
-        geo = geo.GetMesh(mesh_type)
-        pts = [to_point3d(geo.Vertices[i]) for i in range(len(geo.Vertices))]
-        faces.append(Face3D(pts))
+        # For each Mesh in the list create a Ladybug Face3D object and add to
+        # a container
+        for i in range(len(meshes)):
+            if isinstance(meshes[i], rhino3dm.Mesh):
+                mesh = meshes[i]
+                # Get all the vertices
+                pts = [to_point3d(mesh.Vertices[i])
+                       for i in range(len(mesh.Vertices))]
+                for j in range(len(mesh.Faces)):
+                    face = mesh.Faces[j]
+                    if len(face) == 4:
+                        all_verts = (pts[face[0]], pts[face[1]],
+                                     pts[face[2]], pts[face[3]])
+                    else:
+                        all_verts = (pts[face[0]], pts[face[1]], pts[face[2]])
+                    # Create Ladybug Face3D objects based on tuples of vertices
+                    faces.append(Face3D(all_verts))
 
     return faces
