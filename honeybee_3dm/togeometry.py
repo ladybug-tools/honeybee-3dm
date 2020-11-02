@@ -38,7 +38,6 @@ def to_face3d(geo, meshing_parameters=None):
 
     # If it's a Mesh
     if isinstance(geo, rhino3dm.Mesh):
-        print("I am a Mesh")
         mesh = geo
         # Get all the vertices
         pts = [to_point3d(mesh.Vertices[i]) for i in range(len(mesh.Vertices))]
@@ -54,7 +53,6 @@ def to_face3d(geo, meshing_parameters=None):
 
     # If it's an Extrusion
     if isinstance(geo, rhino3dm.Extrusion):
-        print("I am an Extrusion")
         # Convert it into a Mesh first
         mesh = geo.GetMesh(rhino3dm.MeshType.Default)
         if isinstance(mesh, rhino3dm.Mesh):
@@ -73,7 +71,6 @@ def to_face3d(geo, meshing_parameters=None):
 
     # If it's a Brep
     if isinstance(geo, rhino3dm.Brep):
-        print("I am a Brep")
         # Convert it into a list of Meshes
         meshes = [geo.Faces[f].GetMesh(rhino3dm.MeshType.Any) for f in range(
             len(geo.Faces)) if type(geo.Faces[f]) != list]
