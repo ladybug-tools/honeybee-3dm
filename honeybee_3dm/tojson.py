@@ -14,12 +14,12 @@ def publish_json(_hb_objs, _name_=None, _folder_=None, indent_=None, abridged_=F
     name = _name_ if _name_ is not None else 'unnamed'
     file_name = '{}.json'.format(name) if len(_hb_objs) > 1 or not \
         isinstance(_hb_objs[0], Model) else '{}.hbjson'.format(name)
+
     folder = _folder_ if _folder_ is not None else folders.default_simulation_folder
     hb_file = os.path.join(folder, file_name)
     indent = indent_ if indent_ is not None else 0
     abridged = bool(abridged_)
 
-    print("objects" + str(len(_hb_objs)))
     # create the dictionary to be written to a JSON file
     if len(_hb_objs) == 1:  # write a single object into a file if the length is 1
         try:
