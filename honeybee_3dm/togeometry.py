@@ -1,96 +1,101 @@
 """Functions to create Ladybug geometries from Rhino3dm geometries."""
 
+# The Rhino3dm library provides the ability to access content of a Rhino3dm
+# file from outside of Rhino
 import rhino3dm
-from ladybug_geometry.geometry3d.pointvector import Point3D
-from ladybug_geometry.geometry3d.face import Face3D
-from ladybug_geometry.geometry3d.plane import Plane
+
+# Importing Ladybug geometry libraries
+# The Ladybug geometry objects are foundation to other objects in Ladybug and Honeybee
 from ladybug_geometry.geometry3d.pointvector import Point3D, Vector3D
+from ladybug_geometry.geometry3d.face import Face3D
 
 
 def to_point3d(point):
-    """Ladybug point3D from a rhino3dm point.
+    """This function creates a Ladybug Point3D object from a rhino3dm point.
 
     Args:
         point (point3d): A rhino3dm point
+
+    Returns:
+        Point3D: A Ladybug Point3D object
     """
     return Point3D(point.X, point.Y, point.Z)
 
 
 def to_vector3d(vector):
-    """Ladybug Vector3D from Rhino Vector3d."""
+    """This function creates a Ladybug Vector3D from a rhino3dm Vector3d.
+
+    Args:
+        vector (vector3d): A rhino3dm vector3d
+
+    Returns:
+         Vector3D: A Ladybug Vector3D object
+    """
     return Vector3D(vector.X, vector.Y, vector.Z)
 
 
-def to_face3d(geo, meshing_parameters=None):
-    """This method converts a rhino face into a Ladybug Face3D object. The
-    Face3D object is one of the foundational objects in honeybee.
+def mesh_to_face3d(mesh):
+    """This function creates a Ladybug Face3D object out of a rhino3dm Mesh.
 
     Args:
-        geo (A Rhino Brep, Surface or Mesh): This will be converted into a list
-        of Ladybug Face3D.
-        meshing_parameters (string): Optional Rhino Meshing Parameters
-        to describe how curved faces should be converted into planar elements.
-        If None, Rhino3dm's Default Meshing Parameters will be used.
-    """
+        mesh (mesh): A rhino3dm mesh geometry
 
-    # This is a container
+    Returns:
+        A list: A list of Ladybug Face3D objects
+    """
+    # Ladybug Face3D objects will be collected here
     faces = []
 
-    # If it's a Mesh
-    if isinstance(geo, rhino3dm.Mesh):
-        mesh = geo
-        # Get all the vertices
-        pts = [to_point3d(mesh.Vertices[i]) for i in range(len(mesh.Vertices))]
-        for j in range(len(mesh.Faces)):
-            face = mesh.Faces[j]
-            if len(face) == 4:
-                all_verts = (pts[face[0]], pts[face[1]],
-                             pts[face[2]], pts[face[3]])
-            else:
-                all_verts = (pts[face[0]], pts[face[1]], pts[face[2]])
-            # Create Ladybug Face3D objects based on tuples of vertices
-            faces.append(Face3D(all_verts))
+    # Get vertices of the rhino3dm mesh
+    vertices = mesh.Vertices
+    pts = [to_point3d(vertices[i]) for i in range(len(vertices))]
 
-    # If it's an Extrusion
-    if isinstance(geo, rhino3dm.Extrusion):
-        # Convert it into a Mesh first
-        mesh = geo.GetMesh(rhino3dm.MeshType.Default)
-        if isinstance(mesh, rhino3dm.Mesh):
-            # Get all the vertices
-            pts = [to_point3d(mesh.Vertices[i])
-                   for i in range(len(mesh.Vertices))]
-            for j in range(len(mesh.Faces)):
-                face = mesh.Faces[j]
-                if len(face) == 4:
-                    all_verts = (pts[face[0]], pts[face[1]],
-                                 pts[face[2]], pts[face[3]])
-                else:
-                    all_verts = (pts[face[0]], pts[face[1]], pts[face[2]])
-                # Create Ladybug Face3D objects based on tuples of vertices
-                faces.append(Face3D(all_verts))
+    # For each mesh face create a tuple of vertices
+    for j in range(len(mesh.Faces)):
+        face = mesh.Faces[j]
+        if len(face) == 4:
+            all_verts = (pts[face[0]], pts[face[1]],
+                         pts[face[2]], pts[face[3]])
+        else:
+            all_verts = (pts[face[0]], pts[face[1]], pts[face[2]])
 
-    # If it's a Brep
-    if isinstance(geo, rhino3dm.Brep):
-        # Convert it into a list of Meshes
-        meshes = [geo.Faces[f].GetMesh(rhino3dm.MeshType.Any) for f in range(
-            len(geo.Faces)) if type(geo.Faces[f]) != list]
+        # Create a Ladybug Face3D object based on tuples of vertices
+        faces.append(Face3D(all_verts))
 
-        # For each Mesh in the list create a Ladybug Face3D object and add to
-        # a container
-        for i in range(len(meshes)):
-            if isinstance(meshes[i], rhino3dm.Mesh):
-                mesh = meshes[i]
-                # Get all the vertices
-                pts = [to_point3d(mesh.Vertices[i])
-                       for i in range(len(mesh.Vertices))]
-                for j in range(len(mesh.Faces)):
-                    face = mesh.Faces[j]
-                    if len(face) == 4:
-                        all_verts = (pts[face[0]], pts[face[1]],
-                                     pts[face[2]], pts[face[3]])
-                    else:
-                        all_verts = (pts[face[0]], pts[face[1]], pts[face[2]])
-                    # Create Ladybug Face3D objects based on tuples of vertices
-                    faces.append(Face3D(all_verts))
+    return faces
 
+
+def brep_to_face3d(brep):
+    """This function creates a Ladybug Face3D object from a rhino3dm Brep
+
+    Args:
+        brep (Brep): A rhino3dm Brep
+
+    Returns:
+        A list : A list of Ladybug Face3D objects
+    """
+    # Ladybug Face3D objects will be collected here
+    faces = []
+    # Get all the Brep faces
+    for i in range(len(brep.Faces)):
+        # Convert Brep faces into Meshes
+        mesh = brep.Faces[i].GetMesh(rhino3dm.MeshType.Any)
+        faces.extend(mesh_to_face3d(mesh))
+    return faces
+
+
+def extrusion_to_face3d(extrusion):
+    """This function creates a Ladybug Face3D object from a rhino3dm Extrusion
+
+    Args:
+        brep (Extrusion): A rhino3dm Extrusion
+
+    Returns:
+        A list : A list of Ladybug Face3D objects
+    """
+    # Ladybug Face3D objects will be collected here
+    faces = []
+    # Convert the Extrusion into Mesh
+    mesh = extrusion.GetMesh(rhino3dm.MeshType.Any)
+    faces.extend(mesh_to_face3d(mesh))
     return faces
