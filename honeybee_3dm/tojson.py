@@ -1,34 +1,52 @@
-try:  # import the core honeybee dependencies
+
+# Import standard python libraries
+import os
+import json
+
+# import the core honeybee dependencies
+try:
     from honeybee.model import Model
     from honeybee.config import folders
 except ImportError as e:
     raise ImportError('\nFailed to import honeybee:\n\t{}'.format(e))
 
-import os
-import json
 
+def to_json(hb_objects, name=None, folder_path=None, indent=None, abridged=False):
+    """This function write Honeybee objects to a json file.
 
-def publish_json(_hb_objs, _name_=None, _folder_=None, indent_=None, abridged_=False, _dump=True):
+    Args:
+        hb_objects (A list): Any Honeybee object to write to json
+        name (A text string): Name of the json file
+        folder_path (A text string): Path of the location where you want to write
+            the json file. Deafult is "c:\users\**username**\simulation"
+        indent (An integer): An optional positive integer to set the indentation used in the
+            resulting JSON file. If None or 0, the JSON will be a single line. Default to None.
+        abridged (bool): Set to "True" to serialize the object in its abridged form.
+            Abridged objects cannot be re-serialized back to honeybee objects
+            on their own but they are used throughout honeybee to minimize
+            file size and unnecessary duplication. Defaults to False.
+    """
 
-    # set the component defaults
-    name = _name_ if _name_ is not None else 'unnamed'
-    file_name = '{}.json'.format(name) if len(_hb_objs) > 1 or not \
-        isinstance(_hb_objs[0], Model) else '{}.hbjson'.format(name)
+    # Name the file
+    name = name if name is not None else 'unnamed'
+    file_name = '{}.json'.format(name) if len(hb_objects) > 1 or not \
+        isinstance(hb_objects[0], Model) else '{}.hbjson'.format(name)
 
-    folder = _folder_ if _folder_ is not None else folders.default_simulation_folder
+    # Folder path to where the file will be saved
+    folder = folder_path if folder_path is not None else folders.default_simulation_folder
     hb_file = os.path.join(folder, file_name)
-    indent = indent_ if indent_ is not None else 0
-    abridged = bool(abridged_)
+    indent = indent if indent is not None else 0
+    abridged = bool(abridged)
 
     # create the dictionary to be written to a JSON file
-    if len(_hb_objs) == 1:  # write a single object into a file if the length is 1
+    if len(hb_objects) == 1:  # write a single object into a file if the length is 1
         try:
-            obj_dict = _hb_objs[0].to_dict(abridged=abridged)
+            obj_dict = hb_objects[0].to_dict(abridged=abridged)
         except TypeError:  # no abridged option
-            obj_dict = _hb_objs[0].to_dict()
+            obj_dict = hb_objects[0].to_dict()
     else:  # create a dictionary of the objects that are indexed by name
         obj_dict = {}
-        for obj in _hb_objs:
+        for obj in hb_objects:
             try:
                 obj_dict[obj.identifier] = obj.to_dict(abridged=abridged)
             except TypeError:  # no abridged option
