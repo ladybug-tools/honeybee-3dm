@@ -12,13 +12,13 @@ except ImportError as e:
 
 
 def to_json(hb_objects, name=None, folder_path=None, indent=None, abridged=False):
-    """This function write Honeybee objects to a json file.
+    """This function write Honeybee objects to json file.
 
     Args:
         hb_objects (A list): Any Honeybee object to write to json
         name (A text string): Name of the json file
         folder_path (A text string): Path of the location where you want to write
-            the json file. Deafult is "c:\users\**username**\simulation"
+            the json file. Deafult is "c:\\users\\**username**\\simulation"
         indent (An integer): An optional positive integer to set the indentation used in the
             resulting JSON file. If None or 0, the JSON will be a single line. Default to None.
         abridged (bool): Set to "True" to serialize the object in its abridged form.
