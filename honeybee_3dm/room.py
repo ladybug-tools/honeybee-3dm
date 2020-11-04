@@ -34,11 +34,9 @@ def to_room(path):
     rhino3dm_file = rhino3dm.File3dm.Read(path)
     tolerance = rhino3dm_file.Settings.ModelAbsoluteTolerance
 
-    # Gathering layer information from the rhino file
-    layers = rhino3dm_file.Layers
-    layer_name = [layer.Name for layer in layers]
-    layer_index = [layer.Index for layer in layers]
-    layer_dict = dict(zip(layer_name, layer_index))
+    # A dictionary with layer name : layer index structure
+    layer_dict = {
+        layer.Name: layer.Index for layer in rhino3dm_file.Layers}
 
     # Gathering breps / extrusions / closed meshes in the rhino file to create rooms
     volumes = [object for object in rhino3dm_file.Objects if object.Attributes.LayerIndex ==
@@ -51,9 +49,9 @@ def to_room(path):
         geo = geo.Geometry
         if geo.ObjectType == rhino3dm.ObjectType.Extrusion and geo.IsSolid == True:
             check.append(True)
-        if geo.ObjectType == rhino3dm.ObjectType.Brep and geo.IsSolid == True:
+        elif geo.ObjectType == rhino3dm.ObjectType.Brep and geo.IsSolid == True:
             check.append(True)
-        if geo.ObjectType == rhino3dm.ObjectType.Mesh and geo.IsClosed == True:
+        elif geo.ObjectType == rhino3dm.ObjectType.Mesh and geo.IsClosed == True:
             check.append(True)
 
     # Check if all the rhino3dm objects on the layer "room" are closed volumes
@@ -63,15 +61,9 @@ def to_room(path):
         ' Please make this change in the rhino file and try again'
 
     # Creating room names
-    room_names = []
-    for count, geo in enumerate(volumes):
-        # If there's a user defined name of the object in rhino3dm, use it
-        if len(geo.Attributes.Name) > 0:
-            room_names.append(geo.Attributes.Name)
-        # Else, generate a unique name
-        else:
-            name = "Room" + str(uuid.uuid4())[:8]
-            room_names.append(name)
+    room_names = [
+        geo.Attributes.Name if geo.Attributes.Name
+        else "Room" + str(uuid.uuid4())[:8] for geo in volumes]
 
     # All the Honeybee Room objects will be collected here
     hb_rooms = []
@@ -83,11 +75,14 @@ def to_room(path):
         if rh_solid.ObjectType == rhino3dm.ObjectType.Brep:
             lb_faces = brep_to_face3d(rh_solid)
         # If it's an Extrusion, create Ladybug Face3D objects from it
-        if rh_solid.ObjectType == rhino3dm.ObjectType.Extrusion:
+        elif rh_solid.ObjectType == rhino3dm.ObjectType.Extrusion:
             lb_faces = extrusion_to_face3d(rh_solid)
         # If it's a Mesh, create Ladybug Face3D objects from it
-        if rh_solid.ObjectType == rhino3dm.ObjectType.Mesh:
+        elif rh_solid.ObjectType == rhino3dm.ObjectType.Mesh:
             lb_faces = mesh_to_face3d(rh_solid)
+        else:
+            print(
+                f'There are objects on the layer named "room" that this library does not support.')
 
         # Create Ladybug Polyface3D object from Ladybug Face3D objects
         lb_polyface = Polyface3D.from_faces(lb_faces, tolerance)
