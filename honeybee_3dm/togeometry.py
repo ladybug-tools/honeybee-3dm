@@ -43,12 +43,9 @@ def mesh_to_face3d(mesh):
     Returns:
         A list: A list of Ladybug Face3D objects
     """
-    # Ladybug Face3D objects will be collected here
     faces = []
-
-    # Get vertices of the rhino3dm mesh
-    vertices = mesh.Vertices
-    pts = [to_point3d(vertices[i]) for i in range(len(vertices))]
+    # Get vertices of the rhino3dm mesh and convert into Ladybug Point3D objects
+    pts = [to_point3d(mesh.Vertices[i]) for i in range(len(mesh.Vertices))]
 
     # For each mesh face create a tuple of vertices
     for j in range(len(mesh.Faces)):
@@ -74,13 +71,13 @@ def brep_to_face3d(brep):
     Returns:
         A list : A list of Ladybug Face3D objects
     """
-    # Ladybug Face3D objects will be collected here
     faces = []
     # Get all the Brep faces
     for i in range(len(brep.Faces)):
         # Convert Brep faces into Meshes
         mesh = brep.Faces[i].GetMesh(rhino3dm.MeshType.Any)
         faces.extend(mesh_to_face3d(mesh))
+
     return faces
 
 
@@ -93,9 +90,9 @@ def extrusion_to_face3d(extrusion):
     Returns:
         A list : A list of Ladybug Face3D objects
     """
-    # Ladybug Face3D objects will be collected here
     faces = []
     # Convert the Extrusion into Mesh
     mesh = extrusion.GetMesh(rhino3dm.MeshType.Any)
     faces.extend(mesh_to_face3d(mesh))
+
     return faces
