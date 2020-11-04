@@ -110,6 +110,6 @@ def to_face(path):
                         face_names[count], count)
                     hb_faces.append(hb_face)
         else:
-            print(f'Layer "{layer}" is not supported by this library')
+            pass
 
     return hb_faces
