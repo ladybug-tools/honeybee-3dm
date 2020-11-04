@@ -22,47 +22,6 @@ from honeybee.facetype import face_types
 from ladybug_geometry.geometry3d.face import Face3D
 
 
-def layer_name_to_hb_objects(layer):
-    """This function takes a Rhino layer and spits out a Honeybee face type
-    and Honeybee Class to be used for Rhino to Honeybee translation.
-
-    Args:
-        layer (A string): Name of the rhino3dm layer
-
-    Returns:
-        hb_type: A Honeybee face type object
-        hb_face_module: A Honeybee class. It is either of Face, Shade, Aperture, or Door
-    """
-    hb_type = " "  # Variable holding a Honeybee face type
-    hb_face_module = " "  # Variable holding a Honeybee module name
-
-    if layer == "roof":
-        hb_type = face_types.roof_ceiling
-        hb_face_module = Face
-    elif layer == "wall":
-        hb_type = face_types.wall
-        hb_face_module = Face
-    elif layer == "floor":
-        hb_type = face_types.floor
-        hb_face_module = Face
-    elif layer == "airwall":
-        hb_type = face_types.air_boundary
-        hb_face_module = Face
-    elif layer == "shade":
-        hb_type = None
-        hb_face_module = Shade
-    elif layer == "aperture":
-        hb_type = None
-        hb_face_module = Aperture
-    elif layer == "door":
-        hb_type = None
-        hb_face_module = Door
-    elif layer == "Default":
-        pass
-
-    return (hb_type, hb_face_module)
-
-
 def to_face(path):
     """This function looks up a rhino3dm file, converts the objects
     on the layer name "roof", "wall", "floor", "airwall", "shade", and  "aperture"
@@ -80,67 +39,77 @@ def to_face(path):
     #  All the Honeybee objects will be collected here
     hb_faces = []
 
-    # Gathering layer information from the rhino file
-    layers = rhino3dm_file.Layers
-    layer_names = [layer_name.Name for layer_name in layers]
-    layer_indexes = [layer_name.Index for layer_name in layers]
-    layer_dict = dict(zip(layer_names, layer_indexes))
+    # A dictionary with layer name : layer index structure
+    layer_dict = {
+        layer.Name: layer.Index for layer in rhino3dm_file.Layers}
 
-    # For each layer in the rhino3dm file
-    for layer in layer_names:
-        # Select Honeybee Face type
-        hb_face_type = layer_name_to_hb_objects(layer)[0]
-        # Select Honeybee Class
-        hb_face_module = layer_name_to_hb_objects(layer)[1]
-        # Layer name
-        layer_name = layer
+    # A Layer dictionary with layer name : (Honeybee face_type, Class) structure
+    layer_to_hb_object = {
+        'roof': (face_types.roof_ceiling, Face),
+        'wall': (face_types.wall, Face),
+        'floor': (face_types.floor, Face),
+        'airwall': (face_types.air_boundary, Face),
+        'shade': (None, Shade),
+        'aperture': (None, Aperture),
+        'door': (None, Door)}
 
-        # Gathering planar geometries from the layer
-        rhino_faces = [object for object in rhino3dm_file.Objects if object.Attributes.LayerIndex ==
-                       layer_dict[layer_name]]
+    # For each layer in the dictionary
+    for layer in layer_to_hb_object.keys():
+        # If the layer is also in the rhino3dm file
+        if layer in layer_dict.keys():
+            hb_face_type, hb_face_module = layer_to_hb_object[layer]
 
-        # Creating face names
-        face_names = []
-        for count, geo in enumerate(rhino_faces):
-            # If there's a user defined name of the object in rhino3dm, use it
-            if len(geo.Attributes.Name) > 0:
-                face_names.append(geo.Attributes.Name)
-            # Else, generate a unique name
-            else:
-                name = layer_name + str(uuid.uuid4())[:8]
-                face_names.append(name)
+            # Gathering planar geometries from the layer
+            rhino_faces = [object for object in rhino3dm_file.Objects
+                           if object.Attributes.LayerIndex == layer_dict[layer]]
 
-        # for each rhino geometry gathered, Converting the Rhino3dm geometry
-        # into a Ladybug Face3D objects
-        for i in range(len(rhino_faces)):
-            rh_face = rhino_faces[i].Geometry
-            # If it's a Brep, create Ladybug Face3D objects from it
-            if rh_face.ObjectType == rhino3dm.ObjectType.Brep:
-                lb_face = brep_to_face3d(rh_face)
-            # If it's an Extrusion, create Ladybug Face3D objects from it
-            if rh_face.ObjectType == rhino3dm.ObjectType.Extrusion:
-                lb_face = extrusion_to_face3d(rh_face)
-            # If it's a Mesh, create Ladybug Face3D objects from it
-            if rh_face.ObjectType == rhino3dm.ObjectType.Mesh:
-                lb_face = mesh_to_face3d(rh_face)
+            # Creating face names
+            face_names = [geo.Attributes.Name if geo.Attributes.Name else layer +
+                          str(uuid.uuid4())[:8] for geo in rhino_faces]
 
-            # Converting Ladybug Face3D into Honeybee Face
-            for j in range(len(lb_face)):
-                if hb_face_module == Face:
-                    hb_face = hb_face_module(clean_and_id_string('{}_{}'.format(
-                        face_names[i], i)), lb_face[j], hb_face_type)
-                if hb_face_module == Shade:
-                    hb_face = hb_face_module(clean_and_id_string(
-                        '{}_{}'.format(face_names[i], i)), lb_face[j])
-                if hb_face_module == Aperture:
-                    hb_face = hb_face_module(clean_and_id_string(
-                        '{}_{}'.format(face_names[i], i)), lb_face[j])
-                if hb_face_module == Door:
-                    hb_face = hb_face_module(clean_and_id_string(
-                        '{}_{}'.format(face_names[i], i)), lb_face[j])
+            # for each rhino geometry gathered, Converting the Rhino3dm geometry
+            # into a Ladybug Face3D objects
+            for count, face in enumerate(rhino_faces):
+                rh_face = face.Geometry
+                # If it's a Brep, create Ladybug Face3D objects from it
+                if rh_face.ObjectType == rhino3dm.ObjectType.Brep:
+                    lb_face = brep_to_face3d(rh_face)
+                # If it's an Extrusion, create Ladybug Face3D objects from it
+                elif rh_face.ObjectType == rhino3dm.ObjectType.Extrusion:
+                    lb_face = extrusion_to_face3d(rh_face)
+                # If it's a Mesh, create Ladybug Face3D objects from it
+                elif rh_face.ObjectType == rhino3dm.ObjectType.Mesh:
+                    lb_face = mesh_to_face3d(rh_face)
+                else:
+                    print(
+                        f'There are objects on layer "{layer}" that this library does not support.')
 
-                # Assigning a name to the Honeybee Face
-                hb_face.display_name = '{}_{}'.format(face_names[i], i)
-                hb_faces.append(hb_face)
+                # Converting Ladybug Face3D into Honeybee Objects
+                for face_obj in lb_face:
+                    # If the object is on a layer named "wall", "roof", "floor", or "airwall"
+                    if hb_face_module == Face:
+                        hb_face = hb_face_module(clean_and_id_string('{}_{}'.format(
+                            face_names[count], count)), face_obj, hb_face_type)
+                    # If the objects is on a layer named "shade"
+                    elif hb_face_module == Shade:
+                        hb_face = hb_face_module(clean_and_id_string(
+                            '{}_{}'.format(face_names[count], count)), face_obj)
+                    # If the objects is on a layer named "aperture"
+                    elif hb_face_module == Aperture:
+                        hb_face = hb_face_module(clean_and_id_string(
+                            '{}_{}'.format(face_names[count], count)), face_obj)
+                    # If the objects is on a layer named "Door"
+                    elif hb_face_module == Door:
+                        hb_face = hb_face_module(clean_and_id_string(
+                            '{}_{}'.format(face_names[count], count)), face_obj)
+                    else:
+                        pass
+
+                    # Assigning a name to the Honeybee Face
+                    hb_face.display_name = '{}_{}'.format(
+                        face_names[count], count)
+                    hb_faces.append(hb_face)
+        else:
+            print(f'Layer "{layer}" is not supported by this library')
 
     return hb_faces
