@@ -36,10 +36,8 @@ def to_face(path):
     rhino3dm_file = rhino3dm.File3dm.Read(path)
     tolerance = rhino3dm_file.Settings.ModelAbsoluteTolerance
 
-    #  All the Honeybee objects will be collected here
     hb_faces = []
 
-    # A dictionary with layer name : layer index structure
     layer_dict = {
         layer.Name: layer.Index for layer in rhino3dm_file.Layers}
 
@@ -53,9 +51,8 @@ def to_face(path):
         'aperture': (None, Aperture),
         'door': (None, Door)}
 
-    # For each layer in the dictionary
     for layer in layer_to_hb_object.keys():
-        # If the layer is also in the rhino3dm file
+
         if layer in layer_dict.keys():
             hb_face_type, hb_face_module = layer_to_hb_object[layer]
 
@@ -71,13 +68,13 @@ def to_face(path):
             # into a Ladybug Face3D objects
             for count, face in enumerate(rhino_faces):
                 rh_face = face.Geometry
-                # If it's a Brep, create Ladybug Face3D objects from it
+
                 if rh_face.ObjectType == rhino3dm.ObjectType.Brep:
                     lb_face = brep_to_face3d(rh_face)
-                # If it's an Extrusion, create Ladybug Face3D objects from it
+
                 elif rh_face.ObjectType == rhino3dm.ObjectType.Extrusion:
                     lb_face = extrusion_to_face3d(rh_face)
-                # If it's a Mesh, create Ladybug Face3D objects from it
+
                 elif rh_face.ObjectType == rhino3dm.ObjectType.Mesh:
                     lb_face = mesh_to_face3d(rh_face)
                 else:
@@ -86,19 +83,19 @@ def to_face(path):
 
                 # Converting Ladybug Face3D into Honeybee Objects
                 for face_obj in lb_face:
-                    # If the object is on a layer named "wall", "roof", "floor", or "airwall"
+
                     if hb_face_module == Face:
                         hb_face = hb_face_module(clean_and_id_string('{}_{}'.format(
                             face_names[count], count)), face_obj, hb_face_type)
-                    # If the objects is on a layer named "shade"
+
                     elif hb_face_module == Shade:
                         hb_face = hb_face_module(clean_and_id_string(
                             '{}_{}'.format(face_names[count], count)), face_obj)
-                    # If the objects is on a layer named "aperture"
+
                     elif hb_face_module == Aperture:
                         hb_face = hb_face_module(clean_and_id_string(
                             '{}_{}'.format(face_names[count], count)), face_obj)
-                    # If the objects is on a layer named "Door"
+
                     elif hb_face_module == Door:
                         hb_face = hb_face_module(clean_and_id_string(
                             '{}_{}'.format(face_names[count], count)), face_obj)

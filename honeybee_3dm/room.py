@@ -30,20 +30,15 @@ def to_room(path):
     """
     # TODO create a quality check for the file path
 
-    # Creating a rhino3dm object from the file at the path provided
     rhino3dm_file = rhino3dm.File3dm.Read(path)
     tolerance = rhino3dm_file.Settings.ModelAbsoluteTolerance
 
-    # A dictionary with layer name : layer index structure
     layer_dict = {
         layer.Name: layer.Index for layer in rhino3dm_file.Layers}
 
-    # Gathering breps / extrusions / closed meshes in the rhino file to create rooms
     volumes = [object for object in rhino3dm_file.Objects if object.Attributes.LayerIndex ==
                layer_dict["room"]]
 
-    # Checking if all the rooms are either an extrusion, or a brep, or
-    # a mesh and are closed volumes
     check = []
     for geo in volumes:
         geo = geo.Geometry
@@ -54,7 +49,6 @@ def to_room(path):
         elif geo.ObjectType == rhino3dm.ObjectType.Mesh and geo.IsClosed == True:
             check.append(True)
 
-    # Check if all the rhino3dm objects on the layer "room" are closed volumes
     assert (len(check) == len(
         volumes)), 'On the "rooms" layer, you must only have either closed brep,' \
         'or closed extrusions, closed meshes.' \
@@ -65,19 +59,17 @@ def to_room(path):
         geo.Attributes.Name if geo.Attributes.Name
         else "Room" + str(uuid.uuid4())[:8] for geo in volumes]
 
-    # All the Honeybee Room objects will be collected here
     hb_rooms = []
 
-    # For every closed volume on layer "room"
     for i in range(len(volumes)):
         rh_solid = volumes[i].Geometry
-        # If it's a Brep, create Ladybug Face3D objects from it
+
         if rh_solid.ObjectType == rhino3dm.ObjectType.Brep:
             lb_faces = brep_to_face3d(rh_solid)
-        # If it's an Extrusion, create Ladybug Face3D objects from it
+
         elif rh_solid.ObjectType == rhino3dm.ObjectType.Extrusion:
             lb_faces = extrusion_to_face3d(rh_solid)
-        # If it's a Mesh, create Ladybug Face3D objects from it
+
         elif rh_solid.ObjectType == rhino3dm.ObjectType.Mesh:
             lb_faces = mesh_to_face3d(rh_solid)
         else:
