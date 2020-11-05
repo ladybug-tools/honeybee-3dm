@@ -15,6 +15,15 @@ after_success:
   - coverage report
   - coveralls
 
+dist: bionic
+addons:
+  apt:
+    sources:
+      - ppa:chris-lea/redis-server
+    packages:
+    - redis-tools
+    - redis-server
+    
 jobs:
   include:
   - stage: deploy
