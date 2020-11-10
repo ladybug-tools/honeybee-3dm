@@ -4,11 +4,10 @@ planar geometries"""
 # The Rhino3dm library provides the ability to access content of a Rhino3dm
 # file from outside of Rhino
 import rhino3dm
-import uuid
 
-# Importing dependencies from Honeybee-3dm package
-from .togeometry import brep_to_face3d, extrusion_to_face3d, mesh_to_face3d
-from .tojson import to_json
+# The uuid library is used to create names for Honeybee object when a name
+# is not assigned by a user
+import uuid
 
 # Importing core Honeybee & Ladybug Geometry dependencies
 from honeybee.face import Face
@@ -21,14 +20,22 @@ from honeybee.typing import clean_and_id_string
 from honeybee.facetype import face_types
 from ladybug_geometry.geometry3d.face import Face3D
 
+# Importing dependencies from Honeybee-3dm package
+from .togeometry import brep_to_face3d, extrusion_to_face3d, mesh_to_face3d, brep2d_to_face3d, brep3d_to_face3d
+from .tojson import to_json
+
 
 def to_face(path):
-    """This function looks up a rhino3dm file, converts the objects
+    """Creates Honeybee faces from a rhino3dm file
+
+    This function looks up a rhino3dm file, converts the objects
     on the layer name "roof", "wall", "floor", "airwall", "shade", and  "aperture"
     to Honeybee objects, and writes them to a json file.
 
     Args:
-        path (A string): The path to the rhino file
+        path (A string): The path to the rhino3dm file
+    Returns:
+        hb_faces (A list): A list of Honeybee faces
     """
     # TODO create a quality check for the file path
 
@@ -51,14 +58,14 @@ def to_face(path):
         'aperture': (None, Aperture),
         'door': (None, Door)}
 
-    for layer in layer_to_hb_object.keys():
+    for layer in layer_to_hb_object:
 
-        if layer in layer_dict.keys():
+        if layer in layer_dict:
             hb_face_type, hb_face_module = layer_to_hb_object[layer]
 
             # Gathering planar geometries from the layer
-            rhino_faces = [object for object in rhino3dm_file.Objects
-                           if object.Attributes.LayerIndex == layer_dict[layer]]
+            rhino_faces = [obj for obj in rhino3dm_file.Objects
+                           if obj.Attributes.LayerIndex == layer_dict[layer]]
 
             # Creating face names
             face_names = [geo.Attributes.Name if geo.Attributes.Name else layer +
@@ -70,7 +77,10 @@ def to_face(path):
                 rh_face = face.Geometry
 
                 if rh_face.ObjectType == rhino3dm.ObjectType.Brep:
-                    lb_face = brep_to_face3d(rh_face)
+                    if rh_face.IsSolid == True:
+                        lb_face = brep3d_to_face3d(rh_face)
+                    elif rh_face.IsSolid == False:
+                        lb_face = brep2d_to_face3d(rh_face, tolerance)
 
                 elif rh_face.ObjectType == rhino3dm.ObjectType.Extrusion:
                     lb_face = extrusion_to_face3d(rh_face)
@@ -78,8 +88,7 @@ def to_face(path):
                 elif rh_face.ObjectType == rhino3dm.ObjectType.Mesh:
                     lb_face = mesh_to_face3d(rh_face)
                 else:
-                    print(
-                        f'There are objects on layer "{layer}" that this library does not support.')
+                    pass
 
                 # Converting Ladybug Face3D into Honeybee Objects
                 for face_obj in lb_face:
@@ -99,8 +108,6 @@ def to_face(path):
                     elif hb_face_module == Door:
                         hb_face = hb_face_module(clean_and_id_string(
                             '{}_{}'.format(face_names[count], count)), face_obj)
-                    else:
-                        pass
 
                     # Assigning a name to the Honeybee Face
                     hb_face.display_name = '{}_{}'.format(
