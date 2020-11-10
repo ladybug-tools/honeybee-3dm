@@ -4,11 +4,8 @@ import os
 import json
 
 # import the core honeybee dependencies
-try:
-    from honeybee.model import Model
-    from honeybee.config import folders
-except ImportError as e:
-    raise ImportError('\nFailed to import honeybee:\n\t{}'.format(e))
+from honeybee.model import Model
+from honeybee.config import folders
 
 
 def to_json(hb_objects, name=None, folder_path=None, indent=None, abridged=False):
@@ -29,6 +26,7 @@ def to_json(hb_objects, name=None, folder_path=None, indent=None, abridged=False
 
     # Name the file
     name = name if name is not None else 'unnamed'
+
     file_name = '{}.json'.format(name) if len(hb_objects) > 1 or not \
         isinstance(hb_objects[0], Model) else '{}.hbjson'.format(name)
 
