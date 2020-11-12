@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/ladybug-tools/honeybee-3dm.svg?branch=master)](https://travis-ci.org/ladybug-tools/honeybee-3dm)
 [![Coverage Status](https://coveralls.io/repos/github/ladybug-tools/honeybee-3dm/badge.svg?branch=master)](https://coveralls.io/github/ladybug-tools/honeybee-3dm)
 
-[![Python 2.7](https://img.shields.io/badge/python-2.7-green.svg)](https://www.python.org/downloads/release/python-270/) [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
+[![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
 
 # honeybee-3dm
 
