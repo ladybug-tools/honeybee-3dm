@@ -16,26 +16,23 @@ from ladybug_geometry.geometry3d.face import Face3D
 from ladybug_geometry.geometry3d.polyface import Polyface3D
 
 # Importing dependencies from Honeybee-3dm package
-from .togeometry import brep_to_face3d, extrusion_to_face3d, mesh_to_face3d, brep3d_to_face3d
-from .tojson import to_json
+from .togeometry import brep_to_face3d, extrusion_to_face3d, mesh_to_face3d
 
 
-def to_room(path):
-    """Creates Honeybee faces from a rhino3dm file
+def to_room(rhino3dm_file, tolerance):
+    """Creates Honeybee faces from a rhino3dm file.
 
     This function looks up a rhino3dm file, converts the objects
     on the layer name "room" to Honeybee Room objects, and writes them
     to a json file.
 
     Args:
-        path (A string): The path to the rhino file
-    Returns:
-        hb_rooms (A list): A list of Honeybee rooms
-    """
-    # Creating a rhino3dm object from the file at the path provided
-    rhino3dm_file = rhino3dm.File3dm.Read(path)
-    tolerance = rhino3dm_file.Settings.ModelAbsoluteTolerance
+        rhino3dm_file: The rhino file from which Honeybee faces will be created.
+        tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
 
+    Returns:
+        A list of Honeybee room objects.
+    """
     layer_dict = {
         layer.Name: layer.Index for layer in rhino3dm_file.Layers}
 

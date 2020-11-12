@@ -15,10 +15,10 @@ def to_point3d(point):
     """This function creates a Ladybug Point3D object from a rhino3dm point.
 
     Args:
-        point (point3d): A rhino3dm point
+        point: A rhino3dm point.
 
     Returns:
-        Point3D: A Ladybug Point3D object
+        A Ladybug Point3D object.
     """
     return Point3D(point.X, point.Y, point.Z)
 
@@ -27,10 +27,10 @@ def to_vector3d(vector):
     """This function creates a Ladybug Vector3D from a rhino3dm Vector3d.
 
     Args:
-        vector (vector3d): A rhino3dm vector3d
+        vector: A rhino3dm vector3d.
 
     Returns:
-         Vector3D: A Ladybug Vector3D object
+         A Ladybug Vector3D object.
     """
     return Vector3D(vector.X, vector.Y, vector.Z)
 
@@ -39,10 +39,10 @@ def remove_dup_verts(vertices):
     """Remove vertices from an array of Point3Ds that are equal within the tolerance.
 
     Args:
-        vertices (A list): A list of Ladybug Point3D objects
+        vertices: A list of Ladybug Point3D objects.
 
     Returns:
-         A list: A list of Ladybug Point3D objects with duplicate points removed
+         A list of Ladybug Point3D objects with duplicate points removed.
 
     """
     return [pt for i, pt in enumerate(vertices)
@@ -53,10 +53,10 @@ def mesh_to_face3d(mesh):
     """This function creates a Ladybug Face3D object out of a rhino3dm Mesh.
 
     Args:
-        mesh (mesh): A rhino3dm mesh geometry
+        mesh: A rhino3dm mesh geometry.
 
     Returns:
-        faces (A list): A list of Ladybug Face3D objects
+        A list of Ladybug Face3D objects.
     """
 
     faces = []
@@ -76,13 +76,13 @@ def mesh_to_face3d(mesh):
 
 
 def brep_to_face3d(brep):
-    """This function creates a Ladybug Face3D object from a rhino3dm Brep
+    """This function creates a Ladybug Face3D object from a rhino3dm Brep.
 
     Args:
-        brep (Brep): A rhino3dm Brep
+        brep: A rhino3dm Brep.
 
     Returns:
-        faces (A list): A list of Ladybug Face3D objects
+        A list of Ladybug Face3D objects.
     """
     faces = []
     for i in range(len(brep.Faces)):
@@ -93,16 +93,16 @@ def brep_to_face3d(brep):
 
 
 def brep2d_to_face3d(brep, tolerance):
-    """This function creates a Ladybug Face3D object from a rhino3dm Brep
+    """This function creates a Ladybug Face3D object from a rhino3dm Brep.
 
     This method is used in translating rhino3dm planar geometries to Ladybug Face3D
     objects.
 
     Args:
-        brep (Brep): A rhino3dm Brep
+        brep: A rhino3dm Brep.
 
     Returns:
-        faces (A list): A list of Ladybug Face3D objects
+        A list of Ladybug Face3D objects.
     """
     faces = []
     try:
@@ -181,16 +181,16 @@ def brep2d_to_face3d(brep, tolerance):
 
 
 def brep3d_to_face3d(brep):
-    """This function creates a Ladybug Face3D object from a rhino3dm Brep
+    """This function creates a Ladybug Face3D object from a rhino3dm Brep.
 
     This method is used in translating rhino3dm solid volumes to Ladybug Face3D
     objects.
 
     Args:
-        brep (Brep): A rhino3dm Brep
+        brep: A rhino3dm Brep.
 
     Returns:
-        faces (A list): A list of Ladybug Face3D objects
+        A list of Ladybug Face3D objects.
     """
     faces = []
     for i in range(len(brep.Faces)):
@@ -201,13 +201,13 @@ def brep3d_to_face3d(brep):
 
 
 def extrusion_to_face3d(extrusion):
-    """This function creates a Ladybug Face3D object from a rhino3dm Extrusion
+    """This function creates a Ladybug Face3D object from a rhino3dm Extrusion.
 
     Args:
-        brep (Extrusion): A rhino3dm Extrusion
+        brep: A rhino3dm Extrusion.
 
     Returns:
-        faces (A list): A list of Ladybug Face3D objects
+        A list of Ladybug Face3D objects.
     """
     faces = []
     mesh = extrusion.GetMesh(rhino3dm.MeshType.Any)
