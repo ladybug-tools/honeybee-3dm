@@ -36,7 +36,7 @@ def to_face(rhino3dm_file, tolerance):
         tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
 
     Returns:
-        A list of Honeybee faces
+        A list of Honeybee faces.
     """
     # TODO create a quality check for the file path
 
