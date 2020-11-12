@@ -91,17 +91,17 @@ def to_face(rhino3dm_file, tolerance):
                 for face_obj in lb_face:
 
                     if hb_face_module == Face:
-                        hb_face = hb_face_module(clean_and_id_string('{}_{}'.format(
-                            face_names[count], count)), face_obj, hb_face_type)
+                        hb_face = hb_face_module(clean_and_id_string('{}'.format(
+                            face_names[count])), face_obj, hb_face_type)
 
                     elif hb_face_module == Shade or hb_face_module == Aperture \
                             or hb_face_module == Door:
                         hb_face = hb_face_module(clean_and_id_string(
-                            '{}_{}'.format(face_names[count], count)), face_obj)
+                            '{}'.format(face_names[count])), face_obj)
 
                     # Assigning a name to the Honeybee Face
-                    hb_face.display_name = '{}_{}'.format(
-                        face_names[count], count)
+                    hb_face.display_name = '{}'.format(
+                        face_names[count])
                     hb_faces.append(hb_face)
         else:
             pass
