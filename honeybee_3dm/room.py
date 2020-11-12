@@ -31,7 +31,7 @@ def to_room(rhino3dm_file, tolerance):
         tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
 
     Returns:
-        A list of Honeybee room objects.
+        A list of Honeybee rooms.
     """
     layer_dict = {
         layer.Name: layer.Index for layer in rhino3dm_file.Layers}
