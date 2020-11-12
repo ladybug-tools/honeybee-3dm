@@ -22,26 +22,23 @@ from ladybug_geometry.geometry3d.face import Face3D
 
 # Importing dependencies from Honeybee-3dm package
 from .togeometry import brep_to_face3d, extrusion_to_face3d, mesh_to_face3d, brep2d_to_face3d, brep3d_to_face3d
-from .tojson import to_json
 
 
-def to_face(path):
-    """Creates Honeybee faces from a rhino3dm file
+def to_face(rhino3dm_file, tolerance):
+    """Creates Honeybee faces from a rhino3dm file.
 
     This function looks up a rhino3dm file, converts the objects
     on the layer name "roof", "wall", "floor", "airwall", "shade", and  "aperture"
     to Honeybee objects, and writes them to a json file.
 
     Args:
-        path (A string): The path to the rhino3dm file
+        rhino3dm_file: The rhino file from which Honeybee faces will be created.
+        tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
+
     Returns:
-        hb_faces (A list): A list of Honeybee faces
+        A list of Honeybee faces
     """
     # TODO create a quality check for the file path
-
-    # Creating a rhino3dm object from the file at the path provided
-    rhino3dm_file = rhino3dm.File3dm.Read(path)
-    tolerance = rhino3dm_file.Settings.ModelAbsoluteTolerance
 
     hb_faces = []
 
@@ -97,15 +94,8 @@ def to_face(path):
                         hb_face = hb_face_module(clean_and_id_string('{}_{}'.format(
                             face_names[count], count)), face_obj, hb_face_type)
 
-                    elif hb_face_module == Shade:
-                        hb_face = hb_face_module(clean_and_id_string(
-                            '{}_{}'.format(face_names[count], count)), face_obj)
-
-                    elif hb_face_module == Aperture:
-                        hb_face = hb_face_module(clean_and_id_string(
-                            '{}_{}'.format(face_names[count], count)), face_obj)
-
-                    elif hb_face_module == Door:
+                    elif hb_face_module == Shade or hb_face_module == Aperture \
+                            or hb_face_module == Door:
                         hb_face = hb_face_module(clean_and_id_string(
                             '{}_{}'.format(face_names[count], count)), face_obj)
 
