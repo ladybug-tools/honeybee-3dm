@@ -21,7 +21,7 @@ def import_faces(rhino3dm_file, tolerance=None):
 
     This function looks up a rhino3dm file, converts the objects
     on the layer name "roof", "wall", "floor", "airwall", "shade", and  "aperture"
-    to Honeybee objects, and writes them to a json file.
+    to Honeybee objects, and converts them to Honeybee faces.
 
     Args:
         rhino3dm_file: A Rhino3DM file object.
@@ -46,12 +46,10 @@ def import_faces(rhino3dm_file, tolerance=None):
         'door': (None, Door)
     }
 
-    tolerance = tolerance or rhino3dm_file.Settings.ModelAbsoluteTolerance
-
     for layer in rhino3dm_file.Layers:
         if layer.Name not in layer_to_hb_object:
             warnings.warn(
-                f'Object in layer "{layer.Name}" will be ignored during the process '
+                f'Only objects on layers {tuple(layer_to_hb_object.keys())} will be imported during the process '
                 'of importing faces.'
             )
             continue
@@ -73,13 +71,12 @@ def import_faces(rhino3dm_file, tolerance=None):
                 # TODO: Double check with Chris if this naming works for energy models.
                 # if name is assigned by user use the same name for all the sub faces
                 # otherwise generate a randome name based on the layer name.
-                obj_name = name or clean_and_id_string(layer)
+                obj_name = name.replace(' ', '_') or clean_and_id_string(layer)
                 args = [clean_string(obj_name), face_obj]
                 if hb_face_type:
                     args.append(hb_face_type)
                 hb_face = hb_face_module(*args)
                 hb_face.display_name = name
-
                 hb_faces.append(hb_face)
 
     return hb_faces
