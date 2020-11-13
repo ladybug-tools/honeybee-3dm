@@ -76,7 +76,7 @@ def import_faces(rhino3dm_file, tolerance=None):
                 if hb_face_type:
                     args.append(hb_face_type)
                 hb_face = hb_face_module(*args)
-                hb_face.display_name = name
+                hb_face.display_name = obj_name
                 hb_faces.append(hb_face)
 
     return hb_faces
