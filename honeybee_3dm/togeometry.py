@@ -2,6 +2,7 @@
 
 # The Rhino3dm library provides the ability to access content of a Rhino3dm
 # file from outside of Rhino
+import warnings
 import rhino3dm
 
 # Importing Ladybug geometry dependencies
@@ -12,23 +13,53 @@ from ladybug_geometry.geometry3d.polyline import Polyline3D
 
 
 def to_point3d(point):
-    """Ladybug Point3D from a rhino3dm point."""
+    """Create a Ladybug Point3D object from a rhino3dm point.
+
+    Args:
+        point: A rhino3dm point.
+
+    Returns:
+        A Ladybug Point3D object.
+    """
     return Point3D(point.X, point.Y, point.Z)
 
 
 def to_vector3d(vector):
-    """Ladybug Vector3D from a rhino3dm Vector3d."""
+    """Create a Ladybug Vector3D from a rhino3dm Vector3d.
+
+    Args:
+        vector: A rhino3dm vector3d.
+
+    Returns:
+         A Ladybug Vector3D object.
+    """
     return Vector3D(vector.X, vector.Y, vector.Z)
 
 
-def remove_dup_verts(vertices):
-    """Remove vertices from an array of Point3Ds that are equal within the tolerance."""
+def remove_dup_vertices(vertices, tolerance=0.001):
+    """Remove vertices from an array of Point3Ds that are equal within the tolerance.
+
+    Args:
+        vertices: A list of Ladybug Point3D objects.
+
+    Returns:
+         A list of Ladybug Point3D objects with duplicate points removed.
+
+    """
     return [pt for i, pt in enumerate(vertices)
-            if not pt.is_equivalent(vertices[i - 1], 0.001)]
+            if not pt.is_equivalent(vertices[i - 1], tolerance)]
 
 
 def mesh_to_face3d(mesh):
-    """list of Ladybug Face3D from a rhino3dm Mesh."""
+    """Create a Ladybug Face3D object out of a rhino3dm Mesh.
+
+    Args:
+        mesh: A rhino3dm mesh geometry.
+
+    Returns:
+        A list of Ladybug Face3D objects.
+    """
+
     faces = []
     pts = [to_point3d(mesh.Vertices[i]) for i in range(len(mesh.Vertices))]
 
@@ -45,8 +76,34 @@ def mesh_to_face3d(mesh):
     return faces
 
 
+def brep_to_face3d(brep):
+    """Create a Ladybug Face3D object from a rhino3dm Brep.
+
+    Args:
+        brep: A rhino3dm Brep.
+
+    Returns:
+        A list of Ladybug Face3D objects.
+    """
+    faces = []
+    for i in range(len(brep.Faces)):
+        mesh = brep.Faces[i].GetMesh(rhino3dm.MeshType.Any)
+        faces.extend(mesh_to_face3d(mesh))
+
+    return faces
+
+
 def brep2d_to_face3d(brep, tolerance):
-    """list of Ladybug Face3D from a planar rhino3dm Brep."""
+    """Create a Ladybug Face3D object from a rhino3dm Brep.
+
+    This function is used in translating rhino3dm planar Brep to Ladybug Face3D objects.
+
+    Args:
+        brep: A rhino3dm Brep.
+
+    Returns:
+        A list of Ladybug Face3D objects.
+    """
     faces = []
     try:
         # * Check 01 - If any of the edge is an arc
@@ -72,8 +129,7 @@ def brep2d_to_face3d(brep, tolerance):
             # Sort the Ladybug Polylines based on length
             # The longest polyline belongs to the boundary of the face
             # The rest of the polylines belong to the holes in the face
-            sorted_polylines = sorted(
-                polylines, key=lambda polyline: polyline.length)
+            sorted_polylines = sorted(polylines, key=lambda polyline: polyline.length)
             # The first polyline in the list shall always be the polyline for
             # the boundary
             sorted_polylines.reverse()
@@ -89,7 +145,7 @@ def brep2d_to_face3d(brep, tolerance):
                 if len(mesh_pts) == 4 or len(mesh_pts) == 3:
                     faces.extend(mesh_to_face3d(mesh))
                 else:
-                    boundary_pts = remove_dup_verts(
+                    boundary_pts = remove_dup_vertices(
                         sorted_polylines[0].vertices)
                     lb_face = Face3D(boundary=boundary_pts)
                     faces.append(lb_face)
@@ -97,8 +153,8 @@ def brep2d_to_face3d(brep, tolerance):
             # In the list of the Polylines, if there's more than one polyline then
             # the face has hole / holes
             elif len(sorted_polylines) > 1:
-                boundary_pts = remove_dup_verts(sorted_polylines[0].vertices)
-                hole_pts = [remove_dup_verts(polyline.vertices)
+                boundary_pts = remove_dup_vertices(sorted_polylines[0].vertices)
+                hole_pts = [remove_dup_vertices(polyline.vertices)
                             for polyline in sorted_polylines[1:]]
                 # Merging lists of hole_pts
                 total_hole_pts = [
@@ -123,8 +179,18 @@ def brep2d_to_face3d(brep, tolerance):
     return faces
 
 
-def brep3d_to_face3d(brep):
-    """list of Ladybug Face3D from a solid rhino3dm Brep."""
+def solid_to_face3d(brep):
+    """Create a Ladybug Face3D object from a rhino3dm Brep.
+
+    This function is used in translating rhino3dm solid volumes to Ladybug Face3D
+    objects.
+
+    Args:
+        brep: A rhino3dm Brep.
+
+    Returns:
+        A list of Ladybug Face3D objects.
+    """
     faces = []
     for i in range(len(brep.Faces)):
         mesh = brep.Faces[i].GetMesh(rhino3dm.MeshType.Any)
@@ -134,9 +200,58 @@ def brep3d_to_face3d(brep):
 
 
 def extrusion_to_face3d(extrusion):
-    """list of Ladybug Face3D from a rhino3dm Extrusion."""
+    """Create a Ladybug Face3D object from a rhino3dm Extrusion.
+
+    Args:
+        brep: A rhino3dm Extrusion.
+
+    Returns:
+        A list of Ladybug Face3D objects.
+    """
     faces = []
     mesh = extrusion.GetMesh(rhino3dm.MeshType.Any)
     faces.extend(mesh_to_face3d(mesh))
 
     return faces
+
+
+def to_face3d(obj, *, tolerance, raise_exception=True):
+    """Convert Rhino objects to Ladybug Face3D objects.
+
+    Supported object types are Brep, Extrusion and Meshes. If raise_exception is set to
+    True this method will raise a ValueError for unsupported object types.
+
+    Args:
+        obj: A Rhino object.
+        tolerance: A number for tolerance value. Tolerance will only be used for
+            converting mesh geometries.
+        raise_exception: A Boolean to raise an exception for unsupported object types.
+            default is True.
+
+    Returns:
+        A list of Ladybug Face3D.
+
+    Raises:
+        ValueError if object type is not supported and raise_exception is set to True.
+
+    """
+    rh_geo = obj.Geometry
+
+    if rh_geo.ObjectType == rhino3dm.ObjectType.Brep:
+        if rh_geo.IsSolid:
+            lb_face = solid_to_face3d(rh_geo)
+        else:
+            lb_face = brep2d_to_face3d(rh_geo, tolerance)
+
+    elif rh_geo.ObjectType == rhino3dm.ObjectType.Extrusion:
+        lb_face = extrusion_to_face3d(rh_geo)
+
+    elif rh_geo.ObjectType == rhino3dm.ObjectType.Mesh:
+        lb_face = mesh_to_face3d(rh_geo)
+    else:
+        if raise_exception:
+            raise ValueError(f'Unsupported object type: {rh_geo.ObjectType}')
+        warnings.warn(f'Unsupported object type: {rh_geo.ObjectType}')
+        lb_face = []
+
+    return lb_face
