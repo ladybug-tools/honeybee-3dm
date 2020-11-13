@@ -1,16 +1,17 @@
-"""Creating Honeybee grid objects from rhino3dm surfces"""
+"""Import Rhino surfaces as Honeybee grid objects from a Rhino3DM file."""
 
-import rhino3dm
-from honeybee.model import Model
 from honeybee_radiance.sensorgrid import SensorGrid
-from honeybee_radiance.writer import model_to_rad_folder
 
-from .face import to_face
 from .togeometry import brep2d_to_face3d
+from .helper import filter_objects_by_layer
 
 
-def to_grid(rhino3dm_file, tolerance):
+# TODO: expose grid size inputs
+# TODO: expose an option to change the target layer name
+def import_grids(rhino3dm_file, tolerance):
     """Creates Honeybee grids from a rhino3dm file.
+
+    This function assumes all the grid objects are under a layer named ``grid``.
 
     Args:
         rhino3dm_file: The rhino file from which Honeybee faces will be created.
@@ -19,30 +20,30 @@ def to_grid(rhino3dm_file, tolerance):
     Returns:
         A list of Honeybee grids.
     """
-    layer_dict = {
-        layer.Name: layer.Index for layer in rhino3dm_file.Layers}
 
+    # Grids from rhino file
     try:
-        # Grids from rhino file
-        grid_objs = [object.Geometry for object in rhino3dm_file.Objects
-                     if object.Attributes.LayerIndex == layer_dict['grid']]
+        grid_objs = filter_objects_by_layer(rhino3dm_file, 'grid')
+    except ValueError:
+        # no layer named grid
+        return []
 
-        # Face3D objects for the grids
-        grid_face3ds = [brep2d_to_face3d(obj, tolerance)[0]
-                        for obj in grid_objs]
+    # TODO: Handle other objects like Mesh and Brep
+    # Face3D objects for the grids
+    grid_face3ds = [brep2d_to_face3d(obj.Geometry, tolerance)[0] for obj in grid_objs]
 
-        grids = []
-        # Creating Ladybug Grid objects
-        for face in grid_face3ds:
-            try:
-                grids.append(face.mesh_grid(1, 1, 0))
-            except AssertionError:
-                pass
+    grids = []
+    # Creating Ladybug Grid objects
+    for face in grid_face3ds:
+        try:
+            # TODO: Expose the input values for meshing the input geometries
+            grids.append(face.mesh_grid(1, 1, 0))
+        except AssertionError:
+            # TODO(Devang): Clarify why the Assertion error is happening
+            pass
 
-        # Creating Honeybee Grid objects
-        hb_grids = [SensorGrid.from_mesh3d(str(c), grid)
-                    for c, grid in enumerate(grids)]
+    # Creating Honeybee Grid objects
+    # TODO(Devang): User object name for grid if provided in Rhino model
+    hb_grids = [SensorGrid.from_mesh3d(str(c), grid) for c, grid in enumerate(grids)]
 
-        return hb_grids
-    except KeyError:
-        return None
+    return hb_grids

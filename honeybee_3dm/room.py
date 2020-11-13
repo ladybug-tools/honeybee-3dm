@@ -4,83 +4,66 @@
 # file from outside of Rhino
 import rhino3dm
 
-# The uuid library is used to create names for Honeybee object when a name
-# is not assigned by a user
-import uuid
+import warnings
 
 # Importing core Honeybee & Ladybug Geometry dependencies
 from honeybee.room import Room
-from honeybee.facetype import get_type_from_normal
 from honeybee.typing import clean_and_id_string
-from ladybug_geometry.geometry3d.face import Face3D
 from ladybug_geometry.geometry3d.polyface import Polyface3D
 
 # Importing dependencies from Honeybee-3dm package
-from .togeometry import brep3d_to_face3d, extrusion_to_face3d, mesh_to_face3d
+from .togeometry import to_face3d
+from .helper import filter_objects_by_layer
 
 
-def to_room(rhino3dm_file, tolerance):
-    """Creates Honeybee faces from a rhino3dm file.
+def import_rooms(rhino3dm_file, tolerance=None):
+    """Import Honeybee rooms from a rhino3dm file.
 
-    This function looks up a rhino3dm file, converts the objects
-    on the layer name "room" to Honeybee Room objects, and writes them
-    to a json file.
+    This function looks up a rhino3dm file and converts the objects
+    on the layer name "room" to Honeybee Room objects.
 
     Args:
-        rhino3dm_file: The rhino file from which Honeybee faces will be created.
-        tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
+        rhino3dm_file: A Rhino3DM file object.
+        tolerance: A number for model tolerance. By default the tolerance is set to
+            the ModelAbsoluteTolerance value in input 3DM file.
 
     Returns:
         A list of Honeybee rooms.
     """
-    layer_dict = {
-        layer.Name: layer.Index for layer in rhino3dm_file.Layers}
-
-    # Getting all the objects on the layer named "room"
-    volumes = [obj for obj in rhino3dm_file.Objects if obj.Attributes.LayerIndex ==
-               layer_dict["room"]]
+    # rooms from rhino file
+    try:
+        volumes = filter_objects_by_layer(rhino3dm_file, 'room')
+    except ValueError:
+        # no layer named room
+        return []
 
     # From all the objects on the layer named "room" take only solid objects
-    check = []
-    for geo in volumes:
-        geo = geo.Geometry
-        if geo.ObjectType == rhino3dm.ObjectType.Extrusion and geo.IsSolid == True:
-            check.append(True)
-        elif geo.ObjectType == rhino3dm.ObjectType.Brep and geo.IsSolid == True:
-            check.append(True)
-        elif geo.ObjectType == rhino3dm.ObjectType.Mesh and geo.IsClosed == True:
-            check.append(True)
-        else:
-            raise ValueError('On the "room" layer, you must only have either closed brep,'
-                             'or closed extrusions, closed meshes.'
-                             ' Please make this change in the rhino file and try again')
+    closed_volumes = []
+    for vol in volumes:
+        geo = vol.Geometry
+        if geo.ObjectType == rhino3dm.ObjectType.Extrusion and geo.IsSolid:
+            closed_volumes.append(vol)
+        elif geo.ObjectType == rhino3dm.ObjectType.Brep and geo.IsSolid:
+            closed_volumes.append(vol)
+        elif geo.ObjectType == rhino3dm.ObjectType.Mesh and geo.IsClosed:
+            closed_volumes.append(vol)
 
-    # Creating room names
-    room_names = [
-        geo.Attributes.Name if geo.Attributes.Name
-        else "Room" + str(uuid.uuid4())[:8] for geo in volumes]
+    if len(closed_volumes) != len(volumes):
+        diff = len(volumes) - len(closed_volumes)
+        warnings.warn(
+            f'{diff} objects on the "room" layer are not closed Brep or Meshes. '
+            ' These objects will be ignored.'
+        )
 
     hb_rooms = []
-
     # Covert solids into Ladybug Face3D objects
-    for i in range(len(volumes)):
-        rh_solid = volumes[i].Geometry
-
-        if rh_solid.ObjectType == rhino3dm.ObjectType.Brep:
-            lb_faces = brep3d_to_face3d(rh_solid)
-
-        elif rh_solid.ObjectType == rhino3dm.ObjectType.Extrusion:
-            lb_faces = extrusion_to_face3d(rh_solid)
-
-        elif rh_solid.ObjectType == rhino3dm.ObjectType.Mesh:
-            lb_faces = mesh_to_face3d(rh_solid)
-        else:
-            pass
-
+    for i in range(len(closed_volumes)):
+        volume = closed_volumes[i]
+        lb_faces = to_face3d(volume, tolerance=tolerance)
         # Create Ladybug Polyface3D object from Ladybug Face3D objects
         lb_polyface = Polyface3D.from_faces(lb_faces, tolerance)
-        name = room_names[i]
 
+        name = volume.Attributes.Name or clean_and_id_string('Room')
         # Create Honeybee Room object from Ladybug Polyface3D object
         hb_room = Room.from_polyface3d(name, lb_polyface)
         hb_rooms.append(hb_room)
