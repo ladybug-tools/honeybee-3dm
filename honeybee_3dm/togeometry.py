@@ -1,4 +1,4 @@
-"""Functions to create Ladybug geometries from Rhino3dm geometries."""
+"""Functions to create Ladybug objects from Rhino3dm objects."""
 
 # The Rhino3dm library provides the ability to access content of a Rhino3dm
 # file from outside of Rhino
