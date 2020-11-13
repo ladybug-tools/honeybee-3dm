@@ -46,9 +46,9 @@ def to_model(path, name="unnamed"):
             hb_grid = to_grid(rhino3dm_file, model_tolerance)
             # Honeybee model
             model_unit = str(file_unit).split(".")[-1]
-            hb_model = Model.from_objects(
-                name, hb_face, units=model_unit, tolerance=model_tolerance,
-                angle_tolerance=model_angle_tolerance)
+            hb_model = Model.from_objects(name, hb_face, units=model_unit,
+                                          tolerance=model_tolerance,
+                                          angle_tolerance=model_angle_tolerance)
             # Assigning grids to Honeybee model
             hb_model.properties.radiance.sensor_grids = hb_grid
             # Writing Honeybee model to a Radiance folder
