@@ -12,3 +12,8 @@ tox.ini
 /.vscode
 .eggs
 *.code-workspace
+
+# Rhino Backup files
+*.3dm
+*.3dm.rhl
+*3dmbak
