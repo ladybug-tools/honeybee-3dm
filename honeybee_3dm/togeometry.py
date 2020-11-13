@@ -45,21 +45,11 @@ def mesh_to_face3d(mesh):
     return faces
 
 
-def brep_to_face3d(brep):
-    """list of Ladybug Face3D from a rhino3dm Brep."""
-    faces = []
-    for i in range(len(brep.Faces)):
-        mesh = brep.Faces[i].GetMesh(rhino3dm.MeshType.Any)
-        faces.extend(mesh_to_face3d(mesh))
-
-    return faces
-
-
 def brep2d_to_face3d(brep, tolerance):
     """list of Ladybug Face3D from a planar rhino3dm Brep."""
     faces = []
     try:
-        # Check 01 - If any of the edge is an arc
+        # * Check 01 - If any of the edge is an arc
         lines = []
         not_line = 0
         for i in range(len(brep.Edges)):
@@ -115,7 +105,7 @@ def brep2d_to_face3d(brep, tolerance):
                     pts for pts_lst in hole_pts for pts in pts_lst]
                 hole_pts_on_boundary = [
                     pts for pts in total_hole_pts if pts in boundary_pts]
-                # Check 02 - If any of the hole is touching the boundary of the face
+                # * Check 02 - If any of the hole is touching the boundary of the face
                 # then mesh it
                 if len(hole_pts_on_boundary) > 0:
                     print(

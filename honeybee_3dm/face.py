@@ -21,7 +21,7 @@ from honeybee.facetype import face_types
 from ladybug_geometry.geometry3d.face import Face3D
 
 # Importing dependencies from Honeybee-3dm package
-from .togeometry import brep_to_face3d, extrusion_to_face3d, mesh_to_face3d, brep2d_to_face3d, brep3d_to_face3d
+from .togeometry import extrusion_to_face3d, mesh_to_face3d, brep2d_to_face3d, brep3d_to_face3d
 
 
 def to_face(rhino3dm_file, tolerance):
@@ -38,8 +38,6 @@ def to_face(rhino3dm_file, tolerance):
     Returns:
         A list of Honeybee faces.
     """
-    # TODO create a quality check for the file path
-
     hb_faces = []
 
     layer_dict = {

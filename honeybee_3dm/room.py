@@ -16,7 +16,7 @@ from ladybug_geometry.geometry3d.face import Face3D
 from ladybug_geometry.geometry3d.polyface import Polyface3D
 
 # Importing dependencies from Honeybee-3dm package
-from .togeometry import brep_to_face3d, extrusion_to_face3d, mesh_to_face3d
+from .togeometry import brep3d_to_face3d, extrusion_to_face3d, mesh_to_face3d
 
 
 def to_room(rhino3dm_file, tolerance):

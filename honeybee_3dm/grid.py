@@ -5,7 +5,6 @@ from honeybee.model import Model
 from honeybee_radiance.sensorgrid import SensorGrid
 from honeybee_radiance.writer import model_to_rad_folder
 
-from .room import to_room
 from .face import to_face
 from .togeometry import brep2d_to_face3d
 
