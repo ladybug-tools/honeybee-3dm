@@ -5,10 +5,10 @@ def get_unit_system(file_3dm):
     """Get units from a 3dm file object.
 
     Args:
-        file_3dm: A 3dm file object.
+        file_3dm: A Rhino3dm file object.
 
     Returns:
-        str: File units as a string.
+        Rhino3dm file unit as a string.
     """
     UNITS = ['Meters', 'Millimeters', 'Feet', 'Inches', 'Centimeters']
 
@@ -31,11 +31,11 @@ def filter_objects_by_layer(file_3dm, layer_name):
     """Get all the objects in a layer.
 
     Args:
-        file_3dm: Input Rhino 3DM object.
+        file_3dm: Input Rhino3DM object.
         layer_name: Rhino layer name.
 
     Returns:
-        A list of Rhino objects.
+        A list of Rhino3dm objects.
     """
     layer_index = [layer.Index for layer in file_3dm.Layers if layer.Name == layer_name]
     if not layer_index:
@@ -52,7 +52,7 @@ def filter_objects_by_layer_index(file_3dm, layer_index):
         layer_name: Rhino layer name.
 
     Returns:
-        A list of Rhino objects.
+        A list of Rhino3dm objects.
     """
 
     return [obj for obj in file_3dm.Objects if obj.Attributes.LayerIndex == layer_index]

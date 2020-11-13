@@ -6,10 +6,12 @@ import warnings
 import rhino3dm
 
 # Importing Ladybug geometry dependencies
+import ladybug.color as lbc
 from ladybug_geometry.geometry3d.pointvector import Point3D, Vector3D
 from ladybug_geometry.geometry3d.face import Face3D
 from ladybug_geometry.geometry3d.line import LineSegment3D
 from ladybug_geometry.geometry3d.polyline import Polyline3D
+from ladybug_geometry.geometry3d.mesh import Mesh3D
 
 
 def to_point3d(point):
@@ -36,7 +38,7 @@ def to_vector3d(vector):
     return Vector3D(vector.X, vector.Y, vector.Z)
 
 
-def remove_dup_vertices(vertices, tolerance=0.001):
+def remove_dup_vertices(vertices, tolerance):
     """Remove vertices from an array of Point3Ds that are equal within the tolerance.
 
     Args:
@@ -74,6 +76,54 @@ def mesh_to_face3d(mesh):
         faces.append(Face3D(all_verts))
 
     return faces
+
+
+def extract_mesh_faces_colors(mesh, color_by_face=False):
+    """Extract face indices and colors from a Rhino mesh.
+
+    Args:
+        mesh: Rhino3dm mesh
+        color_by_face: Bool. True will derive colors from mesh faces
+
+    Returns:
+        A tuple of mesh faces and mesh colors
+    """
+
+    colors = None
+    lb_faces = []
+    for i in range(len(mesh.Faces)):
+        face = mesh.Faces[i]
+        if len(face) == 4:
+            lb_faces.append((face[0], face[1], face[2], face[3]))
+        else:
+            lb_faces.append((face[0], face[1], face[2]))
+    if len(mesh.VertexColors) != 0:
+        colors = []
+        if color_by_face is True:
+            for j in range(len(mesh.Faces)):
+                face = mesh.Faces[j]
+                col = mesh.VertexColors[face[0]]
+                colors.append(lbc.Color(col.R, col.G, col.B))
+        else:
+            for k in range(len(mesh.VertexColors)):
+                col = mesh.VertexColors[k]
+                colors.append(lbc.Color(col.R, col.G, col.B))
+    return lb_faces, colors
+
+
+def mesh_to_mesh3d(mesh, color_by_face=True):
+    """Ladybug Mesh3D from Rhino Mesh.
+
+    Args:
+        mesh: Rhino3dm mesh
+        color_by_face: Bool. True will derive colors from mesh faces
+
+    Returns:
+        A Ladybug Mesh3D object
+    """
+    lb_verts = tuple(to_point3d(mesh.Vertices[i]) for i in range(len(mesh.Vertices)))
+    lb_faces, colors = extract_mesh_faces_colors(mesh, color_by_face)
+    return Mesh3D(lb_verts, lb_faces, colors)
 
 
 def brep_to_face3d(brep):
@@ -114,7 +164,8 @@ def brep2d_to_face3d(brep, tolerance):
                 not_line += 1
         # If there's an arc in one of the edges, mesh it
         if not_line > 0:
-            print("The surface has curved edges. It will be meshed")
+            warnings.warn(
+                "The surface has curved edges. It will be meshed.")
             faces.extend(brep_to_face3d(brep))
         else:
             # Create Ladybug lines from start and end points of edges
@@ -146,15 +197,16 @@ def brep2d_to_face3d(brep, tolerance):
                     faces.extend(mesh_to_face3d(mesh))
                 else:
                     boundary_pts = remove_dup_vertices(
-                        sorted_polylines[0].vertices)
+                        sorted_polylines[0].vertices, tolerance)
                     lb_face = Face3D(boundary=boundary_pts)
                     faces.append(lb_face)
 
             # In the list of the Polylines, if there's more than one polyline then
             # the face has hole / holes
             elif len(sorted_polylines) > 1:
-                boundary_pts = remove_dup_vertices(sorted_polylines[0].vertices)
-                hole_pts = [remove_dup_vertices(polyline.vertices)
+                boundary_pts = remove_dup_vertices(
+                    sorted_polylines[0].vertices, tolerance)
+                hole_pts = [remove_dup_vertices(polyline.vertices, tolerance)
                             for polyline in sorted_polylines[1:]]
                 # Merging lists of hole_pts
                 total_hole_pts = [
@@ -164,7 +216,7 @@ def brep2d_to_face3d(brep, tolerance):
                 # * Check 02 - If any of the hole is touching the boundary of the face
                 # then mesh it
                 if len(hole_pts_on_boundary) > 0:
-                    print(
+                    warnings.warn(
                         "The surface has holes that touch the boundary. \
                             It will be meshed")
                     faces.extend(brep_to_face3d(brep))
@@ -222,7 +274,7 @@ def to_face3d(obj, *, tolerance, raise_exception=True):
     True this method will raise a ValueError for unsupported object types.
 
     Args:
-        obj: A Rhino object.
+        obj: A Rhino3dm object.
         tolerance: A number for tolerance value. Tolerance will only be used for
             converting mesh geometries.
         raise_exception: A Boolean to raise an exception for unsupported object types.
