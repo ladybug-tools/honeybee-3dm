@@ -1,0 +1,18 @@
+import pytest
+from honeybee_3dm.model import to_model
+from ladybug_geometry.geometry3d import Point3D, Vector3D
+
+path = './tests/assets/test.3dm'
+model = to_model(path)
+
+
+def test_walls():
+    # Check for User provided name
+    assert 'south-wall' in [face.display_name for face in model.faces]
+    # Check for vertices & normal
+    south_wall = [face for face in model.faces if face.display_name == 'south-wall']
+    assert south_wall[0].vertices[0].is_equivalent(Point3D(0, 0, 0), 0.01)
+    assert south_wall[0].vertices[1].is_equivalent(Point3D(5, 0, 0), 0.01)
+    assert south_wall[0].vertices[2].is_equivalent(Point3D(5, 0, 3), 0.01)
+    assert south_wall[0].vertices[3].is_equivalent(Point3D(0, 0, 3), 0.01)
+    assert south_wall[0].normal == Vector3D(0, -1, 0)
