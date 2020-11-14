@@ -57,12 +57,11 @@ def import_rooms(rhino3dm_file, tolerance=None):
 
     hb_rooms = []
     # Covert solids into Ladybug Face3D objects
-    for i in range(len(closed_volumes)):
-        volume = closed_volumes[i]
+    for volume in closed_volumes:
         lb_faces = to_face3d(volume, tolerance=tolerance)
         # Create Ladybug Polyface3D object from Ladybug Face3D objects
         lb_polyface = Polyface3D.from_faces(lb_faces, tolerance)
-
+        # Assign name
         name = volume.Attributes.Name or clean_and_id_string('Room')
         # Create Honeybee Room object from Ladybug Polyface3D object
         hb_room = Room.from_polyface3d(name, lb_polyface)
