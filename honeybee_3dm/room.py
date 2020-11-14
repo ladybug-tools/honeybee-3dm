@@ -41,11 +41,11 @@ def import_rooms(rhino3dm_file, tolerance=None):
     closed_volumes = []
     for vol in volumes:
         geo = vol.Geometry
-        if geo.ObjectType == rhino3dm.ObjectType.Extrusion and geo.IsSolid:
+        if isinstance(geo, rhino3dm.Extrusion) and geo.IsSolid:
             closed_volumes.append(vol)
-        elif geo.ObjectType == rhino3dm.ObjectType.Brep and geo.IsSolid:
+        elif isinstance(geo, rhino3dm.Brep) and geo.IsSolid:
             closed_volumes.append(vol)
-        elif geo.ObjectType == rhino3dm.ObjectType.Mesh and geo.IsClosed:
+        elif isinstance(geo, rhino3dm.Mesh) and geo.IsClosed:
             closed_volumes.append(vol)
 
     if len(closed_volumes) != len(volumes):
