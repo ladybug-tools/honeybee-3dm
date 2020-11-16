@@ -45,32 +45,30 @@ def import_grids(rhino3dm_file, tolerance, grid_size=1, grid_offset=0):
     hb_grids = []
 
     for obj in grid_objs:
-        try:
-            geo = obj.Geometry
-            # If it's a Brep
-            if isinstance(geo, rhino3dm.Brep):
-                face3d = brep2d_to_face3d(geo, tolerance)[0]
-                mesh3d = face3d.mesh_grid(grid_size, grid_size, grid_offset)
 
-            # If it's a Mesh
-            elif isinstance(geo, rhino3dm.Mesh):
-                # If it's a Mesh with only one face
-                if len(geo.Faces) == 1:
-                    face3d = mesh_to_face3d(geo)[0]
-                    mesh3d = face3d.mesh_grid(grid_size, grid_size, grid_offset)
-                # It it's a mesh with multiple faces
-                elif len(geo.Faces) > 1:
-                    mesh3d = mesh_to_mesh3d(geo)
-        except AssertionError:
-            warnings.warn(
-                'Grids are not created for Breps with curved edges.'
-                ' Please mesh them in Rhino and try again.')
+        geo = obj.Geometry
+
+        # If it's a Brep
+        if isinstance(geo, rhino3dm.Brep):
+            face3d = brep2d_to_face3d(geo, tolerance)[0]
+            try:
+                mesh3d = face3d.mesh_grid(grid_size, grid_size, grid_offset)
+            except AssertionError as e:
+                warnings.warn(
+                    f'{e} Breps with curved edges are not supported'
+                    ' for grids. Mesh them in Rhino and try again.'
+                )
+                continue
             # TODO: Find a way to Implement a method to create grids from a planar
             # TODO geometry with curved edges
+
+        # If it's a Mesh
+        elif isinstance(geo, rhino3dm.Mesh):
+            mesh3d = mesh_to_mesh3d(geo)
             pass
 
         name = obj.Attributes.Name
-        obj_name = name.replace(' ', '_') or clean_and_id_string('grid')
+        obj_name = name or clean_and_id_string('grid')
         args = [clean_string(obj_name), mesh3d]
         hb_grids.append(SensorGrid.from_mesh3d(*args))
 
