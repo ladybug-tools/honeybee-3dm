@@ -2,11 +2,10 @@ import pytest
 from honeybee_3dm.model import import_3dm
 from ladybug_geometry.geometry3d import Point3D, Vector3D
 
-path = './tests/assets/test.3dm'
-model = import_3dm(path)
-
 
 def test_apertures():
+    path = './tests/assets/test.3dm'
+    model = import_3dm(path)
     # Check for User provided name
     assert 'Window_East' in [aperture.display_name for aperture in model.apertures]
     # Check for vertices & normal
