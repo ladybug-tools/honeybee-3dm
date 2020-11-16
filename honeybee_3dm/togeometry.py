@@ -192,42 +192,43 @@ def brep2d_to_face3d(brep, tolerance):
                         for i in range(len(mesh.Vertices))]
         except AttributeError:
             warnings.warn(
-                'Non-planar Breps are not handled by Honeybee.'
+                'Non-planar Breps are not handled by Honeybee. They are ignored.'
             )
             return faces
-        # In the list of the Polylines, if there's only one polyline then
-        # the face has no holes
-        if len(sorted_polylines) == 1:
-            if len(mesh_pts) == 4 or len(mesh_pts) == 3:
-                faces.extend(mesh_to_face3d(mesh))
-            else:
+        else:
+            # In the list of the Polylines, if there's only one polyline then
+            # the face has no holes
+            if len(sorted_polylines) == 1:
+                if len(mesh_pts) == 4 or len(mesh_pts) == 3:
+                    faces.extend(mesh_to_face3d(mesh))
+                else:
+                    boundary_pts = remove_dup_vertices(
+                        sorted_polylines[0].vertices, tolerance)
+                    lb_face = Face3D(boundary=boundary_pts)
+                    faces.append(lb_face)
+
+            # In the list of the Polylines, if there's more than one polyline then
+            # the face has hole / holes
+            elif len(sorted_polylines) > 1:
                 boundary_pts = remove_dup_vertices(
                     sorted_polylines[0].vertices, tolerance)
-                lb_face = Face3D(boundary=boundary_pts)
-                faces.append(lb_face)
-
-        # In the list of the Polylines, if there's more than one polyline then
-        # the face has hole / holes
-        elif len(sorted_polylines) > 1:
-            boundary_pts = remove_dup_vertices(
-                sorted_polylines[0].vertices, tolerance)
-            hole_pts = [remove_dup_vertices(polyline.vertices, tolerance)
-                        for polyline in sorted_polylines[1:]]
-            # Merging lists of hole_pts
-            total_hole_pts = [
-                pts for pts_lst in hole_pts for pts in pts_lst]
-            hole_pts_on_boundary = [
-                pts for pts in total_hole_pts if pts in boundary_pts]
-            # * Check 02 - If any of the hole is touching the boundary of the face
-            # then mesh it
-            if len(hole_pts_on_boundary) > 0:
-                warnings.warn(
-                    "The surface has holes that touch the boundary. \
-                        It will be meshed")
-                faces.extend(brep_to_face3d(brep))
-            else:
-                lb_face = Face3D(boundary=boundary_pts, holes=hole_pts)
-                faces.append(lb_face)
+                hole_pts = [remove_dup_vertices(polyline.vertices, tolerance)
+                            for polyline in sorted_polylines[1:]]
+                # Merging lists of hole_pts
+                total_hole_pts = [
+                    pts for pts_lst in hole_pts for pts in pts_lst]
+                hole_pts_on_boundary = [
+                    pts for pts in total_hole_pts if pts in boundary_pts]
+                # * Check 02 - If any of the hole is touching the boundary of the face
+                # then mesh it
+                if len(hole_pts_on_boundary) > 0:
+                    warnings.warn(
+                        "The surface has holes that touch the boundary. \
+                            It will be meshed")
+                    faces.extend(brep_to_face3d(brep))
+                else:
+                    lb_face = Face3D(boundary=boundary_pts, holes=hole_pts)
+                    faces.append(lb_face)
 
     return faces
 
