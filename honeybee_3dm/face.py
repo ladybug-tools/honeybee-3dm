@@ -49,10 +49,9 @@ def import_faces(rhino3dm_file, tolerance=None):
     for layer in rhino3dm_file.Layers:
         if layer.Name not in layer_to_hb_object:
             warnings.warn(
-                f'Only objects on layers {tuple(layer_to_hb_object.keys())} will be imported during the process '
-                'of importing faces.'
+                f'Only objects on layers {tuple(layer_to_hb_object.keys())} will be'
+                'imported during the process of importing faces.'
             )
-            continue
 
     # get all the objects for valid layers
     layers = list(layer_to_hb_object.keys())
@@ -71,7 +70,7 @@ def import_faces(rhino3dm_file, tolerance=None):
                 # TODO: Double check with Chris if this naming works for energy models.
                 # if name is assigned by user use the same name for all the sub faces
                 # otherwise generate a randome name based on the layer name.
-                obj_name = name.replace(' ', '_') or clean_and_id_string(layer)
+                obj_name = name or clean_and_id_string(layer)
                 args = [clean_string(obj_name), face_obj]
                 if hb_face_type:
                     args.append(hb_face_type)

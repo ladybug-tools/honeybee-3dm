@@ -63,5 +63,5 @@ def import_3dm(path, name=None):
     )
     # Assigning grids to Honeybee model
     hb_model.properties.radiance.sensor_grids = hb_grids
-    # Writing Honeybee model to a Radiance folder
+    # Returning a Honeybee model
     return hb_model
