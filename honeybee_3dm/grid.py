@@ -74,7 +74,6 @@ def import_grids(rhino3dm_file, tolerance, grid_size=1, grid_offset=0):
         # If it's a Mesh
         elif isinstance(geo, rhino3dm.Mesh):
             mesh3d = mesh_to_mesh3d(geo)
-            pass
 
         name = obj.Attributes.Name
         obj_name = name or clean_and_id_string('grid')
