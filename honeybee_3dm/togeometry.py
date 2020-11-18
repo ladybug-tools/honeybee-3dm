@@ -224,13 +224,13 @@ def brep2d_to_face3d(brep, tolerance):
             # The first polyline in the list shall always be the polyline for
             # the boundary
             sorted_polylines.reverse()
-
+            # Vertices for the boundary
             boundary_pts = remove_dup_vertices(
                 sorted_polylines[0].vertices, tolerance)
+            # Vertices for the hole / holes
             hole_pts = [remove_dup_vertices(polyline.vertices, tolerance)
                         for polyline in sorted_polylines[1:]]
-
-            # Merging lists of hole_pts
+            # Merging lists of hole vertices
             total_hole_pts = [
                 pts for pts_lst in hole_pts for pts in pts_lst]
             hole_pts_on_boundary = [
