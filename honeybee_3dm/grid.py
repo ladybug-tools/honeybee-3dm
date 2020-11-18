@@ -7,10 +7,9 @@ import rhino3dm
 # Importing Honeybee dependencies
 from honeybee_radiance.sensorgrid import SensorGrid
 from honeybee.typing import clean_and_id_string, clean_string
-from ladybug_geometry.geometry3d import Face3D, Mesh3D
 
 # Importing dependencies from Honeybee-3dm package
-from .togeometry import brep2d_to_face3d, mesh_to_face3d, mesh_to_mesh3d
+from .togeometry import brep2d_to_face3d, mesh_to_mesh3d, check_planarity
 from .helper import filter_objects_by_layer
 
 
@@ -45,22 +44,32 @@ def import_grids(rhino3dm_file, tolerance, grid_size=1, grid_offset=0):
     hb_grids = []
 
     for obj in grid_objs:
-
         geo = obj.Geometry
 
         # If it's a Brep
         if isinstance(geo, rhino3dm.Brep):
-            face3d = brep2d_to_face3d(geo, tolerance)[0]
-            try:
-                mesh3d = face3d.mesh_grid(grid_size, grid_size, grid_offset)
-            except AssertionError as e:
+            
+            # Check if the Brep is planar
+            if check_planarity(geo):
+                face3d = brep2d_to_face3d(geo, tolerance)[0]
+
+                # Check if the Brep has curved edges
+                try:
+                    mesh3d = face3d.mesh_grid(grid_size, grid_size, grid_offset)
+                except AssertionError:
+                    warnings.warn(
+                        'Breps with curved edges are not supported'
+                        ' for grids as of now. Please Mesh them in Rhino and try again.'
+                    )
+                    continue
+                # TODO: Find a way to Implement a method to create grids from a planar
+                # TODO geometry with curved edges
+            else:
                 warnings.warn(
-                    f'{e} Breps with curved edges are not supported'
-                    ' for grids. Mesh them in Rhino and try again.'
+                    'A Non-planar Brep is not handled by Honeybee for grids.' 
+                    ' It is ignored.'
                 )
                 continue
-            # TODO: Find a way to Implement a method to create grids from a planar
-            # TODO geometry with curved edges
 
         # If it's a Mesh
         elif isinstance(geo, rhino3dm.Mesh):
