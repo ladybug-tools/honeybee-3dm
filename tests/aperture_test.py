@@ -1,6 +1,6 @@
 import pytest
 import rhino3dm
-import math
+from math import isclose
 from honeybee_3dm.model import import_3dm
 from ladybug_geometry.geometry3d import Point3D, Vector3D, Face3D
 from honeybee.boundarycondition import Outdoors
@@ -31,8 +31,8 @@ def test_apertures():
     assert len(aperture.vertices) == 4
     assert len(aperture.triangulated_mesh3d.faces) == 2
     assert aperture.normal == Vector3D(1, 0, 0)
-    assert math.isclose(aperture.area, 11.104336, abs_tol=tolerance)
-    assert math.isclose(aperture.perimeter, 13.926511, abs_tol=tolerance)
+    assert isclose(aperture.area, 11.104336, abs_tol=tolerance)
+    assert isclose(aperture.perimeter, 13.926511, abs_tol=tolerance)
     assert isinstance(aperture.boundary_condition, Outdoors)
     assert not aperture.is_operable
     assert not aperture.has_parent
