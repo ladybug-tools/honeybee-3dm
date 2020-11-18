@@ -1,4 +1,9 @@
 from honeybee.model import Model
+from honeybee.room import Room
+from honeybee.shade import Shade
+from honeybee.door import Door
+from honeybee.aperture import Aperture
+from honeybee.facetype import face_types
 from honeybee_3dm.model import import_3dm
 
 
@@ -11,13 +16,19 @@ def test_model():
     assert model.tolerance == 0.01
     assert model.units == "Meters"
     assert len(model.apertures) == 1
+    assert isinstance(model.apertures[0], Aperture)
     assert len(model.doors) == 1
+    assert isinstance(model.doors[0], Door)
     assert len(model.shades) == 1
+    assert isinstance(model.shades[0], Shade)
     assert len(model.faces) == 6
-
-
-def test_assign_name():
-    path = './tests/assets/test.3dm'
-    model = import_3dm(path, name='new_model')
-    assert model.identifier == 'new_model'
-    assert model.display_name == 'new_model'
+    walls = [face for face in model.faces if face.type == face_types.wall]
+    roofs = [face for face in model.faces if face.type == face_types.roof_ceiling]
+    floors = [face for face in model.faces if face.type == face_types.floor]
+    airwalls = [face for face in model.faces if face.type == face_types.air_boundary]
+    assert len(walls) == 4
+    assert len(roofs) == 1
+    assert len(floors) == 1
+    assert len(airwalls) == 0
+    assert model.properties.radiance.sensor_grids
+    
