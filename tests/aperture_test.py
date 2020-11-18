@@ -11,9 +11,8 @@ def test_apertures():
     rhino3dm_file = rhino3dm.File3dm.Read(path)
     tolerance = rhino3dm_file.Settings.ModelAbsoluteTolerance
     model = import_3dm(path)
-    # Check for User provided name
+
     assert 'WindowEast' in [aperture.display_name for aperture in model.apertures]
-    # Check for vertices & normal
     apertures = [
         aperture for aperture in model.apertures if
             aperture.display_name == 'WindowEast']
