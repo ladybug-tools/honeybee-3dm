@@ -79,20 +79,20 @@ def import_faces(rhino3dm_file, tolerance=None):
                 if hb_face_type:
                     args.append(hb_face_type)
                     hb_face = hb_face_module(*args)
-                    hb_face.display_name = obj_name
+                    hb_face.display_name = args[0]
                     hb_faces.append(hb_face)
                 else:
                     if layer == 'shade':
                         hb_shade = hb_face_module(*args)
-                        hb_shade.display_name = obj_name
+                        hb_shade.display_name = args[0]
                         hb_shades.append(hb_shade)
                     elif layer == 'aperture':
                         hb_aperture = hb_face_module(*args)
-                        hb_aperture.display_name = obj_name
+                        hb_aperture.display_name = args[0]
                         hb_apertures.append(hb_aperture)
                     elif layer == 'door':
                         hb_door = hb_face_module(*args)
-                        hb_door.display_name = obj_name
+                        hb_door.display_name = args[0]
                         hb_doors.append(hb_door)
                         
     return hb_faces, hb_shades, hb_apertures, hb_doors
