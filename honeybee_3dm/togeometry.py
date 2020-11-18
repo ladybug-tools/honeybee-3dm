@@ -210,6 +210,7 @@ def brep2d_to_face3d(brep, tolerance):
                     polylines[0].vertices, tolerance)
                 lb_face = Face3D(boundary=boundary_pts)
                 faces.append(lb_face)
+                return faces
 
         # In the list of the Polylines, if there's more than one polyline then
         # the face has hole / holes
