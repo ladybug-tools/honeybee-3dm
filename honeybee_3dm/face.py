@@ -33,9 +33,6 @@ def import_faces(rhino3dm_file, tolerance=None):
 
     """
     hb_faces = []
-    hb_shades = []
-    hb_apertures = []
-    hb_doors = []
 
     # TODO: Add an input to customize layer names
     # A Layer dictionary with layer name : (Honeybee face_type, Class) structure
@@ -67,7 +64,6 @@ def import_faces(rhino3dm_file, tolerance=None):
         # for each rhino geometry gathered, Converting the Rhino3dm geometry
         # into a Ladybug Face3D objects
         for obj in rhino_objects:
-
             lb_faces = to_face3d(obj, tolerance=tolerance)
             name = obj.Attributes.Name
             for face_obj in lb_faces:
@@ -78,21 +74,8 @@ def import_faces(rhino3dm_file, tolerance=None):
                 args = [clean_string(obj_name), face_obj]
                 if hb_face_type:
                     args.append(hb_face_type)
-                    hb_face = hb_face_module(*args)
-                    hb_face.display_name = obj_name
-                    hb_faces.append(hb_face)
-                else:
-                    if layer == 'shade':
-                        hb_shade = hb_face_module(*args)
-                        hb_shade.display_name = obj_name
-                        hb_shades.append(hb_shade)
-                    elif layer == 'aperture':
-                        hb_aperture = hb_face_module(*args)
-                        hb_aperture.display_name = obj_name
-                        hb_apertures.append(hb_aperture)
-                    elif layer == 'door':
-                        hb_door = hb_face_module(*args)
-                        hb_door.display_name = obj_name
-                        hb_doors.append(hb_door)
-                        
-    return hb_faces, hb_shades, hb_apertures, hb_doors
+                hb_face = hb_face_module(*args)
+                hb_face.display_name = obj_name
+                hb_faces.append(hb_face)
+
+    return hb_faces
