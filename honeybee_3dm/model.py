@@ -47,16 +47,26 @@ def import_3dm(path, name=None):
     model_angle_tolerance = rhino3dm_file.Settings.ModelAngleToleranceDegrees
     model_unit = get_unit_system(rhino3dm_file)
 
-    # Honeybee faces
-    hb_faces = import_faces(rhino3dm_file, model_tolerance)
-    # Honeybee_rooms
+    # Honeybee Rooms
     hb_rooms = import_rooms(rhino3dm_file, model_tolerance)
-    # Honeybee grids
+    # Honeybee Faces
+    hb_faces = import_faces(rhino3dm_file, model_tolerance)[0]
+    # Honeybee Shades
+    hb_shades = import_faces(rhino3dm_file, model_tolerance)[1]
+    # Honeybee Apertures
+    hb_apertures = import_faces(rhino3dm_file, model_tolerance)[2]
+    # Honeybee Doors
+    hb_doors = import_faces(rhino3dm_file, model_tolerance)[3]
+    # Honeybee Grids
     hb_grids = import_grids(rhino3dm_file, model_tolerance)
-    # Honeybee model
-    hb_model = Model.from_objects(
+    # Honeybee Model
+    hb_model = Model(
         name,
-        hb_faces + hb_rooms,
+        hb_rooms,
+        hb_faces,
+        hb_shades,
+        hb_apertures,
+        hb_doors,
         units=model_unit,
         tolerance=model_tolerance,
         angle_tolerance=model_angle_tolerance
