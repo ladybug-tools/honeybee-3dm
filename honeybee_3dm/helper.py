@@ -49,7 +49,7 @@ def filter_objects_by_layer_index(file_3dm, layer_index):
 
     Args:
         file_3dm: Input Rhino 3DM object.
-        layer_name: Rhino layer name.
+        layer_index: Index of a Rhino layer.
 
     Returns:
         A list of Rhino3dm objects.
