@@ -62,6 +62,12 @@ def filter_objects_by_layers(file_3dm, layer_names):
     """Get all the objects under a list of layers.
 
     The objects will be separated for each layer.
+    Args:
+        file_3dm: Input Rhino 3DM object.
+        layer_names: A list of layer names in text.
+
+    Returns:
+        A list of lists. A sub-list for each of the layers in layer_names
     """
     # get layer tables
     layer_table = {layer.Index: layer.Name for layer in file_3dm.Layers}
