@@ -188,7 +188,7 @@ def brep_to_mesh_to_face3d(brep):
 
 
 def brep_to_face3d(brep, tolerance):
-    """Get a list of Ladybug Face3D objects from a planar rhino3dm Brep.
+    """Get a Ladybug Face3D object from a planar rhino3dm Brep.
 
     This function is used in translating rhino3dm planar Brep to Ladybug Face3D objects.
 
@@ -197,9 +197,9 @@ def brep_to_face3d(brep, tolerance):
         tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
 
     Returns:
-        A list of Ladybug Face3D objects.
+        A Ladybug Face3D object.
     """
-    faces = []
+    # face3ds = []
     # Getting all vertices of the face
     mesh = brep.Faces[0].GetMesh(rhino3dm.MeshType.Any)
 
@@ -212,11 +212,9 @@ def brep_to_face3d(brep, tolerance):
             break
     # If one of the edges is curved, mesh it
     if curved:
-        faces.append(brep_to_meshed_face3d(brep))
-        return faces
+        return brep_to_meshed_face3d(brep)
     elif len(mesh.Vertices) == 4 or len(mesh.Vertices) == 3:
-        faces.extend(mesh_to_face3d(mesh))
-        return faces
+        return mesh_to_face3d(mesh)[0]
     else:
         # Create Ladybug lines from start and end points of edges
         for i in range(len(brep.Edges)):
@@ -235,9 +233,7 @@ def brep_to_face3d(brep, tolerance):
             # found in the tuple of vertices. This is fixed by using this 
             # remove_dup_vertices method
             boundary_pts = remove_dup_vertices(polylines[0].vertices, tolerance)
-            lb_face = Face3D(boundary=boundary_pts)
-            faces.append(lb_face)
-            return faces
+            return Face3D(boundary=boundary_pts)
 
         # In the list of the Polylines, if there's more than one polyline then
         # the face has hole / holes
@@ -273,13 +269,9 @@ def brep_to_face3d(brep, tolerance):
                     'A Brep has holes that touch the boundary of the brep.'
                     ' These holes are ignored by Honeybee.'
                     )
-                faces.append(brep_to_meshed_face3d(brep))
-                return faces
+                return brep_to_meshed_face3d(brep)
             else:
-                lb_face = Face3D(boundary=boundary_pts, holes=hole_pts)
-                faces.append(lb_face)
-
-    return faces
+                return Face3D(boundary=boundary_pts, holes=hole_pts)
 
 
 def solid_to_face3d(brep):
@@ -345,7 +337,7 @@ def to_face3d(obj, *, tolerance, raise_exception=True):
             lb_face = solid_to_face3d(rh_geo)
         else:
             if check_planarity(rh_geo):
-                lb_face = brep_to_face3d(rh_geo, tolerance)
+                lb_face = [brep_to_face3d(rh_geo, tolerance)]
             else:
                 lb_face = brep_to_mesh_to_face3d(rh_geo)
 
