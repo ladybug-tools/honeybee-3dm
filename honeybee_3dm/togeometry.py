@@ -1,4 +1,8 @@
 """Functions to create Ladybug objects from Rhino3dm objects."""
+# In this module, you will observe that instead of using the pythonic way of
+# iterating through a list, iterators(studs such as "i" and "j") are used. 
+# This is deliberate and it is done to bypass the wrong number of 
+# items extracted from a list when accesses throug the pythonic way.
 
 # The Rhino3dm library provides the ability to access content of a Rhino3dm
 # file from outside of Rhino
