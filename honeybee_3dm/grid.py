@@ -49,8 +49,8 @@ def import_grids(rhino3dm_file, tolerance, grid_size=1, grid_offset=0):
         if isinstance(geo, rhino3dm.Brep):
             # Check if the Brep is planar
             if check_planarity(geo):
-                face3d = brep_to_face3d(geo, tolerance)[0]
-                mesh3d = face3d.mesh_grid(grid_size, grid_size, grid_offset)
+                mesh3d = brep_to_face3d(geo, tolerance).mesh_grid(grid_size,
+                    grid_size, grid_offset)
             else:
                 warnings.warn(
                     'A Non-planar Brep is not handled by Honeybee for grids.' 
