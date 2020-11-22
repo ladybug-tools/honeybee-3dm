@@ -9,7 +9,7 @@ from honeybee_radiance.sensorgrid import SensorGrid
 from honeybee.typing import clean_and_id_string, clean_string
 
 # Importing dependencies from Honeybee-3dm package
-from .togeometry import brep2d_to_face3d, mesh_to_mesh3d, check_planarity
+from .togeometry import brep_to_face3d, mesh_to_mesh3d, check_planarity
 from .helper import filter_objects_by_layer
 
 
@@ -45,32 +45,18 @@ def import_grids(rhino3dm_file, tolerance, grid_size=1, grid_offset=0):
 
     for obj in grid_objs:
         geo = obj.Geometry
-
         # If it's a Brep
         if isinstance(geo, rhino3dm.Brep):
-            
             # Check if the Brep is planar
             if check_planarity(geo):
-                face3d = brep2d_to_face3d(geo, tolerance)[0]
-
-                # Check if the Brep has curved edges
-                try:
-                    mesh3d = face3d.mesh_grid(grid_size, grid_size, grid_offset)
-                except AssertionError:
-                    warnings.warn(
-                        'Breps with curved edges are not supported'
-                        ' for grids as of now. Please Mesh them in Rhino and try again.'
-                    )
-                    continue
-                # TODO: Find a way to Implement a method to create grids from a planar
-                # TODO geometry with curved edges
+                face3d = brep_to_face3d(geo, tolerance)[0]
+                mesh3d = face3d.mesh_grid(grid_size, grid_size, grid_offset)
             else:
                 warnings.warn(
                     'A Non-planar Brep is not handled by Honeybee for grids.' 
                     ' It is ignored.'
                 )
                 continue
-
         # If it's a Mesh
         elif isinstance(geo, rhino3dm.Mesh):
             mesh3d = mesh_to_mesh3d(geo)
