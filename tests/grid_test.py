@@ -14,7 +14,7 @@ def test_grids():
     assert isinstance(grid, SensorGrid)
     grid_names = [grid.display_name for grid in model.properties.radiance.sensor_grids]
     assert 'test-grid' in grid_names
-    assert 'circular-grid' not in grid_names
+    assert 'circular-grid' in grid_names
     assert grid.identifier == 'test-grid'
     assert grid.display_name == 'test-grid'
     assert len(grid.sensors) == 50
