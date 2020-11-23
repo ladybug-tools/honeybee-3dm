@@ -40,21 +40,14 @@ def import_faces(rhino3dm_file, tolerance=None):
     # TODO: Add an input to customize layer names
     # A Layer dictionary with layer name : (Honeybee face_type, Class) structure
     layer_to_hb_object = {
-        'roof': (face_types.roof_ceiling, Face),
-        'wall': (face_types.wall, Face),
-        'floor': (face_types.floor, Face),
-        'airwall': (face_types.air_boundary, Face),
-        'shade': (None, Shade),
-        'aperture': (None, Aperture),
-        'door': (None, Door)
+        'HB_roof': (face_types.roof_ceiling, Face),
+        'HB_wall': (face_types.wall, Face),
+        'HB_floor': (face_types.floor, Face),
+        'HB_airwall': (face_types.air_boundary, Face),
+        'HB_shade': (None, Shade),
+        'HB_aperture': (None, Aperture),
+        'HB_door': (None, Door)
     }
-
-    for layer in rhino3dm_file.Layers:
-        if layer.Name not in layer_to_hb_object:
-            warnings.warn(
-                f'Only objects on layers {tuple(layer_to_hb_object.keys())} will be'
-                'imported during the process of importing faces.'
-            )
 
     # get all the objects for valid layers
     layers = list(layer_to_hb_object.keys())

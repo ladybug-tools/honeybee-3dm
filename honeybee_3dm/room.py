@@ -32,7 +32,7 @@ def import_rooms(rhino3dm_file, tolerance=None):
     """
     # rooms from rhino file
     try:
-        volumes = filter_objects_by_layer(rhino3dm_file, 'room')
+        volumes = filter_objects_by_layer(rhino3dm_file, 'HB_room')
     except ValueError:
         # no layer named room
         return []

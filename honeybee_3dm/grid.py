@@ -34,9 +34,11 @@ def import_grids(rhino3dm_file, tolerance, grid_size=1, grid_offset=0):
 
     # Objects from rhino file
     try:
-        grid_objs = filter_objects_by_layer(rhino3dm_file, 'grid')
+        grid_objs = filter_objects_by_layer(rhino3dm_file, 'HB_grid')
         warnings.warn(
-            'Only objects on layer "grid" will be used to create grids.')
+            'Only objects on Honeybee layer "grid" will be used to create grids.'
+            ' Grids will not be imported if the layer is "Off" in rhino.'
+            )
     except ValueError:
         # no layer named grid
         return []
