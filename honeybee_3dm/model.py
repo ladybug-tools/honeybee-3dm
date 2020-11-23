@@ -1,6 +1,6 @@
 """Creating Honeybee model objects from rhino3dm surfaces and closed volumes"""
 import os
-
+import warnings
 # The Rhino3dm library provides the ability to access content of a Rhino3dm
 # file from outside of Rhino
 import rhino3dm
@@ -42,7 +42,19 @@ def import_3dm(path, name=None):
 
     if not rhino3dm_file:
         raise ValueError(f'Input Rhino file: {path} returns None object.')
-
+    
+    hb_layers = ['HB_wall', 'HB_roof', 'HB_floor', 'HB_aperture', 'HB_shade', 'HB_door', 'HB_grid', 'HB_view']
+    
+    warnings.warn(
+        f'*****The rhino file MUST be saved in the SHADED mode for Honeybee to work.*****'
+    )
+    warnings.warn(
+        f'Honeybee layers are {hb_layers}. Only objects on visible'
+        ' Honeybee layers in rhino will be imported.'
+        ' To import objects on other layers, you can either rename' 
+        ' them to one of the appropriate Honeybee layers or'
+        ' make it a child of an appropriate Honeybee layer.'
+    )
     model_tolerance = rhino3dm_file.Settings.ModelAbsoluteTolerance
     model_angle_tolerance = rhino3dm_file.Settings.ModelAngleToleranceDegrees
     model_unit = get_unit_system(rhino3dm_file)
