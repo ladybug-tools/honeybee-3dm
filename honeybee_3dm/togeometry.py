@@ -30,8 +30,6 @@ def to_point3d(point):
     """
     return Point3D(point.X, point.Y, point.Z)
 
-def to_vector3d(vector):
-    """Create a Ladybug Vector3D from a rhino3dm Vector3d.
 
 def to_vector3d(vector):
     """Create a Ladybug Vector3D from a rhino3dm Vector3d.
@@ -44,8 +42,6 @@ def to_vector3d(vector):
     """
     return Vector3D(vector.X, vector.Y, vector.Z)
 
-    Args:
-        vector: A rhino3dm vector3d.
 
 def remove_dup_vertices(vertices, tolerance):
     """Remove vertices from an array of Point3Ds that are equal within the tolerance.
