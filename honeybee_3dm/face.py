@@ -1,8 +1,6 @@
 """Create Honeybee face objects(Face, Shade, Aperture, Door) from planar geometries
 in a Rhino 3DM file."""
 
-import warnings
-
 # Importing core Honeybee & Ladybug Geometry dependencies
 from honeybee.face import Face
 from honeybee.shade import Shade
@@ -13,7 +11,7 @@ from honeybee.typing import clean_and_id_string, clean_string
 
 # Importing dependencies from Honeybee-3dm package
 from .togeometry import to_face3d
-from .helper import filter_objects_by_layers
+from .helper import filter_objects_by_layers, HB_layers
 
 
 def import_faces(rhino3dm_file, tolerance=None):
@@ -40,13 +38,13 @@ def import_faces(rhino3dm_file, tolerance=None):
     # TODO: Add an input to customize layer names
     # A Layer dictionary with layer name : (Honeybee face_type, Class) structure
     layer_to_hb_object = {
-        'HB_roof': (face_types.roof_ceiling, Face),
-        'HB_wall': (face_types.wall, Face),
-        'HB_floor': (face_types.floor, Face),
-        'HB_airwall': (face_types.air_boundary, Face),
-        'HB_shade': (None, Shade),
-        'HB_aperture': (None, Aperture),
-        'HB_door': (None, Door)
+        HB_layers.roof.value: (face_types.roof_ceiling, Face),
+        HB_layers.wall.value: (face_types.wall, Face),
+        HB_layers.floor.value: (face_types.floor, Face),
+        HB_layers.airwall.value: (face_types.air_boundary, Face),
+        HB_layers.shade.value: (None, Shade),
+        HB_layers.aperture.value: (None, Aperture),
+        HB_layers.door.value: (None, Door)
     }
 
     # get all the objects for valid layers
@@ -75,15 +73,15 @@ def import_faces(rhino3dm_file, tolerance=None):
                     hb_face.display_name = args[0]
                     hb_faces.append(hb_face)
                 else:
-                    if layer == 'HB_shade':
+                    if layer == HB_layers.shade.value:
                         hb_shade = hb_face_module(*args)
                         hb_shade.display_name = args[0]
                         hb_shades.append(hb_shade)
-                    elif layer == 'HB_aperture':
+                    elif layer == HB_layers.aperture.value:
                         hb_aperture = hb_face_module(*args)
                         hb_aperture.display_name = args[0]
                         hb_apertures.append(hb_aperture)
-                    elif layer == 'HB_door':
+                    elif layer == HB_layers.door.value:
                         hb_door = hb_face_module(*args)
                         hb_door.display_name = args[0]
                         hb_doors.append(hb_door)

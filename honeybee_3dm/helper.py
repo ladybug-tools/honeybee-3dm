@@ -1,5 +1,29 @@
 """A collection of helper functions."""
 
+from enum import Enum, unique
+
+
+@unique
+class HB_layers(Enum):
+    """Official Honeybee layers.
+    
+    This class hosts all the official Honeybee layers in 
+    layer key : layer name structure
+
+    Args:
+        Enum: An Enum object.
+    """
+    grid = 'HB_grid'
+    room = 'HB_room'
+    wall = 'HB_wall'
+    roof = 'HB_roof'
+    floor = 'HB_floor'
+    airwall = 'HB_airwall'
+    shade = 'HB_shade'
+    aperture = 'HB_aperture'
+    door = 'HB_door'
+    view = 'HB_view'
+    
 
 def get_unit_system(file_3dm):
     """Get units from a 3dm file object.

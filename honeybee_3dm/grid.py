@@ -10,7 +10,7 @@ from honeybee.typing import clean_and_id_string, clean_string
 
 # Importing dependencies from Honeybee-3dm package
 from .togeometry import brep_to_face3d, mesh_to_mesh3d, check_planarity
-from .helper import filter_objects_by_layer
+from .helper import filter_objects_by_layer, HB_layers
 
 
 # TODO: expose an option to change the target layer name
@@ -34,7 +34,7 @@ def import_grids(rhino3dm_file, tolerance, grid_size=1, grid_offset=0):
 
     # Objects from rhino file
     try:
-        grid_objs = filter_objects_by_layer(rhino3dm_file, 'HB_grid')
+        grid_objs = filter_objects_by_layer(rhino3dm_file, HB_layers.grid.value)
         warnings.warn(
             'Only objects on Honeybee layer "grid" will be used to create grids.'
             ' Grids will not be imported if the layer is "Off" in rhino.'

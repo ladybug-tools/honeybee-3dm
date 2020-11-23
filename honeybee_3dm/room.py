@@ -13,7 +13,7 @@ from ladybug_geometry.geometry3d.polyface import Polyface3D
 
 # Importing dependencies from Honeybee-3dm package
 from .togeometry import to_face3d
-from .helper import filter_objects_by_layer
+from .helper import filter_objects_by_layer, HB_layers
 
 
 def import_rooms(rhino3dm_file, tolerance=None):
@@ -32,7 +32,7 @@ def import_rooms(rhino3dm_file, tolerance=None):
     """
     # rooms from rhino file
     try:
-        volumes = filter_objects_by_layer(rhino3dm_file, 'HB_room')
+        volumes = filter_objects_by_layer(rhino3dm_file, HB_layers.room.value)
     except ValueError:
         # no layer named room
         return []
@@ -62,7 +62,7 @@ def import_rooms(rhino3dm_file, tolerance=None):
         # Create Ladybug Polyface3D object from Ladybug Face3D objects
         lb_polyface = Polyface3D.from_faces(lb_faces, tolerance)
         # Assign name
-        name = volume.Attributes.Name or clean_and_id_string('Room')
+        name = volume.Attributes.Name or clean_and_id_string('room')
         # Create Honeybee Room object from Ladybug Polyface3D object
         hb_room = Room.from_polyface3d(name, lb_polyface)
         hb_rooms.append(hb_room)
