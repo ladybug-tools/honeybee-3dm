@@ -2,12 +2,11 @@
 
 from enum import Enum, unique
 
-
 @unique
 class HB_layers(Enum):
-    """Official Honeybee layers.
+    """Default Honeybee layers.
     
-    This class hosts all the official Honeybee layers in 
+    This class hosts all the default Honeybee layers in 
     layer key : layer name structure
 
     Args:
@@ -51,67 +50,92 @@ def get_unit_system(file_3dm):
     return unit
 
 
-def parent_child_layers(file_obj, layer_name):
+def parent_child_layers(file_obj, layer_name, visibility=True):
     """Get a list of parent and child layers for a layer.
 
     Args:
         file_obj: A rhino3dm file object
         layer_name: Text string of a layer name.
+        visibility: Bool. If set to False then the objects on an "off"
+            layer in Rhino3dm will also be imported. Defaults to True.
 
     Returns:
         A list of parent and child layer names.
     """
     layer_names = []
     for layer in file_obj.Layers:
-        if layer.Visible:
+        if visibility:
+            if layer.Visible:
+                parent_children = layer.FullPath.split('::')
+                if layer_name in parent_children:
+                    layer_names += parent_children
+        else:
             parent_children = layer.FullPath.split('::')
             if layer_name in parent_children:
                 layer_names += parent_children
     
     # remove duplicate layer names
-    layer_names = list(dict.fromkeys(layer_names))
+    layer_names = list(set(layer_names))
     return layer_names
 
 
-def parent_child_index(file_obj, layer_lst):
+def parent_child_index(file_obj, layers, visibility=True):
     """Get a dictionary with child layer : Parent Honeybee Layer structure.
 
     Args:
         file_obj: A rhino3dm file object
-        layer_lst: A list of Honeybee layer names
+        layers: A list of Honeybee layer names
+        visibility: Bool. If set to False then the objects on an "off"
+            layer in Rhino3dm will also be imported. Defaults to True.
 
     Returns:
         A a dictionary with child layer : Parent Honeybee Layer structure.
     """
-    name_index = {layer.Name: layer.Index for layer in file_obj.Layers if layer.Visible}
-
-    parent_child_dict = {}
-    for layer_name in layer_lst:
-        for layer in file_obj.Layers:
-            if layer.Visible:
+    if visibility:
+        name_index = {layer.Name: layer.Index for layer in file_obj.Layers if layer.Visible}
+        parent_child_dict = {}
+        for layer_name in layers:
+            for layer in file_obj.Layers:
+                if layer.Visible:
+                    parent_children = layer.FullPath.split('::')
+                    if layer_name in parent_children:
+                        parent_child_dict[name_index[
+                                parent_children[-1]]] = name_index[parent_children[0]]
+    else:
+        name_index = {layer.Name: layer.Index for layer in file_obj.Layers}
+        parent_child_dict = {}
+        for layer_name in layers:
+            for layer in file_obj.Layers:
                 parent_children = layer.FullPath.split('::')
                 if layer_name in parent_children:
-                    parent_child_dict[name_index[parent_children[-1]]] = name_index[parent_children[0]]
+                    parent_child_dict[name_index[
+                            parent_children[-1]]] = name_index[parent_children[0]]
     
     return parent_child_dict
 
 
-def filter_objects_by_layer(file_3dm, layer_name):
+def filter_objects_by_layer(file_3dm, layer_name, visibility=True):
     """Get all the objects in a layer.
 
     Args:
         file_3dm: Input Rhino3DM object.
         layer_name: Rhino layer name.
+        visibility: Bool. If set to False then the objects on an "off"
+            layer in Rhino3dm will also be imported. Defaults to True.
 
     Returns:
         A list of Rhino3dm objects.
     """
     # Get a list of parent and child layers for the layer_name
-    parent_child = parent_child_layers(file_3dm, layer_name)
+    parent_child = parent_child_layers(file_3dm, layer_name, visibility)
 
     # Get Indexes for all layers
-    layer_index = [layer.Index for layer in file_3dm.Layers if layer.Name in parent_child
-        and layer.Visible]
+    if visibility:
+        layer_index = [layer.Index for layer in file_3dm.Layers
+            if layer.Name in parent_child and layer.Visible]
+    else:
+        layer_index = [layer.Index for layer in file_3dm.Layers
+            if layer.Name in parent_child]
     if not layer_index:
         raise ValueError(f'Find no layer named "{layer_name}"')
 
@@ -134,20 +158,22 @@ def filter_objects_by_layer_index(file_3dm, layer_index):
         if obj.Attributes.LayerIndex == index]
 
 
-def filter_objects_by_layers(file_3dm, layer_names):
+def filter_objects_by_layers(file_3dm, layer_names, visibility=True):
     """Get all the objects under a list of layers.
 
     The objects will be separated for each layer.
     Args:
         file_3dm: Input Rhino 3DM object.
         layer_names: A list of layer names in text.
+        visibility: Bool. If set to False then the objects on an "off"
+            layer in Rhino3dm will also be imported. Defaults to True.
 
     Returns:
         A list of lists. A sub-list for each of the layers in layer_names
     """
     # A dictionary with child layer index : Parent layer index structure
     # The parent layer is one of the Honeybee layers
-    parent_child_dict = parent_child_index(file_3dm, layer_names)
+    parent_child_dict = parent_child_index(file_3dm, layer_names, visibility)
 
     # get layer tables if the layer is in official Honeybee layers and is visible
     layer_table = {layer.Index: layer.Name for layer in file_3dm.Layers if layer.Visible}

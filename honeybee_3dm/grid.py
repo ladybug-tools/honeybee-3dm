@@ -17,7 +17,8 @@ from .helper import filter_objects_by_layer, HB_layers
 # TODO: Grid size and offset will have to provided using the config file
 
 
-def import_grids(rhino3dm_file, tolerance, grid_size=1, grid_offset=0):
+def import_grids(rhino3dm_file, tolerance, grid_size=1, grid_offset=0, *,
+    visibility=True):
     """Creates Honeybee grids from a rhino3dm file.
 
     This function assumes all the grid objects are under a layer named ``grid``.
@@ -27,6 +28,8 @@ def import_grids(rhino3dm_file, tolerance, grid_size=1, grid_offset=0):
         tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
         grid_size: Grid size. Defaults to 1.
         grid_offset: Grid offset from the grid geometry. Defaults to 0.
+        visibility: Bool. If set to False then the objects on an "off"
+            layer in Rhino3dm will also be imported. Defaults to True.
 
     Returns:
         A list of Honeybee grids.
@@ -34,7 +37,8 @@ def import_grids(rhino3dm_file, tolerance, grid_size=1, grid_offset=0):
 
     # Objects from rhino file
     try:
-        grid_objs = filter_objects_by_layer(rhino3dm_file, HB_layers.grid.value)
+        grid_objs = filter_objects_by_layer(rhino3dm_file, HB_layers.grid.value,
+            visibility=visibility)
         warnings.warn(
             'Only objects on Honeybee layer "grid" will be used to create grids.'
             ' Grids will not be imported if the layer is "Off" in rhino.'
