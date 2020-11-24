@@ -92,7 +92,8 @@ def parent_child_index(file_obj, layers, visibility=True):
         A a dictionary with child layer : Parent Honeybee Layer structure.
     """
     if visibility:
-        name_index = {layer.Name: layer.Index for layer in file_obj.Layers if layer.Visible}
+        name_index = {layer.Name: layer.Index for layer in file_obj.Layers if
+            layer.Visible}
         parent_child_dict = {}
         for layer_name in layers:
             for layer in file_obj.Layers:
