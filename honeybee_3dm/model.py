@@ -18,7 +18,7 @@ from .helper import get_unit_system
 
 # TODO: Add an argument to let the user choose the layers and assign energy and radiance
 # properties if desired.
-def import_3dm(path, name=None):
+def import_3dm(path, name=None,*, visibility=True):
     """Import a rhino3dm file as a Honeybee model.
 
     This function outputs a Honeybee model from the faces, shades, apertures, and doors
@@ -29,6 +29,8 @@ def import_3dm(path, name=None):
         path: A text string for the path to the rhino3dm file.
         name: A text string that will be used as the name of the Honeybee
             model. Default will be the same as Rhino file name.
+        visibility: Bool. If set to False then the objects on an "off"
+            layer in Rhino3dm will also be imported. Defaults to True.
 
     Returns:
         A Honeybee model.
@@ -43,14 +45,14 @@ def import_3dm(path, name=None):
     if not rhino3dm_file:
         raise ValueError(f'Input Rhino file: {path} returns None object.')
     
-    hb_layers = ['HB_wall', 'HB_roof', 'HB_floor', 'HB_aperture', 'HB_shade', 'HB_door', 'HB_grid', 'HB_view']
+    hb_layers = ['HB_wall', 'HB_roof', 'HB_floor', 'HB_aperture', 'HB_shade', 'HB_door',
+        'HB_grid', 'HB_view']
     
     warnings.warn(
         f'*****The rhino file MUST be saved in the SHADED mode for Honeybee to work.*****'
     )
     warnings.warn(
-        f'Honeybee layers are {hb_layers}. Only objects on visible'
-        ' Honeybee layers in rhino will be imported.'
+        f'Honeybee layers are {hb_layers}.'
         ' To import objects on other layers, you can either rename' 
         ' them to one of the appropriate Honeybee layers or'
         ' make it a child of an appropriate Honeybee layer.'
@@ -60,17 +62,17 @@ def import_3dm(path, name=None):
     model_unit = get_unit_system(rhino3dm_file)
 
     # Honeybee Rooms
-    hb_rooms = import_rooms(rhino3dm_file, model_tolerance)
+    hb_rooms = import_rooms(rhino3dm_file, model_tolerance, visibility)
     # Honeybee Faces
-    hb_faces = import_faces(rhino3dm_file, model_tolerance)[0]
+    hb_faces = import_faces(rhino3dm_file, model_tolerance, visibility)[0]
     # Honeybee Shades
-    hb_shades = import_faces(rhino3dm_file, model_tolerance)[1]
+    hb_shades = import_faces(rhino3dm_file, model_tolerance, visibility)[1]
     # Honeybee Apertures
-    hb_apertures = import_faces(rhino3dm_file, model_tolerance)[2]
+    hb_apertures = import_faces(rhino3dm_file, model_tolerance, visibility)[2]
     # Honeybee Doors
-    hb_doors = import_faces(rhino3dm_file, model_tolerance)[3]
+    hb_doors = import_faces(rhino3dm_file, model_tolerance, visibility)[3]
     # Honeybee Grids
-    hb_grids = import_grids(rhino3dm_file, model_tolerance)
+    hb_grids = import_grids(rhino3dm_file, model_tolerance, visibility=visibility)
     # Honeybee Model
     hb_model = Model(
         name,

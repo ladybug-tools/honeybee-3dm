@@ -16,7 +16,7 @@ from .togeometry import to_face3d
 from .helper import filter_objects_by_layer, HB_layers
 
 
-def import_rooms(rhino3dm_file, tolerance=None):
+def import_rooms(rhino3dm_file, tolerance=None, visibility=True):
     """Import Honeybee rooms from a rhino3dm file.
 
     This function looks up a rhino3dm file and converts the objects
@@ -26,13 +26,16 @@ def import_rooms(rhino3dm_file, tolerance=None):
         rhino3dm_file: A Rhino3DM file object.
         tolerance: A number for model tolerance. By default the tolerance is set to
             the ModelAbsoluteTolerance value in input 3DM file.
+        visibility: Bool. If set to False then the objects on an "off"
+            layer in Rhino3dm will also be imported. Defaults to True.
 
     Returns:
         A list of Honeybee rooms.
     """
     # rooms from rhino file
     try:
-        volumes = filter_objects_by_layer(rhino3dm_file, HB_layers.room.value)
+        volumes = filter_objects_by_layer(rhino3dm_file, HB_layers.room.value,
+            visibility=visibility)
     except ValueError:
         # no layer named room
         return []

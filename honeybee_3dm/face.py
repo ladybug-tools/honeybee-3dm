@@ -14,7 +14,7 @@ from .togeometry import to_face3d
 from .helper import filter_objects_by_layers, HB_layers
 
 
-def import_faces(rhino3dm_file, tolerance=None):
+def import_faces(rhino3dm_file, tolerance=None, visibility=True):
     """Import Rhino planar geometry as Honeybee faces.
 
     This function looks up a rhino3dm file, converts the objects
@@ -25,6 +25,8 @@ def import_faces(rhino3dm_file, tolerance=None):
         rhino3dm_file: A Rhino3DM file object.
         tolerance: A number for model tolerance. By default the tolerance is set to
             the ModelAbsoluteTolerance value in input 3DM file.
+        visibility: Bool. If set to False then the objects on an "off"
+            layer in Rhino3dm will also be imported. Defaults to True.
 
     Returns:
         A list of Honeybee faces.
@@ -49,7 +51,8 @@ def import_faces(rhino3dm_file, tolerance=None):
 
     # get all the objects for valid layers
     layers = list(layer_to_hb_object.keys())
-    objects_by_layer = filter_objects_by_layers(rhino3dm_file, layers)
+    objects_by_layer = filter_objects_by_layers(rhino3dm_file, layers,
+        visibility=visibility)
 
     for layer, rhino_objects in zip(layers, objects_by_layer):
 
