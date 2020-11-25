@@ -314,7 +314,7 @@ def extrusion_to_face3d(extrusion):
     return faces
 
 
-def to_face3d(obj, *, tolerance, raise_exception=True):
+def to_face3d(obj, *, tolerance, raise_exception=False):
     """Convert Rhino objects to Ladybug Face3D objects.
 
     Supported object types are Brep, Extrusion and Meshes. If raise_exception is set to
@@ -325,7 +325,7 @@ def to_face3d(obj, *, tolerance, raise_exception=True):
         tolerance: A number for tolerance value. Tolerance will only be used for
             converting mesh geometries.
         raise_exception: A Boolean to raise an exception for unsupported object types.
-            default is True.
+            default is False.
 
     Returns:
         A list of Ladybug Face3D.
@@ -354,7 +354,9 @@ def to_face3d(obj, *, tolerance, raise_exception=True):
     else:
         if raise_exception:
             raise ValueError(f'Unsupported object type: {rh_geo.ObjectType}')
-        warnings.warn(f'Unsupported object type: {rh_geo.ObjectType}')
+        warnings.warn(
+            f'Unsupported object type: {rh_geo.ObjectType}'
+            )
         lb_face = []
 
     return lb_face
