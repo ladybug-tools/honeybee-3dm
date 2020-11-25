@@ -30,8 +30,6 @@ def to_point3d(point):
     """
     return Point3D(point.X, point.Y, point.Z)
 
-def to_vector3d(vector):
-    """Create a Ladybug Vector3D from a rhino3dm Vector3d.
 
 def to_vector3d(vector):
     """Create a Ladybug Vector3D from a rhino3dm Vector3d.
@@ -44,8 +42,6 @@ def to_vector3d(vector):
     """
     return Vector3D(vector.X, vector.Y, vector.Z)
 
-    Args:
-        vector: A rhino3dm vector3d.
 
 def remove_dup_vertices(vertices, tolerance):
     """Remove vertices from an array of Point3Ds that are equal within the tolerance.
@@ -134,8 +130,11 @@ def mesh_to_face3d(mesh):
     """
 
     faces = []
-    pts = [to_point3d(mesh.Vertices[i]) for i in range(len(mesh.Vertices))]
-
+    try:
+        pts = [to_point3d(mesh.Vertices[i]) for i in range(len(mesh.Vertices))]
+    except AttributeError:
+        raise AttributeError
+ 
     for j in range(len(mesh.Faces)):
         face = mesh.Faces[j]
         if len(face) == 4:
@@ -206,7 +205,8 @@ def brep_to_face3d(brep, tolerance):
     # face3ds = []
     # Getting all vertices of the face
     mesh = brep.Faces[0].GetMesh(rhino3dm.MeshType.Any)
-
+    if not mesh:
+        raise AttributeError
     # * Check 01 - If any of the edge is an arc
     lines = []
     curved = False
@@ -355,7 +355,7 @@ def to_face3d(obj, *, tolerance, raise_exception=False):
         if raise_exception:
             raise ValueError(f'Unsupported object type: {rh_geo.ObjectType}')
         warnings.warn(
-            f'Unsupported object type: {rh_geo.ObjectType}'
+            f'Unsupported object type: {rh_geo.ObjectType} is ignored'
             )
         lb_face = []
 
