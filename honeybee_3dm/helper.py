@@ -1,12 +1,12 @@
 """A collection of helper functions."""
-
+import json
 from enum import Enum, unique
 
 @unique
 class HB_layers(Enum):
     """Default Honeybee layers.
     
-    This class hosts all the default Honeybee layers in 
+    This class hosts all the default Honeybee layers in
     layer key : layer name structure
 
     Args:
@@ -22,7 +22,21 @@ class HB_layers(Enum):
     aperture = 'HB_aperture'
     door = 'HB_door'
     view = 'HB_view'
-    
+
+
+def read_json(path):
+    """Get a dictionary from a config.json file.
+
+    Args:
+        path: A text string for the path to the config.json.
+
+    Returns:
+        A dictionary for the config.json
+    """
+    with open(path) as fh:
+        config = json.load(fh)
+        return config
+
 
 def get_unit_system(file_3dm):
     """Get units from a 3dm file object.
@@ -50,11 +64,56 @@ def get_unit_system(file_3dm):
     return unit
 
 
-def parent_child_layers(file_obj, layer_name, visibility=True):
+def check_layer_in_hb_layers(config, layer_name):
+    """Check whether a layer is tied to one of the HB_layers in the config file.
+
+    Args:
+        config: A dictionary. Config file in the form of a dictionary.
+        layer_name: A text string. Layer name for the layer to run this check on.
+
+    Returns:
+        A bool. True if the layer is found tied to one of the HB_layers in the config
+            file.
+    """
+    if layer_name in config['HB_layers'].values() \
+        and layer_name != config['HB_layers']['HB_grid'] \
+        and layer_name != config['HB_layers']['HB_room'] \
+        and layer_name != config['HB_layers']['HB_view']:
+        return True
+    else:
+        return False
+
+
+def check_layer_not_in_hb_layers(config, layer_name, child_parent):
+    """Check whether a layer pair is tied to one of the HB_layers in the config file.
+
+    Check whether a layer and its parent are tied to one of the HB layers in the config
+    file.
+
+    Args:
+        config: A dictionary. Config file in the form of a dictionary.
+        layer_name: A text string. Layer name for the layer to run this check on.
+        child_parent: A dictionary. A dictionary with child layer to parent layer 
+            structure
+
+    Returns:
+        A bool. True if the layer and its parent layer are not found tied
+            to one of the HB_layers in the config file.
+    """
+    if layer_name != config['HB_layers']['HB_grid'] \
+        and layer_name != config['HB_layers']['HB_room'] \
+        and layer_name != config['HB_layers']['HB_view'] \
+        and child_parent[layer_name] != config['HB_layers']['HB_grid']:
+        return True
+    else:
+        return False
+
+
+def parent_child_layers(file_3dm, layer_name, visibility=True):
     """Get a list of parent and child layers for a layer.
 
     Args:
-        file_obj: A rhino3dm file object
+        file_3dm: A rhino3dm file object
         layer_name: Text string of a layer name.
         visibility: Bool. If set to False then the objects on an "off"
             layer in Rhino3dm will also be imported. Defaults to True.
@@ -63,7 +122,7 @@ def parent_child_layers(file_obj, layer_name, visibility=True):
         A list of parent and child layer names.
     """
     layer_names = []
-    for layer in file_obj.Layers:
+    for layer in file_3dm.Layers:
         if visibility:
             if layer.Visible:
                 parent_children = layer.FullPath.split('::')
@@ -79,44 +138,51 @@ def parent_child_layers(file_obj, layer_name, visibility=True):
     return layer_names
 
 
-def parent_child_index(file_obj, layers, visibility=True):
-    """Get a dictionary with child layer : Parent Honeybee Layer structure.
+def child_parent_dict(file_3dm):
+    """Get a dictionary with child layer and parent layer structure.
 
     Args:
-        file_obj: A rhino3dm file object
-        layers: A list of Honeybee layer names
+        file_3dm: A rhino3dm file object
+
+    Returns:
+        A a dictionary with child layer and parent layer structure.
+    """
+
+    # name_index = {layer.Name: layer.Index for layer in file_3dm.Layers}
+    child_parent_dict = {}
+
+    for layer in file_3dm.Layers:
+        parent_children = layer.FullPath.split('::')
+        child_parent_dict[parent_children[-1]] = parent_children[0]
+
+    return child_parent_dict
+
+
+def objects_on_layer(file_3dm, layer, visibility=True):
+    """Get a list of objects on child layers.
+
+    Args:
+        file_3dm: Input Rhino3DM object.
+        layer: A Rhino3dm layer object.
         visibility: Bool. If set to False then the objects on an "off"
             layer in Rhino3dm will also be imported. Defaults to True.
 
     Returns:
-        A a dictionary with child layer : Parent Honeybee Layer structure.
+        A list of Rhino3dm objects on a layer.
     """
     if visibility:
-        name_index = {layer.Name: layer.Index for layer in file_obj.Layers if
-            layer.Visible}
-        parent_child_dict = {}
-        for layer_name in layers:
-            for layer in file_obj.Layers:
-                if layer.Visible:
-                    parent_children = layer.FullPath.split('::')
-                    if layer_name in parent_children:
-                        parent_child_dict[name_index[
-                                parent_children[-1]]] = name_index[parent_children[0]]
+        if layer.Visible:
+            layer_index = [layer.Index]
+            return filter_objects_by_layer_index(file_3dm, layer_index)
+        else:
+            return []
     else:
-        name_index = {layer.Name: layer.Index for layer in file_obj.Layers}
-        parent_child_dict = {}
-        for layer_name in layers:
-            for layer in file_obj.Layers:
-                parent_children = layer.FullPath.split('::')
-                if layer_name in parent_children:
-                    parent_child_dict[name_index[
-                            parent_children[-1]]] = name_index[parent_children[0]]
-    
-    return parent_child_dict
-
-
-def filter_objects_by_layer(file_3dm, layer_name, visibility=True):
-    """Get all the objects in a layer.
+        layer_index = [layer.Index]
+        return filter_objects_by_layer_index(file_3dm, layer_index)
+        
+        
+def objects_on_parent_child(file_3dm, layer_name, visibility=True):
+    """Get all the objects on a layer and its sub-layers.
 
     Args:
         file_3dm: Input Rhino3DM object.
@@ -158,42 +224,3 @@ def filter_objects_by_layer_index(file_3dm, layer_index):
 
     return [obj for obj in file_3dm.Objects for index in layer_index
         if obj.Attributes.LayerIndex == index]
-
-
-def filter_objects_by_layers(file_3dm, layer_names, visibility=True):
-    """Get all the objects under a list of layers.
-
-    The objects will be separated for each layer.
-    Args:
-        file_3dm: Input Rhino 3DM object.
-        layer_names: A list of layer names in text.
-        visibility: Bool. If set to False then the objects on an "off"
-            layer in Rhino3dm will also be imported. Defaults to True.
-
-    Returns:
-        A list of lists. A sub-list for each of the layers in layer_names
-    """
-    # A dictionary with child layer index : Parent layer index structure
-    # The parent layer is one of the Honeybee layers
-    parent_child_dict = parent_child_index(file_3dm, layer_names, visibility)
-
-    # get layer tables if the layer is in official Honeybee layers and is visible
-    layer_table = {layer.Index: layer.Name for layer in file_3dm.Layers if layer.Visible}
-
-    # create a place holder for each layer
-    objects = {layer_name: [] for layer_name in layer_names}
-
-    # get index for each layer
-    for obj in file_3dm.Objects:
-        index = obj.Attributes.LayerIndex
-        try:
-            # Get the Honeybee layer name if the object is on a child layer of 
-            # one of the Honeybee layers
-            layer_name = layer_table[parent_child_dict[index]]
-            objects[layer_name].append(obj)
-        # For an object that is not on either Honeybee layer or their child layers
-        except KeyError:
-            continue
-
-    # return objects as a list of list based on the input layer_names order
-    return [objects[layer_name] for layer_name in layer_names]
