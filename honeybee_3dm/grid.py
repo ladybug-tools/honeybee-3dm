@@ -10,7 +10,7 @@ from honeybee.typing import clean_and_id_string, clean_string
 
 # Importing dependencies from Honeybee-3dm package
 from .togeometry import brep_to_face3d, mesh_to_mesh3d, check_planarity
-from .helper import filter_objects_by_layer, HB_layers
+from .helper import objects_on_parent_child, HB_layers
 
 
 # TODO: expose an option to change the target layer name
@@ -39,7 +39,7 @@ def import_grids(rhino3dm_file, tolerance, grid_size=1, grid_offset=0, *,
     config = config
     # If config file is provided and any Rhino layer is tied to HB_grid layer
     if config and config['HB_layers']['HB_grid']:
-        grid_objs = filter_objects_by_layer(rhino3dm_file, 
+        grid_objs = objects_on_parent_child(rhino3dm_file, 
             config['HB_layers']['HB_grid'], visibility=visibility)
         
         for obj in grid_objs:
@@ -48,8 +48,15 @@ def import_grids(rhino3dm_file, tolerance, grid_size=1, grid_offset=0, *,
             if isinstance(geo, rhino3dm.Brep):
                 # Check if the Brep is planar
                 if check_planarity(geo):
-                    mesh3d = brep_to_face3d(geo, tolerance).mesh_grid(grid_size,
-                        grid_size, grid_offset)
+                    try:
+                        mesh3d = brep_to_face3d(geo, tolerance).mesh_grid(grid_size,
+                            grid_size, grid_offset)
+                    except AttributeError:
+                        warnings.warn(
+                            'Please turn on the shaded mode in rhino, save the file,'
+                        ' and try again.'
+                        )
+                        continue
                 else:
                     warnings.warn(
                         'A Non-planar Brep is not handled by Honeybee for grids.' 
