@@ -11,5 +11,10 @@
         "HB_aperture": "window",
         "HB_shade": "shade",
         "HB_door": "door"
+    },
+    "grid_controls":{
+        "grid_size_x": 1.0,
+        "grid_size_y": 1.0,
+        "grid_offset": 0.0
     }
 }
