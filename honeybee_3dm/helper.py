@@ -129,17 +129,18 @@ def filter_objects_by_layer(file_3dm, layer_name, visibility=True):
     """
     # Get a list of parent and child layers for the layer_name
     parent_child = parent_child_layers(file_3dm, layer_name, visibility)
-
-    # Get Indexes for all layers
-    if visibility:
-        layer_index = [layer.Index for layer in file_3dm.Layers
-            if layer.Name in parent_child and layer.Visible]
+    if parent_child:
+        # Get Indexes for all layers
+        if visibility:
+            layer_index = [layer.Index for layer in file_3dm.Layers
+                if layer.Name in parent_child and layer.Visible]
+        else:
+            layer_index = [layer.Index for layer in file_3dm.Layers
+                if layer.Name in parent_child]
+        if not layer_index:
+            raise ValueError(f'Find no layer named "{layer_name}"')
     else:
-        layer_index = [layer.Index for layer in file_3dm.Layers
-            if layer.Name in parent_child]
-    if not layer_index:
-        raise ValueError(f'Find no layer named "{layer_name}"')
-
+        return []
     # Return a list of object on layer_name and its child layers
     return filter_objects_by_layer_index(file_3dm, layer_index)
 
