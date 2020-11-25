@@ -11,8 +11,9 @@ def test_apertures():
     config_path = './tests/assets/config.json'
     rhino3dm_file = rhino3dm.File3dm.Read(path)
     tolerance = rhino3dm_file.Settings.ModelAbsoluteTolerance
+    
+    # Model with config file
     model = import_3dm(path, config_path=config_path)
-
     assert 'WindowEast' in [aperture.display_name for aperture in model.apertures]
     apertures = [
         aperture for aperture in model.apertures if
@@ -36,3 +37,7 @@ def test_apertures():
     assert isinstance(aperture.boundary_condition, Outdoors)
     assert not aperture.is_operable
     assert not aperture.has_parent
+    
+    # Model without config file
+    model = import_3dm(path)
+    assert not model.apertures
