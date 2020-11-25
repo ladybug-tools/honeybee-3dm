@@ -38,6 +38,23 @@ def read_json(path):
         return config
 
 
+def check_grid_controls(grid_controls):
+    """Checks grid controls from the config file
+
+    This funcion makes sure that each grid control is
+    a floating point number.
+
+    Args:
+        grid_controls: A list of grid controls from the config file
+    Returns:
+            A bool. True if all the grid controls pass the check else False.
+    """
+    check = [isinstance(item, float) for item in grid_controls]
+    if len(grid_controls) == len(check):
+        return True
+    else:
+        return False
+
 def get_unit_system(file_3dm):
     """Get units from a 3dm file object.
 
