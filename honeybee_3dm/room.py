@@ -16,7 +16,7 @@ from .togeometry import to_face3d
 from .helper import filter_objects_by_layer, HB_layers
 
 
-def import_rooms(rhino3dm_file, tolerance=None, visibility=True):
+def import_rooms(rhino3dm_file, tolerance=None, visibility=True, config=None):
     """Import Honeybee rooms from a rhino3dm file.
 
     This function looks up a rhino3dm file and converts the objects
@@ -28,6 +28,8 @@ def import_rooms(rhino3dm_file, tolerance=None, visibility=True):
             the ModelAbsoluteTolerance value in input 3DM file.
         visibility: Bool. If set to False then the objects on an "off"
             layer in Rhino3dm will also be imported. Defaults to True.
+        config: A dictionary. The config file as a dictionary object.
+            Defaults to None.
 
     Returns:
         A list of Honeybee rooms.
