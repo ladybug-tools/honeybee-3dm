@@ -14,8 +14,7 @@ from honeybee.typing import clean_string
 from .room import import_rooms
 from .face import import_faces
 from .grid import import_grids
-from .helper import get_unit_system
-from .fromjson import read_json
+from .helper import get_unit_system, read_json
 
 
 # TODO: Add an argument to let the user choose the layers and assign energy and radiance
@@ -41,9 +40,20 @@ def import_3dm(path, name=None, *, config_path=None, visibility=True):
         A Honeybee model.
     """
     # CONFIG FILE
-    assert os.path.isfile(config_path), f'Config file not found.'
-    # Get the config file as a directory
-    config = read_json(config_path)
+    if config_path:
+        os.path.isfile(config_path)
+        # Get the config file as a directory
+        try:
+            config = read_json(config_path)
+        except OSError:
+            warnings.warn(
+                f'The path {config_path} is not a valid path. Please try' 
+                ' using "r" prefix to the file path.'
+                    )
+            return []
+    else:
+        config = None
+
 
     # RHINO FILE
     if not os.path.isfile(path):
@@ -72,14 +82,14 @@ def import_3dm(path, name=None, *, config_path=None, visibility=True):
             rhino3dm_file, model_tolerance, visibility, config)
 
     # Honeybee Grid objects if they are tied to a Honeybee layer in config file
-    if config['HB_layers']['HB_grid']:
+    if config and config['HB_layers']['HB_grid']:
         hb_grids = import_grids(rhino3dm_file, model_tolerance, 
             visibility=visibility, config=config)
     else:
         hb_grids = []
 
     # Honeybee Room objects if they are tied to a Honeybee layer in config file
-    if config['HB_layers']['HB_room']:
+    if config and config['HB_layers']['HB_room']:
         hb_rooms = import_rooms(rhino3dm_file, model_tolerance, visibility, config)
     else:
         hb_rooms = []
