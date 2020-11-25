@@ -5,7 +5,8 @@ from honeybee_3dm.model import import_3dm
 
 def test_grids():
     path = './tests/assets/test.3dm'
-    model = import_3dm(path)
+    config_path = './tests/assets/config.json'
+    model = import_3dm(path, config_path=config_path)
     grid_names = [grid.display_name for grid in model.properties.radiance.sensor_grids]
     assert 'test-grid' in grid_names
     assert 'circular-grid' in grid_names
