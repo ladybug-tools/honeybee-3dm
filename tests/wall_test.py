@@ -5,7 +5,8 @@ from ladybug_geometry.geometry3d import Point3D, Vector3D
 
 def test_walls():
     path = './tests/assets/test.3dm'
-    model = import_3dm(path)
+    config_path = './tests/assets/config.json'
+    model = import_3dm(path, config_path=config_path)
     # Check for User provided name
     assert 'southwall' in [face.display_name for face in model.faces]
     # Check for vertices & normal

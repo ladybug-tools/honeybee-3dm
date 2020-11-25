@@ -8,9 +8,10 @@ from honeybee.boundarycondition import Outdoors
 
 def test_apertures():
     path = './tests/assets/test.3dm'
+    config_path = './tests/assets/config.json'
     rhino3dm_file = rhino3dm.File3dm.Read(path)
     tolerance = rhino3dm_file.Settings.ModelAbsoluteTolerance
-    model = import_3dm(path)
+    model = import_3dm(path, config_path=config_path)
 
     assert 'WindowEast' in [aperture.display_name for aperture in model.apertures]
     apertures = [

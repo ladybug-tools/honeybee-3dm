@@ -1,0 +1,15 @@
+
+{
+    "HB_layers" :{
+        "HB_wall": "",
+        "HB_grid": "grid",
+        "HB_room": "",
+        "HB_floor": " ",
+        "HB_roof": " ",
+        "HB_airwall": " ",
+        "HB_view": " ",
+        "HB_aperture": "window",
+        "HB_shade": "shade",
+        "HB_door": "door"
+    }
+}
