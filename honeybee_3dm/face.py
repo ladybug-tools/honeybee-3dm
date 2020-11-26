@@ -14,9 +14,14 @@ from honeybee.typing import clean_and_id_string, clean_string
 from .togeometry import to_face3d
 from .helper import HB_layers, child_parent_dict, objects_on_layer
 from .helper import check_layer_in_hb_layers, check_layer_not_in_hb_layers
+from .material import get_layer_modifier
 
 
-def import_faces(rhino3dm_file, tolerance=None, visibility=True, config=None):
+def import_faces(rhino3dm_file,
+                tolerance=None,
+                visibility=True,
+                config=None,
+                modifiers_dict=None):
     """Import Rhino planar geometry as Honeybee faces.
 
     This function looks up a rhino3dm file, converts the objects
@@ -40,6 +45,8 @@ def import_faces(rhino3dm_file, tolerance=None, visibility=True, config=None):
     hb_apertures = []
     hb_doors = []
     config = config
+    modifiers_dict = modifiers_dict
+
     # If config file is provided and any Rhino layer is assigned
     if config and config['HB_layers'].values():
         # Map rhino layers to HB_layers based on the config file
@@ -76,7 +83,20 @@ def import_faces(rhino3dm_file, tolerance=None, visibility=True, config=None):
                             ' and try again.'
                         )
                         continue
+
+                    # Get object's name
                     name = obj.Attributes.Name
+
+                    # Assign Radiance Modifier
+                    if modifiers_dict and layer.RenderMaterialIndex != -1:
+                        if get_layer_modifier(rhino3dm_file, modifiers_dict, layer):
+                            rad_mod = get_layer_modifier(rhino3dm_file,
+                                modifiers_dict, layer)
+                        else:
+                            rad_mod = None
+                    else:
+                        rad_mod= None
+
                     for face_obj in lb_faces:
                         # Assign a name to the object
                         obj_name = name or clean_and_id_string(layer.Name)
@@ -87,28 +107,39 @@ def import_faces(rhino3dm_file, tolerance=None, visibility=True, config=None):
                             args.append(hb_face_type)
                             hb_face = hb_face_module(*args)
                             hb_face.display_name = args[0]
+                            if rad_mod:
+                                hb_face.properties.radiance.modifier = rad_mod
                             hb_faces.append(hb_face)
                         # If there's no face type then assign Honeybee module based on
                         # rhino layer name
                         else:
                             # Honeybee Shade object
-                            if hb_layer_from_layer[layer.Name] == HB_layers.shade.value:
+                            if hb_layer_from_layer[layer.Name
+                                ] == HB_layers.shade.value:
                                 hb_shade = hb_face_module(*args)
                                 hb_shade.display_name = args[0]
+                                if rad_mod:
+                                    hb_shade.properties.radiance.modifier = rad_mod
                                 hb_shades.append(hb_shade)
-                            # Honeybee Shade object
-                            elif hb_layer_from_layer[layer.Name] == HB_layers.aperture.value:
+                            # Honeybee Aperture object
+                            elif hb_layer_from_layer[layer.Name
+                                ] == HB_layers.aperture.value:
                                 hb_aperture = hb_face_module(*args)
                                 hb_aperture.display_name = args[0]
+                                if rad_mod:
+                                    hb_aperture.properties.radiance.modifier = rad_mod
                                 hb_apertures.append(hb_aperture)
-                            # Honeybee Shade object
-                            elif hb_layer_from_layer[layer.Name] == HB_layers.door.value:
+                            # Honeybee Door object
+                            elif hb_layer_from_layer[layer.Name
+                                ] == HB_layers.door.value:
                                 hb_door = hb_face_module(*args)
                                 hb_door.display_name = args[0]
+                                if rad_mod:
+                                    hb_door.properties.radiance.modifier = rad_mod
                                 hb_doors.append(hb_door)
 
-            # If the rhino layer is not tied to a HB_layer in the config file and it is not
-            # tied to HB layers for Grids, Rooms, and Views
+            # If the rhino layer is not tied to a HB_layer in the config file and
+            # it is not tied to HB layers for Grids, Rooms, and Views
             # Assign Honeybee Faces based on normal direction of Rhino face
             elif check_layer_not_in_hb_layers(config, layer.Name, child_parent):
                 # Get objects on the rhino layer
@@ -122,14 +153,31 @@ def import_faces(rhino3dm_file, tolerance=None, visibility=True, config=None):
                             ' and try again.'
                         )
                         continue
+
+                    # Get object's Name
                     name = obj.Attributes.Name
+
+                    # Assign Radiance Modifier
+                    if modifiers_dict and layer.RenderMaterialIndex != -1:
+                        if get_layer_modifier(rhino3dm_file, modifiers_dict, layer):
+                            rad_mod = get_layer_modifier(rhino3dm_file,
+                                modifiers_dict, layer)
+                        else:
+                            rad_mod = None
+                    else:
+                        rad_mod = None
+
                     for face_obj in lb_faces:
                         obj_name = name or clean_and_id_string(layer.Name)
                         args = [clean_string(obj_name), face_obj]
                         hb_face = Face(*args)
                         hb_face.display_name = args[0]
+                        if rad_mod:
+                            hb_face.properties.radiance.modifier = rad_mod
                         hb_faces.append(hb_face)
-    else:   # If config file is not provided
+    
+    # If config file is not provided
+    else: 
         for layer in rhino3dm_file.Layers:
             # Get objects on the rhino layer
             objects = objects_on_layer(rhino3dm_file, layer, visibility=visibility)
@@ -142,12 +190,26 @@ def import_faces(rhino3dm_file, tolerance=None, visibility=True, config=None):
                         ' and try again.'
                     )
                     continue
+                # Get object's Name
                 name = obj.Attributes.Name
+
+                # Assign Radiance Modifier
+                if modifiers_dict and layer.RenderMaterialIndex != -1:
+                    if get_layer_modifier(rhino3dm_file, modifiers_dict, layer):
+                        rad_mod = get_layer_modifier(rhino3dm_file,
+                            modifiers_dict, layer)
+                    else:
+                        rad_mod = None
+                else:
+                    rad_mod = None
+
                 for face_obj in lb_faces:
                     obj_name = name or clean_and_id_string(layer.Name)
                     args = [clean_string(obj_name), face_obj]
                     hb_face = Face(*args)
                     hb_face.display_name = args[0]
+                    if rad_mod:
+                        hb_face.properties.radiance.modifier = rad_mod
                     hb_faces.append(hb_face)
 
     return hb_faces, hb_shades, hb_apertures, hb_doors
