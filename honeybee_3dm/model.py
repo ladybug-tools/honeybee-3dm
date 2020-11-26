@@ -51,10 +51,6 @@ def import_3dm(path, name=None, *, config_path=None, mat_path=None, visibility=T
     rhino3dm_file = rhino3dm.File3dm.Read(path)
     if not rhino3dm_file:
         raise ValueError(f'Input Rhino file: {path} returns None object.')
-    warnings.warn(
-        f'*****The rhino file MUST be saved in the SHADED mode for'
-        ' Honeybee to work.*****'
-                    )
 
     # CONFIG FILE
     if config_path:
