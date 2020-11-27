@@ -36,6 +36,8 @@ def import_faces(rhino3dm_file,
             layer in Rhino3dm will also be imported. Defaults to True.
         config: A dictionary. The config file as a dictionary object.
             Defaults to None.
+        modifiers_dict: A dictionary with radiance identifier to modifier structure.
+            Defaults to None.
     Returns:
         A list of Honeybee faces.
 
