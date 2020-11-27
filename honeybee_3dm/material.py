@@ -73,14 +73,20 @@ def get_layer_modifier(file_3dm, modifiers_dict, layer):
             radiance modifier is not found in the .mat file for the material on a
             Rhino layer.
     """
-    if file_3dm.Materials.FindIndex(layer.RenderMaterialIndex).Name in modifiers_dict:
-        return modifiers_dict[
-            file_3dm.Materials.FindIndex(layer.RenderMaterialIndex).Name
-            ]
+    if modifiers_dict and layer.RenderMaterialIndex != -1:
+        if file_3dm.Materials.FindIndex(layer.RenderMaterialIndex
+            ).Name in modifiers_dict and ' ' not in file_3dm.Materials.FindIndex(
+                layer.RenderMaterialIndex).Name:
+            return modifiers_dict[
+                file_3dm.Materials.FindIndex(layer.RenderMaterialIndex).Name
+                ]
+        else:
+            warnings.warn(
+                'Either a modifier with an exact same name is not found in the .mat file'
+                f' or the Rhino layer "{layer.Name}"" has a material with no name.'
+                ' or there is a white space in the material name.'
+                ' Default Honeybee modifier will be applied.'
+            )
+            return None
     else:
-        warnings.warn(
-            'Either a modifier with an exact same name is not found in the .mat file'
-            f' or the Rhino layer "{layer.Name}"" has a material with no name.'
-            ' Default Honeybee modifier will be applied.'
-        )
         return None
