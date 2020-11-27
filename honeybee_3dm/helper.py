@@ -1,6 +1,11 @@
 """A collection of helper functions."""
 import json
+import warnings
 from enum import Enum, unique
+from honeybee.face import Face
+from honeybee.typing import clean_and_id_string, clean_string
+from .togeometry import to_face3d
+from .material import get_layer_modifier
 
 @unique
 class HB_layers(Enum):
@@ -38,6 +43,50 @@ def read_json(path):
         return config
 
 
+def get_default_hb_face(file_3dm, layer, modifiers_dict=None, tolerance=None,
+    visibility=None):
+    """Get default Honeybee Faces for a Rhino3dm layer.
+
+    Args:
+        file_3dm: A Rhino3dm file object.
+        layer: A Rhino3dm layer object.
+        modifiers_dict: A dictionary with radiance identifier to modifier structure.
+        tolerance: A number for model tolerance. By default the tolerance is set to
+            the ModelAbsoluteTolerance value in input 3DM file. Defaults to None.
+        visibility: Bool. If set to False then the objects on an "off"
+            layer in Rhino3dm will also be imported. Defaults to True.
+    Returns:
+        A list of Honeybee Face objects.
+    """
+    hb_faces = []
+    objects = objects_on_layer(file_3dm, layer = layer, visibility = visibility)
+    
+    for obj in objects:
+        try:
+            lb_faces = to_face3d(obj, tolerance=tolerance)
+        except AttributeError:
+            warnings.warn(
+                'Please turn on the shaded mode in rhino, save the file,'
+                ' and try again.'
+            )
+            continue
+
+        name = obj.Attributes.Name
+
+        rad_mod = get_layer_modifier(file_3dm, modifiers_dict, layer)
+
+        for face_obj in lb_faces:
+            obj_name = name or clean_and_id_string(layer.Name)
+            args = [clean_string(obj_name), face_obj]
+            hb_face = Face(*args)
+            hb_face.display_name = args[0]
+            if rad_mod:
+                hb_face.properties.radiance.modifier = rad_mod
+            hb_faces.append(hb_face)
+
+    return hb_faces
+
+
 def check_grid_controls(grid_controls):
     """Checks grid controls from the config file
 
@@ -54,6 +103,7 @@ def check_grid_controls(grid_controls):
         return True
     else:
         return False
+
 
 def get_unit_system(file_3dm):
     """Get units from a 3dm file object.
@@ -120,7 +170,9 @@ def check_layer_not_in_hb_layers(config, layer_name, child_parent):
     if layer_name != config['HB_layers']['HB_grid'] \
         and layer_name != config['HB_layers']['HB_room'] \
         and layer_name != config['HB_layers']['HB_view'] \
-        and child_parent[layer_name] != config['HB_layers']['HB_grid']:
+        and child_parent[layer_name] != config['HB_layers']['HB_grid'] \
+        and child_parent[layer_name] != config['HB_layers']['HB_room'] \
+        and child_parent[layer_name] != config['HB_layers']['HB_view']:
         return True
     else:
         return False
