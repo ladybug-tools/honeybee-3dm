@@ -34,8 +34,7 @@ def import_faces(rhino3dm_file,
             the ModelAbsoluteTolerance value in input 3DM file.
         visibility: Bool. If set to False then the objects on an "off"
             layer in Rhino3dm will also be imported. Defaults to True.
-        config: A dictionary. The config file as a dictionary object.
-            Defaults to None.
+        config: A dictionary of config settings. Defaults to None
         modifiers_dict: A dictionary with radiance identifier to modifier structure.
             Defaults to None.
     Returns:
@@ -46,8 +45,6 @@ def import_faces(rhino3dm_file,
     hb_shades = []
     hb_apertures = []
     hb_doors = []
-    config = config
-    modifiers_dict = modifiers_dict
 
     # If config file is provided and any Rhino layer is assigned
     if config and config['HB_layers'].values():
