@@ -8,6 +8,6 @@ sphinx-bootstrap-theme==0.7.1
 sphinxcontrib-fulltoc==1.2.0
 sphinxcontrib-websupport==1.2.4
 twine==3.2.0
-wheel==0.35.1
+wheel==0.36.0
 setuptools==50.3.2
 importlib-metadata==3.1.0
