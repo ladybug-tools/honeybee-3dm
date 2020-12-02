@@ -6,8 +6,8 @@
 
 import warnings
 import rhino3dm
-
 import ladybug.color as lbc
+
 from ladybug_geometry.geometry3d.pointvector import Point3D, Vector3D
 from ladybug_geometry.geometry3d.face import Face3D
 from ladybug_geometry.geometry3d.line import LineSegment3D
@@ -45,6 +45,8 @@ def remove_dup_vertices(vertices, tolerance):
 
     Args:
         vertices: A list of Ladybug Point3D objects.
+        tolerance: A number for model tolerance. By default the tolerance is set to
+            the ModelAbsoluteTolerance value in input 3DM file.
 
     Returns:
          A list of Ladybug Point3D objects with duplicate points removed.
@@ -58,10 +60,10 @@ def check_planarity(brep):
     """Check the planarity of a Brep.
 
     Args:
-        brep: Geometry of a Rhino3dm Brep
+        brep: Geometry of a Rhino3dm Brep.
 
     Returns:
-        Bool. True if planar otherwise False
+        Bool. True if planar otherwise False.
     """
     is_planar = [brep.Faces[i].UnderlyingSurface().IsPlanar()
         for i in range(len(brep.Faces))]
@@ -72,11 +74,11 @@ def extract_mesh_faces_colors(mesh, color_by_face=False):
     """Extract face indices and colors from a Rhino mesh.
 
     Args:
-        mesh: Rhino3dm mesh
-        color_by_face: Bool. True will derive colors from mesh faces
+        mesh: Rhino3dm mesh.
+        color_by_face: Bool. True will derive colors from mesh faces.
 
     Returns:
-        A tuple of mesh faces and mesh colors
+        A tuple of mesh faces and mesh colors.
     """
 
     colors = None
@@ -105,11 +107,11 @@ def mesh_to_mesh3d(mesh, color_by_face=True):
     """Get a Ladybug Mesh3D object from a Rhino3dm Mesh.
 
     Args:
-        mesh: Rhino3dm mesh
-        color_by_face: Bool. True will derive colors from mesh faces
+        mesh: Rhino3dm mesh.
+        color_by_face: Bool. True will derive colors from mesh faces.
 
     Returns:
-        A Ladybug Mesh3D object
+        A Ladybug Mesh3D object.
     """
     lb_verts = tuple(to_point3d(mesh.Vertices[i]) for i in range(len(mesh.Vertices)))
     lb_faces, colors = extract_mesh_faces_colors(mesh, color_by_face)
@@ -199,7 +201,6 @@ def brep_to_face3d(brep, tolerance):
     Returns:
         A Ladybug Face3D object.
     """
-    # face3ds = []
     # Getting all vertices of the face
     mesh = brep.Faces[0].GetMesh(rhino3dm.MeshType.Any)
     if not mesh:
@@ -333,21 +334,24 @@ def to_face3d(obj, *, tolerance, raise_exception=False):
     """
     rh_geo = obj.Geometry
 
-    if rh_geo.ObjectType == rhino3dm.ObjectType.Brep:
+    # if it's a Brep
+    if isinstance(rh_geo, rhino3dm.Brep):
+        # If it's a solid brep
         if rh_geo.IsSolid:
             lb_face = solid_to_face3d(rh_geo)
         else:
+            # If it's a planar brep
             if check_planarity(rh_geo):
                 lb_face = [brep_to_face3d(rh_geo, tolerance)]
+            # If it's not a planar brep. Such as a curved wall
             else:
                 lb_face = brep_to_mesh_to_face3d(rh_geo)
-
-    elif rh_geo.ObjectType == rhino3dm.ObjectType.Extrusion:
+    # If it's an extrusion
+    elif isinstance(rh_geo, rhino3dm.Extrusion):
         lb_face = extrusion_to_face3d(rh_geo)
-
-    elif rh_geo.ObjectType == rhino3dm.ObjectType.Mesh:
+    # If it's a mesh
+    elif isinstance(rh_geo, rhino3dm.Mesh):
         lb_face = mesh_to_face3d(rh_geo)
-
     else:
         if raise_exception:
             raise ValueError(f'Unsupported object type: {rh_geo.ObjectType}')
