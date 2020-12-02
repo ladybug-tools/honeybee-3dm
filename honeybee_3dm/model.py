@@ -11,7 +11,7 @@ from .config import read_json, check_config, check_parent_in_config
 from .layer import child_parent_dict
 
 
-def import_3dm(path, name=None, *, config_path=None, visibility=True):
+def import_3dm(path, name=None, *, config_path=None, layer_visibility=True):
     """Import a rhino3dm file as a Honeybee model.
 
     This function outputs a Honeybee model from the faces, shades, apertures, and doors
@@ -25,7 +25,7 @@ def import_3dm(path, name=None, *, config_path=None, visibility=True):
             model. Default will be the same as Rhino file name.
         config_path: A text string path to the config file on disk.
             Defaults to not using a config file.
-        visibility: Bool. If set to False then the objects on an "off"
+        layer_visibility: Bool. If set to False then the objects on an "off"
             layer in Rhino3dm will also be imported. Defaults to True.
 
     Returns:
@@ -74,7 +74,7 @@ def import_3dm(path, name=None, *, config_path=None, visibility=True):
             if layer.Name in config['layers']:
                 hb_objs = import_objects_with_config(
                     rhino3dm_file, layer, tolerance=model_tolerance,
-                        visibility=visibility, config=config)
+                        layer_visibility=layer_visibility, config=config)
                 hb_faces.extend(hb_objs[0])
                 hb_shades.extend(hb_objs[1])
                 hb_apertures.extend(hb_objs[2])

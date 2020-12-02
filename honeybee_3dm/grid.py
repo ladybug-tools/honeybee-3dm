@@ -10,7 +10,7 @@ from .layer import objects_on_layer, objects_on_parent_child
 
 
 def import_grids(rhino3dm_file, layer, *, grid_controls=None, child_layer=False,
-    tolerance=None, visibility=True):
+    tolerance=None, layer_visibility=True):
     """Creates Honeybee grids from a rhino3dm file.
 
     This function assumes all the grid objects are under a layer named ``grid``.
@@ -24,7 +24,7 @@ def import_grids(rhino3dm_file, layer, *, grid_controls=None, child_layer=False,
         child_layer: A bool. True will generate grids from the objects on the child layer
             of a layer in addition to the objects on the parent layer. Defaults to False.
         tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
-        visibility: Bool. If set to False then the objects on an "off"
+        layer_visibility: Bool. If set to False then the objects on an "off"
             layer in Rhino3dm will also be imported. Defaults to True.
             .
     Returns:
@@ -33,12 +33,13 @@ def import_grids(rhino3dm_file, layer, *, grid_controls=None, child_layer=False,
     hb_grids = []
     # if objects on child layers are not requested
     if not child_layer:
-        grid_objs = objects_on_layer(rhino3dm_file, layer, visibility=visibility)
+        grid_objs = objects_on_layer(rhino3dm_file, layer,
+            layer_visibility=layer_visibility)
     
     # if objects on child layers are requested
     if child_layer:
         grid_objs = objects_on_parent_child(rhino3dm_file, layer.Name,
-            visibility=visibility)
+            layer_visibility=layer_visibility)
     
     # Set default grid settings if not provided
     if not grid_controls:

@@ -19,13 +19,13 @@ def child_parent_dict(file_3dm):
     return child_parent_dict
 
 
-def parent_child_layers(file_3dm, layer_name, visibility=True):
+def parent_child_layers(file_3dm, layer_name, layer_visibility=True):
     """Get a list of parent and child layers for a layer.
 
     Args:
         file_3dm: A rhino3dm file object
         layer_name: Text string of a layer name.
-        visibility: Bool. If set to False then the objects on an "off"
+        layer_visibility: Bool. If set to False then the objects on an "off"
             layer in Rhino3dm will also be imported. Defaults to True.
 
     Returns:
@@ -33,7 +33,7 @@ def parent_child_layers(file_3dm, layer_name, visibility=True):
     """
     layer_names = []
     for layer in file_3dm.Layers:
-        if visibility:
+        if layer_visibility:
             if layer.Visible:
                 parent_children = layer.FullPath.split('::')
                 if layer_name in parent_children:
@@ -63,23 +63,23 @@ def filter_objects_by_layer_index(file_3dm, layer_index):
         if obj.Attributes.LayerIndex == index and obj.Attributes.Visible]
 
 
-def objects_on_parent_child(file_3dm, layer_name, visibility=True):
+def objects_on_parent_child(file_3dm, layer_name, layer_visibility=True):
     """Get all the objects on a layer and its child-layers.
 
     Args:
         file_3dm: Input Rhino3DM object.
         layer_name: Rhino layer name.
-        visibility: Bool. If set to False then the objects on an "off"
+        layer_visibility: Bool. If set to False then the objects on an "off"
             layer in Rhino3dm will also be imported. Defaults to True.
 
     Returns:
         A list of Rhino3dm objects.
     """
     # Get a list of parent and child layers for the layer_name
-    parent_child = parent_child_layers(file_3dm, layer_name, visibility)
+    parent_child = parent_child_layers(file_3dm, layer_name, layer_visibility)
     if parent_child:
         # Get Indexes for all layers
-        if visibility:
+        if layer_visibility:
             layer_index = [layer.Index for layer in file_3dm.Layers
                 if layer.Name in parent_child and layer.Visible]
         else:
@@ -93,19 +93,19 @@ def objects_on_parent_child(file_3dm, layer_name, visibility=True):
     return filter_objects_by_layer_index(file_3dm, layer_index)
 
 
-def objects_on_layer(file_3dm, layer, visibility=True):
+def objects_on_layer(file_3dm, layer, layer_visibility=True):
     """Get a list of objects on a layer.
 
     Args:
         file_3dm: Input Rhino3DM object.
         layer: A Rhino3dm layer object.
-        visibility: Bool. If set to False then the objects on an "off"
+        layer_visibility: Bool. If set to False then the objects on an "off"
             layer in Rhino3dm will also be imported. Defaults to True.
 
     Returns:
         A list of Rhino3dm objects on a layer.
     """
-    if visibility:
+    if layer_visibility:
         if layer.Visible:
             layer_index = [layer.Index]
             return filter_objects_by_layer_index(file_3dm, layer_index)

@@ -11,8 +11,8 @@ from .config import grid_controls, face3d_to_face_type_to_hb_face, face3d_to_hb_
 from .config import face3d_to_rad_to_hb_face, child_layer_control
 
 
-def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None, visibility=True,
-    config=None, modifiers_dict=None):
+def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None,
+    layer_visibility=True, config=None, modifiers_dict=None):
     """Import Rhino planar geometry as Honeybee faces.
 
     This function looks up a rhino3dm file, converts the objects
@@ -23,7 +23,7 @@ def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None, visibili
         rhino3dm_file: A Rhino3DM file object.
         tolerance: A number for model tolerance. By default the tolerance is set to
             the ModelAbsoluteTolerance value in input 3DM file.
-        visibility: Bool. If set to False then the objects on an "off"
+        layer_visibility: Bool. If set to False then the objects on an "off"
             layer in Rhino3dm will also be imported. Defaults to True.
         config: A dictionary of config settings. Defaults to None
         modifiers_dict: A dictionary with radiance identifier to modifier structure.
@@ -54,11 +54,12 @@ def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None, visibili
         # If child layers needs to be included
         if child_layer_control(config, layer.Name):
             objects = objects_on_parent_child(rhino3dm_file, layer.Name,
-                visibility=visibility)
+                layer_visibility=layer_visibility)
 
         # If child layers do not need to be included
         else:
-            objects = objects_on_layer(rhino3dm_file, layer, visibility=visibility)
+            objects = objects_on_layer(rhino3dm_file, layer,
+                layer_visibility=layer_visibility)
     
         for obj in objects:
             try:
@@ -94,7 +95,7 @@ def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None, visibili
     return hb_faces, hb_shades, hb_apertures, hb_doors, hb_grids
 
 
-def import_objects(file_3dm, layer, *, tolerance=None, visibility=True):
+def import_objects(file_3dm, layer, *, tolerance=None, layer_visibility=True):
     """Get default Honeybee Faces for a Rhino3dm layer.
 
     Args:
@@ -102,7 +103,7 @@ def import_objects(file_3dm, layer, *, tolerance=None, visibility=True):
         layer: A Rhino3dm layer object.
         tolerance: A number for model tolerance. By default the tolerance is set to
             the ModelAbsoluteTolerance value in input 3DM file. Defaults to None.
-        visibility: Bool. If set to False then the objects on an "off"
+        layer_visibility: Bool. If set to False then the objects on an "off"
             layer and hidden objects in Rhino3dm will also be imported.
             Defaults to True.
 
@@ -110,7 +111,7 @@ def import_objects(file_3dm, layer, *, tolerance=None, visibility=True):
         A list of Honeybee Face objects.
     """
     hb_faces = []
-    objects = objects_on_layer(file_3dm, layer=layer, visibility=visibility)
+    objects = objects_on_layer(file_3dm, layer=layer, layer_visibility=layer_visibility)
     
     for obj in objects:
         try:
