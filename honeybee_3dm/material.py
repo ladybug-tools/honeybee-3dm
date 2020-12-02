@@ -1,6 +1,5 @@
 """Creating Honeybee model objects from rhino3dm surfaces and closed volumes"""
 
-import warnings
 from honeybee_radiance.modifier.material import Plastic, Glass, BSDF, Mirror
 
 
@@ -35,7 +34,7 @@ def mat_to_dict(path):
         with open(path) as fh:
             lines = fh.readlines()
     except Exception as e:
-        warnings.warn(e)
+        raise ValueError(e)
     else:
         material_dict = {'plastic': Plastic,
                         'glass': Glass,
@@ -54,39 +53,3 @@ def mat_to_dict(path):
         modifiers_dict = {modifier.identifier: modifier for modifier in modifiers}
         
         return modifiers_dict
-
-
-def get_layer_modifier(file_3dm, modifiers_dict, layer):
-    """Get a radiance modifier based on the material on a Rhino3dm layer.
-
-    This function checks if a Rhino3dm layer has material property and 
-    cross-references the material property with the modifiers in the .mat file.
-
-    Args:
-        file_3dm: A Rhino3dm file object
-        modifiers_dict: A dictionary of radiance identifier : modifier structure
-        layer: A Rhino3dm layer object.
-
-    Returns:
-        A Radiance modifier object or None if the material name on the Rhino layer
-            does not match one of the radiance identifiers in the .mat or if a
-            radiance modifier is not found in the .mat file for the material on a
-            Rhino layer.
-    """
-    if modifiers_dict and layer.RenderMaterialIndex != -1:
-        if file_3dm.Materials.FindIndex(layer.RenderMaterialIndex
-            ).Name in modifiers_dict and ' ' not in file_3dm.Materials.FindIndex(
-                layer.RenderMaterialIndex).Name:
-            return modifiers_dict[
-                file_3dm.Materials.FindIndex(layer.RenderMaterialIndex).Name
-                ]
-        else:
-            warnings.warn(
-                'Either a modifier with an exact same name is not found in the .mat file'
-                f' or the Rhino layer "{layer.Name}"" has a material with no name.'
-                ' or there is a white space in the material name.'
-                ' Default Honeybee modifier will be applied.'
-            )
-            return None
-    else:
-        return None
