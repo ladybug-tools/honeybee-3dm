@@ -1,4 +1,4 @@
-"""Import Rhino surfaces as Honeybee grid objects from a Rhino3DM file."""
+"""Create Honeybee grid objects from planar geometries in a rhino file."""
 import warnings
 import rhino3dm
 

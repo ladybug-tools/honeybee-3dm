@@ -1,4 +1,4 @@
-"""Creating Honeybee model objects from rhino3dm surfaces and closed volumes"""
+"""Functions to work with the radiance material file"""
 
 from honeybee_radiance.modifier.material import Plastic, Glass, BSDF, Mirror
 
