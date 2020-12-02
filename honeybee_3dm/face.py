@@ -9,7 +9,6 @@ from .layer import objects_on_layer, objects_on_parent_child, child_layer_contro
 from .grid import import_grids
 from .config import grid_controls, face3d_to_face_type_to_hb_face, face3d_to_hb_object
 from .config import face3d_to_rad_to_hb_face
-from .helper import face3d_to_hb_face
 
 
 def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None, visibility=True,
