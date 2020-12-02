@@ -1,14 +1,14 @@
-"""Create Honeybee face objects(Face, Shade, Aperture, Door) from planar geometries
+"""Create Honeybee objects(Face, Shade, Aperture, Door, Grid) from planar geometries
 in a Rhino 3DM file."""
 
 from honeybee.face import Face
 from honeybee.typing import clean_and_id_string, clean_string
 
 from .togeometry import to_face3d
-from .layer import objects_on_layer, objects_on_parent_child, child_layer_control
+from .layer import objects_on_layer, objects_on_parent_child
 from .grid import import_grids
 from .config import grid_controls, face3d_to_face_type_to_hb_face, face3d_to_hb_object
-from .config import face3d_to_rad_to_hb_face
+from .config import face3d_to_rad_to_hb_face, child_layer_control
 
 
 def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None, visibility=True,
@@ -44,31 +44,18 @@ def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None, visibili
 
     # If Grids are requested for a layer
     if grid_controls(config, layer.Name):
-        
-        # If child layers needs to be included
-        if child_layer_control(config, layer.Name):
-            hb_grids = import_grids(
-                rhino3dm_file,
-                layer,
-                grid_controls=grid_controls(config, layer.Name),
-                child_layer=True, tolerance=tolerance)
-        
-        # If child layers do not need to be included
-        else:
-            hb_grids = import_grids(
-                rhino3dm_file,
-                layer,
-                grid_controls=grid_controls(config, layer.Name),
-                child_layer=False, tolerance=tolerance)
-    
+
+        hb_grids = import_grids(rhino3dm_file, layer,
+            grid_controls=grid_controls(config, layer.Name),
+            child_layer=child_layer_control(config, layer.Name), tolerance=tolerance)
+
     # If Grids are not requested for a layer
     else:
         # If child layers needs to be included
-        if 'include_child_layers' in config['layers'][layer.Name] and \
-            config['layers'][layer.Name]['include_child_layers'].lower() == 'true':
+        if child_layer_control(config, layer.Name):
             objects = objects_on_parent_child(rhino3dm_file, layer.Name,
                 visibility=visibility)
-        
+
         # If child layers do not need to be included
         else:
             objects = objects_on_layer(rhino3dm_file, layer, visibility=visibility)
@@ -81,7 +68,6 @@ def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None, visibili
                     'Please turn on the shaded mode in rhino, save the file,'
                     ' and try again.'
                 )
-
             name = obj.Attributes.Name
 
             for face_obj in lb_faces:
