@@ -1,6 +1,9 @@
 """Create Honeybee face objects(Face, Shade, Aperture, Door) from planar geometries
 in a Rhino 3DM file."""
 
+from honeybee.face import Face
+from honeybee.typing import clean_and_id_string, clean_string
+
 from .togeometry import to_face3d
 from .layer import objects_on_layer, objects_on_parent_child, child_layer_control
 from .grid import import_grids
@@ -136,7 +139,11 @@ def import_objects(file_3dm, layer, *, tolerance=None, visibility=True):
         name = obj.Attributes.Name
 
         for face_obj in lb_faces:
-            hb_faces.append(face3d_to_hb_face(face_obj, name, layer.Name))
+            obj_name = name or clean_and_id_string(layer.Name)
+            args = [clean_string(obj_name), face_obj]
+            hb_face = Face(*args)
+            hb_face.display_name = args[0]
+            hb_faces.append(hb_face)
 
     return hb_faces
     
