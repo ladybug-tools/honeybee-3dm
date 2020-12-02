@@ -1,27 +1,16 @@
 """Create Honeybee face objects(Face, Shade, Aperture, Door) from planar geometries
 in a Rhino 3DM file."""
-import warnings
 
-# Importing core Honeybee & Ladybug Geometry dependencies
-from honeybee.face import Face
-from honeybee.shade import Shade
-from honeybee.aperture import Aperture
-from honeybee.door import Door
-from honeybee.facetype import face_types
-from honeybee.typing import clean_and_id_string, clean_string
-
-# Importing dependencies from Honeybee-3dm package
 from .togeometry import to_face3d
-from .helper import HB_layers, child_parent_dict, objects_on_layer, get_default_hb_face
-from .helper import check_layer_in_hb_layers, check_layer_not_in_hb_layers
-from .material import get_layer_modifier
+from .layer import objects_on_layer, objects_on_parent_child, child_layer_control
+from .grid import import_grids
+from .config import grid_controls, face3d_to_face_type_to_hb_face, face3d_to_hb_object
+from .config import face3d_to_rad_to_hb_face
+from .helper import face3d_to_hb_face
 
 
-def import_faces(rhino3dm_file,
-                tolerance=None,
-                visibility=True,
-                config=None,
-                modifiers_dict=None):
+def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None, visibility=True,
+    config=None, modifiers_dict=None):
     """Import Rhino planar geometry as Honeybee faces.
 
     This function looks up a rhino3dm file, converts the objects
@@ -37,104 +26,117 @@ def import_faces(rhino3dm_file,
         config: A dictionary of config settings. Defaults to None
         modifiers_dict: A dictionary with radiance identifier to modifier structure.
             Defaults to None.
+
     Returns:
-        A list of Honeybee faces.
+        A tuple of following lists;
+        Honeybee Face objects,
+        Honeybee Shade objects,
+        Honeybee Aperture objects,
+        Honeybee Door objects,
+        Honeybee grids
+        A list wil be empty if no objects are imported from rhino file.
 
     """
-    hb_faces = []
-    hb_shades = []
-    hb_apertures = []
-    hb_doors = []
+    # Placeholders
+    hb_faces, hb_shades, hb_apertures, hb_doors, hb_grids = tuple([[] for _ in range(5)])
 
-    # If config file is provided and any Rhino layer is assigned
-    if config and config['HB_layers'].values():
-        # Map rhino layers to HB_layers based on the config file
-        hb_layer_from_layer = {config['HB_layers'][key]: key for key in
-            config['HB_layers']}
-        layer_to_hb_object = {
-            HB_layers.roof.value: (face_types.roof_ceiling, Face),
-            HB_layers.wall.value: (face_types.wall, Face),
-            HB_layers.floor.value: (face_types.floor, Face),
-            HB_layers.airwall.value: (face_types.air_boundary, Face),
-            HB_layers.shade.value: (None, Shade),
-            HB_layers.aperture.value: (None, Aperture),
-            HB_layers.door.value: (None, Door)
-        }
-        child_parent = child_parent_dict(rhino3dm_file)
-        for layer in rhino3dm_file.Layers:
-            # If the rhino layer is tied to a HB_layer in the config file and it is not
-            # tied to HB layers for Grids, Rooms, and Views
-            if check_layer_in_hb_layers(config, layer.Name):
-                hb_face_type, hb_face_module = layer_to_hb_object[
-                        hb_layer_from_layer[layer.Name]]
-                objects = objects_on_layer(rhino3dm_file, layer, visibility=visibility)
-                for obj in objects:
-                    try:
-                        lb_faces = to_face3d(obj, tolerance=tolerance)
-                    except AttributeError:
-                        warnings.warn(
-                            'Please turn on the shaded mode in rhino, save the file,' 
-                            ' and try again.'
-                        )
-                        continue
-
-                    name = obj.Attributes.Name
-                    # Assign Radiance Modifier
-                    rad_mod = get_layer_modifier(rhino3dm_file, modifiers_dict, layer)
-
-                    for face_obj in lb_faces:
-                        obj_name = name or clean_and_id_string(layer.Name)
-                        args = [clean_string(obj_name), face_obj]
-                        # If there's a face type the object is either of the
-                        # Wall, Floor, Roof, Ceiling, Airwall
-                        if hb_face_type:
-                            args.append(hb_face_type)
-                            hb_face = hb_face_module(*args)
-                            hb_face.display_name = args[0]
-                            if rad_mod:
-                                hb_face.properties.radiance.modifier = rad_mod
-                            hb_faces.append(hb_face)
-                        # If there's no face type then assign Honeybee module based on
-                        # rhino layer name
-                        else:
-                            if hb_layer_from_layer[layer.Name
-                                ] == HB_layers.shade.value:
-                                hb_shade = hb_face_module(*args)
-                                hb_shade.display_name = args[0]
-                                if rad_mod:
-                                    hb_shade.properties.radiance.modifier = rad_mod
-                                hb_shades.append(hb_shade)
-                                
-                            elif hb_layer_from_layer[layer.Name
-                                ] == HB_layers.aperture.value:
-                                hb_aperture = hb_face_module(*args)
-                                hb_aperture.display_name = args[0]
-                                if rad_mod:
-                                    hb_aperture.properties.radiance.modifier = rad_mod
-                                hb_apertures.append(hb_aperture)
-
-                            elif hb_layer_from_layer[layer.Name
-                                ] == HB_layers.door.value:
-                                hb_door = hb_face_module(*args)
-                                hb_door.display_name = args[0]
-                                if rad_mod:
-                                    hb_door.properties.radiance.modifier = rad_mod
-                                hb_doors.append(hb_door)
-
-            # If the rhino layer is not tied to a HB_layer in the config file and
-            # it is not tied to HB layers for Grids, Rooms, and Views
-            # Assign Honeybee Faces based on normal direction of Rhino face
-            elif check_layer_not_in_hb_layers(config, layer.Name, child_parent):
-                hb_faces.extend(get_default_hb_face(rhino3dm_file, layer,
-                            modifiers_dict=modifiers_dict,
-                            tolerance=tolerance,
-                            visibility=visibility))
-    # If config file is not provided
+    # If Grids are requested for a layer
+    if grid_controls(config, layer.Name):
+        
+        # If child layers needs to be included
+        if child_layer_control(config, layer.Name):
+            hb_grids = import_grids(
+                rhino3dm_file,
+                layer,
+                grid_controls=grid_controls(config, layer.Name),
+                child_layer=True, tolerance=tolerance)
+        
+        # If child layers do not need to be included
+        else:
+            hb_grids = import_grids(
+                rhino3dm_file,
+                layer,
+                grid_controls=grid_controls(config, layer.Name),
+                child_layer=False, tolerance=tolerance)
+    
+    # If Grids are not requested for a layer
     else:
-        for layer in rhino3dm_file.Layers:
-            hb_faces.extend(get_default_hb_face(rhino3dm_file, layer,
-                            modifiers_dict=modifiers_dict,
-                            tolerance=tolerance,
-                            visibility=visibility))
+        # If child layers needs to be included
+        if 'include_child_layers' in config['layers'][layer.Name] and \
+            config['layers'][layer.Name]['include_child_layers'].lower() == 'true':
+            objects = objects_on_parent_child(rhino3dm_file, layer.Name,
+                visibility=visibility)
+        
+        # If child layers do not need to be included
+        else:
+            objects = objects_on_layer(rhino3dm_file, layer, visibility=visibility)
+    
+        for obj in objects:
+            try:
+                lb_faces = to_face3d(obj, tolerance=tolerance)
+            except AttributeError:
+                raise AttributeError(
+                    'Please turn on the shaded mode in rhino, save the file,'
+                    ' and try again.'
+                )
 
-    return hb_faces, hb_shades, hb_apertures, hb_doors
+            name = obj.Attributes.Name
+
+            for face_obj in lb_faces:
+                # If face_type settting is employed
+                if 'honeybee_face_type' in config['layers'][layer.Name]:
+                    hb_faces.append(face3d_to_face_type_to_hb_face(config, face_obj,
+                        name, layer.Name))
+                
+                # If only radiance material settting is employed
+                elif 'honeybee_face_type' not in config['layers'][layer.Name] and\
+                    'honeybee_face_object' not in config['layers'][layer.Name] and\
+                        'radiance_material' in config['layers'][layer.Name]:
+                    hb_faces.append(face3d_to_rad_to_hb_face(config, face_obj, name,
+                        layer.Name))
+                
+                # If face_object settting is employed
+                elif 'honeybee_face_object' in config['layers'][layer.Name]:
+                    hb_objects = face3d_to_hb_object(config, face_obj, name,
+                        layer.Name)
+                    hb_apertures.extend(hb_objects[0])
+                    hb_shades.extend(hb_objects[1])
+                    hb_doors.extend(hb_objects[2])
+
+    return hb_faces, hb_shades, hb_apertures, hb_doors, hb_grids
+
+
+def import_objects(file_3dm, layer, *, tolerance=None, visibility=True):
+    """Get default Honeybee Faces for a Rhino3dm layer.
+
+    Args:
+        file_3dm: A Rhino3dm file object.
+        layer: A Rhino3dm layer object.
+        tolerance: A number for model tolerance. By default the tolerance is set to
+            the ModelAbsoluteTolerance value in input 3DM file. Defaults to None.
+        visibility: Bool. If set to False then the objects on an "off"
+            layer and hidden objects in Rhino3dm will also be imported.
+            Defaults to True.
+
+    Returns:
+        A list of Honeybee Face objects.
+    """
+    hb_faces = []
+    objects = objects_on_layer(file_3dm, layer=layer, visibility=visibility)
+    
+    for obj in objects:
+        try:
+            lb_faces = to_face3d(obj, tolerance=tolerance)
+        except AttributeError:
+            raise AttributeError(
+                'Please turn on the shaded mode in rhino, save the file,'
+                ' and try again.'
+            )
+
+        name = obj.Attributes.Name
+
+        for face_obj in lb_faces:
+            hb_faces.append(face3d_to_hb_face(face_obj, name, layer.Name))
+
+    return hb_faces
+    
