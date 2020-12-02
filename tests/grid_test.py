@@ -1,7 +1,7 @@
 import pytest
 from honeybee_radiance.sensorgrid import SensorGrid
 from honeybee_3dm.model import import_3dm
-from honeybee_3dm.helper import read_json
+from honeybee_3dm.config import read_json
 
 def test_grids():
     path = './tests/assets/test.3dm'
