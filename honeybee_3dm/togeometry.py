@@ -4,12 +4,9 @@
 # This is deliberate and it is done to bypass the wrong number of 
 # items extracted from a list when accesses throug the pythonic way.
 
-# The Rhino3dm library provides the ability to access content of a Rhino3dm
-# file from outside of Rhino
 import warnings
 import rhino3dm
 
-# Importing Ladybug geometry dependencies
 import ladybug.color as lbc
 from ladybug_geometry.geometry3d.pointvector import Point3D, Vector3D
 from ladybug_geometry.geometry3d.face import Face3D
