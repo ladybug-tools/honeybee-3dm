@@ -119,7 +119,8 @@ def import_objects(file_3dm, layer, *, tolerance=None, layer_visibility=True):
         except AttributeError:
             raise AttributeError(
                 'Please turn on the shaded mode in rhino, save the file,'
-                ' and try again.'
+                ' and try again. Shaded mesh could not be created for'
+                f' object with ID {obj.Attributes.Id}'
             )
 
         name = obj.Attributes.Name
