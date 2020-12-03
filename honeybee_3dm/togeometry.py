@@ -241,7 +241,8 @@ def brep_to_face3d(brep, tolerance):
         # the face has hole / holes
         elif len(polylines) > 1:
             # Get the area of Face3D created by the polylines
-            polyline_areas = [Face3D(polyline.vertices).area for polyline in polylines]
+            polyline_areas = [Face3D(polyline.vertices).area for polyline in polylines
+                if isinstance(polyline, Polyline3D)]
             # Sort the Polylines based on area of face created from polyline vertices
             # The longest polyline belongs to the boundary of the face
             # The rest of the polylines belong to the holes in the face
@@ -341,7 +342,7 @@ def to_face3d(obj, *, tolerance, raise_exception=False):
             lb_face = solid_to_face3d(rh_geo)
         else:
             # If it's a planar brep
-            if check_planarity(rh_geo):
+            if check_planarity(rh_geo) and len(rh_geo.Faces) == 1:
                 lb_face = [brep_to_face3d(rh_geo, tolerance)]
             # If it's not a planar brep. Such as a curved wall
             else:
