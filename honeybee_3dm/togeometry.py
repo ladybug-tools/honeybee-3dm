@@ -289,12 +289,25 @@ def solid_to_face3d(brep):
     Returns:
         A list of Ladybug Face3D objects.
     """
-    faces = []
+    face3ds = []
+
     for i in range(len(brep.Faces)):
         mesh = brep.Faces[i].GetMesh(rhino3dm.MeshType.Any)
-        faces.extend(mesh_to_face3d(mesh))
+        faces = mesh_to_face3d(mesh)
+        normals = set([face.normal.z for face in faces])
+        if len(normals) > 1:
+            # It's not a planar mesh
+            face3ds.extend(faces)
+        # It's a planar mesh, hence create a polyface from meshes 
+        # and return a since face3d
+        else:
+            polyface = Polyface3D.from_faces(faces, 0.001)
+            lines = list(polyface.naked_edges)
+            polylines = Polyline3D.join_segments(lines, 0.001)
+            face3d = Face3D(boundary=polylines[0].vertices)
+            face3ds.append(face3d)
 
-    return faces
+    return face3ds
 
 
 def extrusion_to_face3d(extrusion):
@@ -347,12 +360,23 @@ def to_face3d(obj, *, tolerance, raise_exception=False):
             # If it's not a planar brep. Such as a curved wall
             else:
                 lb_face = brep_to_mesh_to_face3d(rh_geo)
+
     # If it's an extrusion
     elif isinstance(rh_geo, rhino3dm.Extrusion):
-        lb_face = extrusion_to_face3d(rh_geo)
+        if rh_geo.IsSolid:
+            warnings.warn(
+                'Presently solid extrusion objects are being meshed before import.'
+                ' Performance will improve if they were converted to closed polysurfaces'
+                ' in rhino before importing here.'
+            )
+            lb_face = extrusion_to_face3d(rh_geo)
+        else:
+            lb_face = extrusion_to_face3d(rh_geo)
+
     # If it's a mesh
     elif isinstance(rh_geo, rhino3dm.Mesh):
         lb_face = mesh_to_face3d(rh_geo)
+        
     else:
         if raise_exception:
             raise ValueError(f'Unsupported object type: {rh_geo.ObjectType}')
