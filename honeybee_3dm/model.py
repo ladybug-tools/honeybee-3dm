@@ -6,12 +6,11 @@ from honeybee.model import Model
 from honeybee.typing import clean_string
 
 from .face import import_objects, import_objects_with_config
-from .helper import get_unit_system
-from .config import read_json, check_config, check_parent_in_config
-from .layer import child_parent_dict
+from .helper import get_unit_system , check_parent_in_config
+from .layer import child_parent_dict, visible_layers
+from .config import check_config
 
-
-def import_3dm(path, name=None, *, config_path=None, layer_visibility=True):
+def import_3dm(path, name=None, *, config_path=None):
     """Import a rhino3dm file as a Honeybee model.
 
     This function outputs a Honeybee model from the faces, shades, apertures, and doors
@@ -25,8 +24,6 @@ def import_3dm(path, name=None, *, config_path=None, layer_visibility=True):
             model. Default will be the same as Rhino file name.
         config_path: A text string path to the config file on disk.
             Defaults to not using a config file.
-        layer_visibility: Bool. If set to False then the objects on an "off"
-            layer in Rhino3dm will also be imported. Defaults to True.
 
     Returns:
         A Honeybee model.
@@ -48,8 +45,9 @@ def import_3dm(path, name=None, *, config_path=None, layer_visibility=True):
                 ' If file exists, try using double backslashes in file path'
                 ' and try again.'
             )
-        # Get the config file as a directory
-        config = read_json(config_path)
+        # Validate the config file and get it as a directory
+
+        config = check_config(rhino3dm_file, config_path)
     else:
         config = None
 
@@ -65,16 +63,29 @@ def import_3dm(path, name=None, *, config_path=None, layer_visibility=True):
     # A dictionary with child layer : parent layer structure
     child_to_parent = child_parent_dict(rhino3dm_file)
 
+    # Get all the visible layers from rhino
+    if visible_layers(rhino3dm_file):
+        rhino_visible_layers = visible_layers(rhino3dm_file)
+        rhino_visible_layer_names = [layer.Name for layer in rhino_visible_layers]
+    else:
+        raise ValueError(
+            'Please turn on the layers in rhino you wish to import objects from.'
+        )
+
     # If config is provided
-    if config and check_config(rhino3dm_file, config):
+    if config:
         
         for layer in rhino3dm_file.Layers:
-            
+
+            # If the layer is not in config and not "on" in rhino, ignore
+            if layer.Name not in config['layers'] and \
+                layer.Name not in rhino_visible_layer_names:
+                continue
+
             # Import objects from each layer in the config file
-            if layer.Name in config['layers']:
+            elif layer.Name in config['layers']:
                 hb_objs = import_objects_with_config(
-                    rhino3dm_file, layer, tolerance=model_tolerance,
-                        layer_visibility=layer_visibility, config=config)
+                    rhino3dm_file, layer, tolerance=model_tolerance, config=config)
                 hb_faces.extend(hb_objs[0])
                 hb_shades.extend(hb_objs[1])
                 hb_apertures.extend(hb_objs[2])
@@ -87,13 +98,13 @@ def import_3dm(path, name=None, *, config_path=None, layer_visibility=True):
                 continue
 
             # Import objects from each layer not in the config file
-            else:
+            elif layer.Name in rhino_visible_layer_names:
                 hb_faces.extend(import_objects(rhino3dm_file, layer,
                     tolerance=model_tolerance))
     
-    # If config is not provided
-    else:
-        for layer in rhino3dm_file.Layers:
+    else:  # If config is not provided
+        # Only use layers that are "on" in rhino
+        for layer in rhino_visible_layers:
             hb_faces.extend(import_objects(rhino3dm_file, layer,
                 tolerance=model_tolerance))
     
