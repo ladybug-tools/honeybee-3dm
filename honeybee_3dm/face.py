@@ -7,12 +7,12 @@ from honeybee.typing import clean_and_id_string, clean_string
 from .togeometry import to_face3d
 from .layer import objects_on_layer, objects_on_parent_child
 from .grid import import_grids
-from .config import grid_controls, face3d_to_face_type_to_hb_face, face3d_to_hb_object
-from .config import face3d_to_rad_to_hb_face, child_layer_control
+from .helper import grid_controls, face3d_to_hb_face_with_face_type, face3d_to_hb_object
+from .helper import face3d_to_hb_face_with_rad, child_layer_control
 
 
 def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None,
-    layer_visibility=True, config=None, modifiers_dict=None):
+    config=None, modifiers_dict=None):
     """Import Rhino planar geometry as Honeybee faces.
 
     This function looks up a rhino3dm file, converts the objects
@@ -23,8 +23,6 @@ def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None,
         rhino3dm_file: A Rhino3DM file object.
         tolerance: A number for model tolerance. By default the tolerance is set to
             the ModelAbsoluteTolerance value in input 3DM file.
-        layer_visibility: Bool. If set to False then the objects on an "off"
-            layer in Rhino3dm will also be imported. Defaults to True.
         config: A dictionary of config settings. Defaults to None
         modifiers_dict: A dictionary with radiance identifier to modifier structure.
             Defaults to None.
@@ -53,13 +51,11 @@ def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None,
     else:
         # If child layers needs to be included
         if child_layer_control(config, layer.Name):
-            objects = objects_on_parent_child(rhino3dm_file, layer.Name,
-                layer_visibility=layer_visibility)
+            objects = objects_on_parent_child(rhino3dm_file, layer.Name)
 
         # If child layers do not need to be included
         else:
-            objects = objects_on_layer(rhino3dm_file, layer,
-                layer_visibility=layer_visibility)
+            objects = objects_on_layer(rhino3dm_file, layer)
     
         for obj in objects:
             try:
@@ -74,14 +70,14 @@ def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None,
             for face_obj in lb_faces:
                 # If face_type settting is employed
                 if 'honeybee_face_type' in config['layers'][layer.Name]:
-                    hb_faces.append(face3d_to_face_type_to_hb_face(config, face_obj,
+                    hb_faces.append(face3d_to_hb_face_with_face_type(config, face_obj,
                         name, layer.Name))
                 
                 # If only radiance material settting is employed
                 elif 'honeybee_face_type' not in config['layers'][layer.Name] and\
                     'honeybee_face_object' not in config['layers'][layer.Name] and\
                         'radiance_material' in config['layers'][layer.Name]:
-                    hb_faces.append(face3d_to_rad_to_hb_face(config, face_obj, name,
+                    hb_faces.append(face3d_to_hb_face_with_rad(config, face_obj, name,
                         layer.Name))
                 
                 # If face_object settting is employed
@@ -95,7 +91,7 @@ def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None,
     return hb_faces, hb_shades, hb_apertures, hb_doors, hb_grids
 
 
-def import_objects(file_3dm, layer, *, tolerance=None, layer_visibility=True):
+def import_objects(file_3dm, layer, *, tolerance=None):
     """Get default Honeybee Faces for a Rhino3dm layer.
 
     Args:
@@ -103,15 +99,12 @@ def import_objects(file_3dm, layer, *, tolerance=None, layer_visibility=True):
         layer: A Rhino3dm layer object.
         tolerance: A number for model tolerance. By default the tolerance is set to
             the ModelAbsoluteTolerance value in input 3DM file. Defaults to None.
-        layer_visibility: Bool. If set to False then the objects on an "off"
-            layer and hidden objects in Rhino3dm will also be imported.
-            Defaults to True.
 
     Returns:
         A list of Honeybee Face objects.
     """
     hb_faces = []
-    objects = objects_on_layer(file_3dm, layer=layer, layer_visibility=layer_visibility)
+    objects = objects_on_layer(file_3dm, layer=layer)
     
     for obj in objects:
         try:
