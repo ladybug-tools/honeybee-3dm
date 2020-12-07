@@ -1,4 +1,4 @@
-"""A collection of helper functions."""
+"""A collection of general helper functions"""
 
 
 def get_unit_system(file_3dm):
@@ -25,3 +25,4 @@ def get_unit_system(file_3dm):
         )
 
     return unit
+

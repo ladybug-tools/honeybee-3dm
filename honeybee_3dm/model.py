@@ -6,9 +6,9 @@ from honeybee.model import Model
 from honeybee.typing import clean_string
 
 from .face import import_objects, import_objects_with_config
-from .helper import get_unit_system , check_parent_in_config
+from .helper import get_unit_system
 from .layer import child_parent_dict, visible_layers
-from .config import check_config
+from .config import check_config, check_parent_in_config
 
 def import_3dm(path, name=None, *, config_path=None):
     """Import a rhino3dm file as a Honeybee model.
