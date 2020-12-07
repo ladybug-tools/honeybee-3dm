@@ -1,4 +1,4 @@
-"""Functions to create Ladybug objects from Rhino3dm objects."""
+"""Functions to create Ladybug Geometry objects from Rhino3dm objects."""
 # In this module, you will observe that instead of using the pythonic way of
 # iterating through a list, iterators(studs such as "i" and "j") are used. 
 # This is deliberate and it is done to bypass the wrong number of 
@@ -363,14 +363,6 @@ def to_face3d(obj, *, tolerance, raise_exception=False):
 
     # If it's an extrusion
     elif isinstance(rh_geo, rhino3dm.Extrusion):
-        if rh_geo.IsSolid:
-            warnings.warn(
-                'Presently solid extrusion objects are being meshed before import.'
-                ' Performance will improve if they were converted to closed polysurfaces'
-                ' in rhino before importing here.'
-            )
-            lb_face = extrusion_to_face3d(rh_geo)
-        else:
             lb_face = extrusion_to_face3d(rh_geo)
 
     # If it's a mesh
