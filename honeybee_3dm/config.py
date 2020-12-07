@@ -1,18 +1,129 @@
-"""Functions to work with the config file."""
+"""Validation and schema generation for the config file and helper functions."""
 
+import enum
 import json
 import os
+import rhino3dm
 
+from pydantic import BaseModel, validator, Field
+from typing import Dict
+
+from .material import mat_to_dict
 from honeybee.face import Face
 from honeybee.shade import Shade
 from honeybee.aperture import Aperture
 from honeybee.door import Door
 from honeybee.facetype import face_types
 from honeybee.typing import clean_and_id_string, clean_string
-from .material import mat_to_dict
 
 
-def read_json(path):
+class FaceObjects(str, enum.Enum):
+    """List of acceptable string names for Honeybee Classes."""
+    door = 'door'
+    shade = 'shade'
+    aperture = 'aperture'
+
+
+class FaceType(str, enum.Enum):
+    """List of acceptable string names for Honeybee face types."""
+    wall = 'wall'
+    roof = 'roof'
+    floor = 'floor'
+    airwall = 'airwall'
+
+
+class GridSettings(BaseModel):
+    """Config for the grid-settings."""
+
+    grid_size: float = Field(
+        1.0,
+        description='Grid spacing.'
+    )
+
+    grid_offset: float = Field(
+        0.0,
+        description='Grid offset'
+    )
+
+    @validator('grid_size')
+    def check_grid_size(cls, v):
+        grid_size = v
+        if grid_size <= 0.0:
+            raise ValueError('Grid size must be greater than zero.')
+        return v
+
+
+class LayerConfig(BaseModel):
+    """Config for layer keys."""
+
+    exclude_from_rad: bool = Field(
+        False,
+        description='Boolean to indicate if this layer should be excluded from '
+        'radiance model.'
+    )
+
+    include_child_layers: bool = Field(
+        False,
+        description='Boolean to indicate if objects from child layers are to be imported'
+    )
+
+    radiance_material: str = Field(
+        None,
+        description='Text string of the radiance identifier.'
+    )
+
+    grid_settings: GridSettings = Field(
+        None
+    )
+
+    honeybee_face_object: FaceObjects = Field(
+        None,
+        description='A text string for FaceObject to create either a Honeybee Shade,'
+        ' a Honeybee door, or a Honeybee aperture object.'
+    )
+
+    honeybee_face_type: FaceType = Field(
+        None,
+        description='A text string for FaceType to create either a Honeybee Wall,'
+        ' a Honeybee Floor, or a Honeybee aperture roof/ceiling, or a Honeybee.'
+        ' Floor.'
+    )
+
+
+class Config(BaseModel):
+    """Config for the config file."""
+
+    sources: Dict[str, str] = Field(
+        None,
+        description='Path to the radiance .mat file.'
+    )
+
+    layers: Dict[str, LayerConfig] = Field(
+        description='names of layer in rhino.'
+    )
+
+    @validator('sources')
+    def check_sources(cls, v):
+        sources = list(v.keys())
+        if len(sources) != 1:
+            raise ValueError('sources can only have one key.')
+
+        if sources[0] != 'radiance_material':
+            raise ValueError(
+                    f'invalid sources key: {sources[0]}.'
+                    'key must be radiance_material'
+            )
+        return v
+    
+    @validator('layers')
+    def check_layers(cls, v):
+        layers = list(v.keys())
+        if not layers:
+            raise ValueError('The config file cannot be used without layer names.')
+        return v
+
+
+def read_json(config_path):
     """Get a dictionary from a config.json file.
 
     Args:
@@ -22,7 +133,7 @@ def read_json(path):
         A dictionary for the config.json
     """
     try:
-        with open(path) as fh:
+        with open(config_path) as fh:
             config = json.load(fh)
     except json.decoder.JSONDecodeError:
         raise ValueError(
@@ -31,54 +142,136 @@ def read_json(path):
     return config
 
 
+def check_layers(file_3dm, config):
+    """Checks if layers in the config file are layers from the rhino file.
+
+    Args:
+        file_3dm: A rhino3dm file object.
+        config: Config dictionary.
+
+    Raises:
+        KeyError: If any of the layer names mentioned in the config file is not found
+            in the layers in the rhino file.
+
+    Returns:
+        Boolean value of True if no error is raised.
+    """
+    layers = [layer.Name for layer in file_3dm.Layers]
+    layer_check = [True for layer in config['layers'] if layer in layers]
+    if len(config['layers']) != layer_check.count(True):
+        raise KeyError(
+            'Only layer names from the Rhino file are allowed in the config file.'
+        )
+    else:
+        return True
+
+
+def check_rad(config):
+    """Checks if radiance modifiers can be applied to objects on rhino layers.
+
+    Args:
+        config: Config dictionary.
+
+    Raises:
+        OSError: If the path to the radiance material file is not a valid path.
+        KeyError: If the config file does not have a key named "radiance_material" in
+            sources and a radiance material is requested in one of the layers in the
+            config file.
+        ValueError: If any of the radiance identifiers mentioned in the config file 
+            are not found in the radiance materials file or do not match the identifiers
+            in the radiance material file.
+
+    Returns:
+        Boolean value of True if no error is raised.
+    """
+
+    # Check-04: Check if radiance modifiers can be imported
+    for layer in config['layers']:
+        if 'radiance_material' in config['layers'][layer]:
+            break
+        if 'sources' in config and config['sources']['radiance_material']:
+            os.path.isfile(config['sources']['radiance_material'])
+            try:
+                modifiers_dict = mat_to_dict(config['sources']['radiance_material'])
+            except OSError:
+                path = config['sources']['radiance_material']
+                raise OSError(
+                    f'The path {path} is not a valid path. Please try' 
+                    ' using double backslashes in the  file path.'
+                        )
+        else:
+            raise KeyError(
+                'Please make sure the config file has the key "radiance_material" in'
+                ' sources.'
+        )
+    
+    # Check-05: Check if all the radiance materials are found in the .mat file
+    rad_mat = [config['layers'][layer][key] for layer in config['layers'] for key \
+        in config['layers'][layer] if key == 'radiance_material']
+    
+    rad_mat_check = [True for mat in rad_mat if mat in modifiers_dict]
+    if len(rad_mat) != rad_mat_check.count(True):
+        raise ValueError(
+            'Please make sure all the radiance materials used in the config file are'
+            ' also found in the radiance material file and names of radiance'
+            ' materials in the config file match the radiance identifiers in the'
+            ' radiance material file.'
+        )
+    else:
+        pass
+
+    return True
+
+
+def check_config(file_3dm, config_path):
+    """Validates the config file and returns it in the form of a dictionary.
+
+    Args:
+        file_3dm: A rhino3dm file object.
+        config_path: A text string for the path to the config file.
+
+    Returns:
+        Config dictionary or None if any of the checks fails.
+    """
+    # Validate against schema
+    Config.parse_file(config_path)
+
+    # Get a config dictionary from the config file
+    config = read_json(config_path)
+
+    # Validate config with external binaries
+    if check_layers(file_3dm, config) and check_rad(config):
+        return config
+    else:
+        None
+
+
+
 def child_layer_control(config, layer_name):
     """Checks if child layers are requested for a layer in the config file."""
 
     if 'include_child_layers' in config['layers'][layer_name] and \
-        config['layers'][layer_name]['include_child_layers'].lower() == 'true':
+        config['layers'][layer_name]['include_child_layers'] == True:
         return True
     else:
         return False
 
 
 def grid_controls(config, layer_name):
-    """Checks grid controls from the config file and returns valid grid controls.
+    """Returns grid controls for a layer from the config.
 
     Args:
         grid_controls: A list of grid controls from the config file
 
     Returns:
-        A tuple of grid controls (grid-size-x, gris-size-y, grid-offset) if valid 
+        A tuple of grid controls (grid_size, grid_offset) if valid 
             grid settings are found in the config file or None
     """
 
     if 'grid_settings' in config['layers'][layer_name] and \
-            'exclude_from_rad' in config['layers'][layer_name]:
-        
-        auth_grid_keys = ['grid-size-x', 'grid-size-y', 'grid-offset']
-        grid_key_check = [True for key in config['layers'][layer_name]['grid_settings'] \
-            if key in auth_grid_keys]
-
-        if len(config['layers'][layer_name]['grid_settings']) == 3 and \
-            grid_key_check.count(True) == 3:
-            pass
-        else:
-            raise KeyError(
-                f'The keys in grid-settings must be from {tuple(auth_grid_keys)}.'
-                ' Other keys are not allowed.'
-        )
+            config['layers'][layer_name]['exclude_from_rad']:
         grid_controls = config['layers'][layer_name]['grid_settings']
-        
-        check = [isinstance(value, float) for value in grid_controls.values()]
-        
-        if len(grid_controls) == check.count(True):
-            return (grid_controls['grid-size-x'], grid_controls['grid-size-y'],
-                grid_controls['grid-offset'])
-        else:
-            raise ValueError(
-                'Grid size and offset distance need to be decimal point numbers in'
-                ' the config file. Please fix that and try again.'
-            )
+        return grid_controls['grid_size'], grid_controls['grid_offset']
     else:
         return None
 
@@ -102,13 +295,13 @@ def check_parent_in_config(file_3dm, config, layer_name, parent_layer_name):
 
     if parent_layer_name in config['layers'] and\
         'include_child_layers' in config['layers'][parent_layer_name] and\
-        config['layers'][parent_layer_name]['include_child_layers'].lower() == 'true':
+        config['layers'][parent_layer_name]['include_child_layers'] == True:
         return True
     else:
         return False
 
 
-def face3d_to_face_type_to_hb_face(config, face_obj, name, layer_name):
+def face3d_to_hb_face_with_face_type(config, face_obj, name, layer_name):
     """Create a Honeybee Face object with a specific face_type.
 
     This function returns a Honeybee Face object with a specific face_type requested
@@ -153,7 +346,7 @@ def face3d_to_face_type_to_hb_face(config, face_obj, name, layer_name):
         return hb_face
 
 
-def face3d_to_rad_to_hb_face(config, face_obj, name, layer_name):
+def face3d_to_hb_face_with_rad(config, face_obj, name, layer_name):
     """Create a Honeybee Face object with a radiance material assigned to it.
 
     Args:
@@ -237,116 +430,3 @@ def face3d_to_hb_object(config, face_obj, name, layer_name):
             hb_shades.append(hb_shade)
 
     return hb_apertures, hb_shades, hb_doors
-
-
-def check_config(file_3dm, config):
-    """Quality check for the config file.
-
-    Args:
-        file_3dm: A rhino3dm file object.
-        config: A dictionary of the config settings.
-
-    Raises:
-        KeyError: KeyError will be raised if the key "layers" is not found in the config
-            file.
-        KeyError: KeyError will be raised if a layer in the config file is not found in 
-            the rhino file.
-        KeyError: KeyError will be raised if any of the key in a layer is not a valid
-            key.
-        ValueError: ValueError will be raised if a key has an empty string as a value.
-        OSError: OSError will be raised if the path to radiance material file is not
-            valid.
-        KeyError: KeyError will be raised if the key "radiance_meterial" is not found
-            in the "sources" and the key "radiance_material" is found in one of the 
-            layers.
-        ValueError: ValueError is raised if all the radiance materials requested in the
-            config file are not found in the radiance material file.
-
-    Returns:
-        True if no error is raised.
-    """
-
-    # A list of layer names from the rhino file
-    layers = [layer.Name for layer in file_3dm.Layers]
-
-    # Check-01: If only rhino layers are used in the config
-    if 'layers' not in config:
-        raise KeyError(
-            'layers not found in the config file.'
-        )
-    else:
-        layer_check = [True for key in config['layers'] if key in layers]
-        if len(config['layers']) != layer_check.count(True):
-            raise KeyError(
-                'The layer names in the "layers" do not match names of the layers in'
-                ' rhino.'
-            )
-        else:
-            pass
-    
-    # Check-02: If all the layer keys are authentic
-    auth_keys = ['exclude_from_rad', 'grid_settings', 'include_child_layers',
-        'radiance_material', 'honeybee_face_object', 'honeybee_face_type']
-    
-    unique_layer_keys = set([key for layer in config['layers'] for\
-        key in config['layers'][layer]])
-    layer_key_check = [True for key in unique_layer_keys if key in auth_keys]
-    
-    if len(unique_layer_keys) != layer_key_check.count(True):
-        raise KeyError(
-                f'The layer keys must be from {tuple(auth_keys)}'
-            )
-    else:
-        pass
-
-    # Check-03: Check if there are any blank values
-    parent_value_check = [True for value in config.values() if value != " "]
-    if len(config) != parent_value_check.count(True):
-        raise ValueError(
-                'Keys without values are not allowed in the config file'
-            )
-    else:
-        child_value_check = [True if config['layers'][layer][key] != " " else False for\
-            layer in config['layers'] for key in config['layers'][layer]]
-        if len(child_value_check) != child_value_check.count(True):
-            raise ValueError(
-                'Keys without values are not allowed in the config file'
-            )
-        else:
-            pass
-
-    # Check-04: Check if radiance modifiers can be imported
-    for layer in config['layers']:
-        if 'radiance_material' in config['layers'][layer]:
-            break
-        if 'sources' in config and config['sources']['radiance_material']:
-            os.path.isfile(config['sources']['radiance_material'])
-            # Get the config file as a directory
-            try:
-                modifiers_dict = mat_to_dict(config['sources']['radiance_material'])
-            except OSError:
-                path = config['sources']['radiance_material']
-                raise OSError(
-                    f'The path {path} is not a valid path. Please try' 
-                    ' using double backslashes in the  file path.'
-                        )
-        else:
-            raise KeyError(
-                'Please make sure the config file has the key "radiance_material" in'
-                ' sources.'
-        )
-    
-    # Check-05: Check if all the radiance materials are found in the .mat file
-    rad_mat = [config['layers'][layer][key] for layer in config['layers'] for key \
-        in config['layers'][layer] if key == 'radiance_material']
-    
-    rad_mat_check = [True for mat in rad_mat if mat in modifiers_dict]
-    if len(rad_mat) != rad_mat_check.count(True):
-        raise ValueError(
-            'Please make sure all the radiance materials used in the config file are'
-            ' also found in the radiance material file.'
-        )
-    else:
-        pass
-
-    return True
