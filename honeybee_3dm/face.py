@@ -7,8 +7,8 @@ from honeybee.typing import clean_and_id_string, clean_string
 from .togeometry import to_face3d
 from .layer import objects_on_layer, objects_on_parent_child
 from .grid import import_grids
-from .helper import grid_controls, face3d_to_hb_face_with_face_type, face3d_to_hb_object
-from .helper import face3d_to_hb_face_with_rad, child_layer_control
+from .config import grid_controls, face3d_to_hb_face_with_face_type, face3d_to_hb_object
+from .config import face3d_to_hb_face_with_rad, child_layer_control
 
 
 def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None,
