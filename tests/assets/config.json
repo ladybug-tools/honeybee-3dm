@@ -1,21 +1,20 @@
 
 {
     "sources" :{
-        "radiance_material": "D:\\Github\\honeybee-3dm\\tests\\assets\\daylight.mat"
+        "radiance_material": "./tests/assets/daylight.mat"
     },
     "layers":{
         "grid": {
-            "exclude_from_rad" : "true",
+            "exclude_from_rad" : true,
             "grid_settings": {
-                "grid-size-x": 0.6,
-                "grid-size-y" : 0.6,
-                "grid-offset": 0.0
+                "grid_size" : 0.6,
+                "grid_offset": 0.0
             },
-            "include_child_layers" : "true"
+            "include_child_layers" : true
         },
         "window": {
             "radiance_material": "rad_glass_40",
-            "include_child_layers": "true",
+            "include_child_layers": true,
             "honeybee_face_object": "aperture" 
         },
         "door":{
@@ -26,7 +25,7 @@
         },
         "walls": {
             "radiance_material": "rad_wall",
-            "include_child_layers": "false"
+            "include_child_layers": false
         },
         "floor": {
             "honeybee_face_type": "floor"
