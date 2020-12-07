@@ -1,4 +1,5 @@
-"""Create Honeybee grid objects from planar geometries in a rhino file."""
+"""Create Honeybee grid objects from objects in a rhino file."""
+
 import warnings
 import rhino3dm
 
@@ -10,7 +11,7 @@ from .layer import objects_on_layer, objects_on_parent_child
 
 
 def import_grids(rhino3dm_file, layer, *, grid_controls=None, child_layer=False,
-    tolerance=None, layer_visibility=True):
+    tolerance=None):
     """Creates Honeybee grids from a rhino3dm file.
 
     This function assumes all the grid objects are under a layer named ``grid``.
@@ -18,14 +19,12 @@ def import_grids(rhino3dm_file, layer, *, grid_controls=None, child_layer=False,
     Args:
         rhino3dm_file: The rhino file from which Honeybee grids will be created.
         layer: A Rhino3dm layer object.
-        grid_controls: A tuple of values for grid-size-x, grid-size-y, and grid-offset
+        grid_controls: A tuple of values for grid_size and grid_offset.
             Defaults to None. This will employ the grid setting of (1.0, 1.0, 0.0)
             for grid-size-x, grid-size-y, and grid-offset respectively.
         child_layer: A bool. True will generate grids from the objects on the child layer
             of a layer in addition to the objects on the parent layer. Defaults to False.
         tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
-        layer_visibility: Bool. If set to False then the objects on an "off"
-            layer in Rhino3dm will also be imported. Defaults to True.
             .
     Returns:
         A list of Honeybee grids.
@@ -33,13 +32,11 @@ def import_grids(rhino3dm_file, layer, *, grid_controls=None, child_layer=False,
     hb_grids = []
     # if objects on child layers are not requested
     if not child_layer:
-        grid_objs = objects_on_layer(rhino3dm_file, layer,
-            layer_visibility=layer_visibility)
+        grid_objs = objects_on_layer(rhino3dm_file, layer)
     
     # if objects on child layers are requested
     if child_layer:
-        grid_objs = objects_on_parent_child(rhino3dm_file, layer.Name,
-            layer_visibility=layer_visibility)
+        grid_objs = objects_on_parent_child(rhino3dm_file, layer.Name)
     
     # Set default grid settings if not provided
     if not grid_controls:
@@ -53,7 +50,7 @@ def import_grids(rhino3dm_file, layer, *, grid_controls=None, child_layer=False,
             if check_planarity(geo):
                 try:
                     mesh3d = brep_to_face3d(geo, tolerance).mesh_grid(grid_controls[0],
-                        grid_controls[1], grid_controls[2])
+                        grid_controls[0], grid_controls[1])
                 except AttributeError:
                     raise AttributeError(
                         'Please turn on the shaded mode in rhino, save the file,'
