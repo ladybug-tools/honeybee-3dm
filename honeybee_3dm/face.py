@@ -11,7 +11,7 @@ from .helper import grid_controls, face3d_to_hb_face_with_face_type, face3d_to_h
 from .helper import face3d_to_hb_face_with_rad, child_layer_control
 
 
-def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None,
+def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
     config=None, modifiers_dict=None):
     """Import Rhino planar geometry as Honeybee faces.
 
@@ -91,7 +91,7 @@ def import_objects_with_config(rhino3dm_file, layer, *, tolerance=None,
     return hb_faces, hb_shades, hb_apertures, hb_doors, hb_grids
 
 
-def import_objects(file_3dm, layer, *, tolerance=None):
+def import_objects(file_3dm, layer, *, tolerance):
     """Get default Honeybee Faces for a Rhino3dm layer.
 
     Args:
@@ -108,7 +108,7 @@ def import_objects(file_3dm, layer, *, tolerance=None):
     
     for obj in objects:
         try:
-            lb_faces = to_face3d(obj, tolerance=tolerance)
+            lb_faces = to_face3d(obj, tolerance)
         except AttributeError:
             raise AttributeError(
                 'Please turn on the shaded mode in rhino, save the file,'
@@ -117,8 +117,11 @@ def import_objects(file_3dm, layer, *, tolerance=None):
             )
 
         name = obj.Attributes.Name
-
         for face_obj in lb_faces:
+            # If a face area is zero then ignore the face
+            if not face_obj.area > 0.0:
+                print("Face igonered")
+                continue
             obj_name = name or clean_and_id_string(layer.Name)
             args = [clean_string(obj_name), face_obj]
             hb_face = Face(*args)
