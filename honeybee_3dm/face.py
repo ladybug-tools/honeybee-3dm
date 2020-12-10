@@ -62,16 +62,17 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
                 lb_faces = to_face3d(obj, tolerance=tolerance)
             except AttributeError:
                 raise AttributeError(
-                    'Please turn on the shaded mode in rhino, save the file,'
-                    ' and try again. Shaded mesh could not be created for'
-                    f' object with ID {obj.Attributes.Id}'
-                )
+                    'Shaded mesh could not be created for'
+                    f' object with ID {obj.Attributes.Id}. Please make the object'
+                    ' visible on rhino canvas, switch to shaded mode, and save the file.'
+                    )
             except ValueError:
                 raise ValueError(
-                f'Could not create a face for object of ID {obj.Attributes.Id}'
-                ' Please reduce the unit tolerance value in rhino save the file and'
-                ' try again.'
-            )
+                    f'Could not create a face for object of ID {obj.Attributes.Id}'
+                    ' Please reduce the unit tolerance value in rhino, save the file and'
+                    ' try again. You might need to repeat this more than once if the'
+                    ' face is too small for the unit tolerance selected.'
+                    )
             name = obj.Attributes.Name
 
             for face_obj in lb_faces:
@@ -118,16 +119,17 @@ def import_objects(file_3dm, layer, *, tolerance):
             lb_faces = to_face3d(obj, tolerance)
         except AttributeError:
             raise AttributeError(
-                'Please turn on the shaded mode in rhino, save the file,'
-                ' and try again. Shaded mesh could not be created for'
-                f' object with ID {obj.Attributes.Id}'
-            )
+                'Shaded mesh could not be created for'
+                f' object with ID {obj.Attributes.Id}. Please make the object'
+                ' visible on rhino canvas, switch to shaded mode, and save the file.'
+                )
         except ValueError:
-                raise ValueError(
+            raise ValueError(
                 f'Could not create a face for object of ID {obj.Attributes.Id}'
-                ' Please reduce the unit tolerance value in rhino save the file and'
-                ' try again.'
-            )
+                ' Please reduce the unit tolerance value in rhino, save the file and'
+                ' try again. You might need to repeat this more than once if the'
+                ' face is too small for the unit tolerance selected.'
+                )
 
         name = obj.Attributes.Name
         for face_obj in lb_faces:

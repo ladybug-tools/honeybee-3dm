@@ -69,7 +69,6 @@ def check_planarity(brep, tolerance):
     is_planar = [brep.Surfaces[i].IsPlanar(tolerance)
         for i in range(len(brep.Surfaces))]
 
-    print(is_planar)
     return all(is_planar)
 
 
@@ -435,8 +434,6 @@ def brepface_to_face3d(brepFace, tolerance):
         #             return [face3d]
 
             
-
-
 def brep_to_brepface_to_face3d(brep, tolerance):
     faces = []
     for i in range(len(brep.Faces)):
