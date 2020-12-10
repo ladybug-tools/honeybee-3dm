@@ -49,7 +49,7 @@ def import_grids(rhino3dm_file, layer, *, grid_controls=None, child_layer=False,
             # Check if the Brep is planar
             if check_planarity(geo):
                 try:
-                    mesh3d = brep_to_face3d(geo, tolerance).mesh_grid(grid_controls[0],
+                    mesh3d = brep_to_face3d(geo, tolerance)[0].mesh_grid(grid_controls[0],
                         grid_controls[0], grid_controls[1])
                 except AttributeError:
                     raise AttributeError(
