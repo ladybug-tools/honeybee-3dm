@@ -63,8 +63,15 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
             except AttributeError:
                 raise AttributeError(
                     'Please turn on the shaded mode in rhino, save the file,'
-                    ' and try again.'
+                    ' and try again. Shaded mesh could not be created for'
+                    f' object with ID {obj.Attributes.Id}'
                 )
+            except ValueError:
+                raise ValueError(
+                f'Could not create a face for object of ID {obj.Attributes.Id}'
+                ' Please reduce the unit tolerance value in rhino save the file and'
+                ' try again.'
+            )
             name = obj.Attributes.Name
 
             for face_obj in lb_faces:
@@ -114,6 +121,12 @@ def import_objects(file_3dm, layer, *, tolerance):
                 'Please turn on the shaded mode in rhino, save the file,'
                 ' and try again. Shaded mesh could not be created for'
                 f' object with ID {obj.Attributes.Id}'
+            )
+        except ValueError:
+                raise ValueError(
+                f'Could not create a face for object of ID {obj.Attributes.Id}'
+                ' Please reduce the unit tolerance value in rhino save the file and'
+                ' try again.'
             )
 
         name = obj.Attributes.Name

@@ -168,7 +168,10 @@ def brep_to_meshed_face3d(brep, tolerance):
     for i in range(len(brep.Faces)):
         mesh = brep.Faces[i].GetMesh(rhino3dm.MeshType.Any)
         faces.extend(mesh_to_face3d(mesh))
-    polyface = Polyface3D.from_faces(faces, tolerance)
+    try:
+        polyface = Polyface3D.from_faces(faces, tolerance)
+    except Exception:
+        raise ValueError
     lines = list(polyface.naked_edges)
     polylines = Polyline3D.join_segments(lines, tolerance)
     face3d = Face3D(boundary=polylines[0].vertices)
@@ -244,7 +247,10 @@ def brep_to_face3d(brep, tolerance):
             # found in the tuple of vertices. This is fixed by using this 
             # remove_dup_vertices method
             boundary_pts = remove_dup_vertices(polylines[0].vertices, tolerance)
-            return [Face3D(boundary=boundary_pts)]
+            if len(boundary_pts) < 3:
+                raise ValueError
+            else:
+                return [Face3D(boundary=boundary_pts)]
 
         # In the list of the Polylines, if there's more than one polyline then
         # the face has hole / holes
@@ -311,7 +317,10 @@ def brepface_to_face3d(brepFace, tolerance):
     if curved:
         print("It is curved")
         faces = mesh_to_face3d(mesh)
-        polyface = Polyface3D.from_faces(faces, tolerance)
+        try:
+            polyface = Polyface3D.from_faces(faces, tolerance)
+        except Exception:
+            raise ValueError
         lines = list(polyface.naked_edges)
         polylines = Polyline3D.join_segments(lines, tolerance)
         face3d = Face3D(boundary=polylines[0].vertices)
@@ -320,7 +329,10 @@ def brepface_to_face3d(brepFace, tolerance):
     elif len(mesh.Vertices) == 4 or len(mesh.Vertices) == 3:
         print("It has 3 or 4 vertices")
         faces = mesh_to_face3d(mesh)
-        polyface = Polyface3D.from_faces(faces, tolerance)
+        try:
+            polyface = Polyface3D.from_faces(faces, tolerance)
+        except Exception:
+            raise ValueError
         lines = list(polyface.naked_edges)
         polylines = Polyline3D.join_segments(lines, tolerance)
         face3d = Face3D(boundary=polylines[0].vertices)
@@ -329,7 +341,10 @@ def brepface_to_face3d(brepFace, tolerance):
     else:
         print("It has entered the last option")
         faces = mesh_to_face3d(mesh)
-        polyface = Polyface3D.from_faces(faces, tolerance)
+        try:
+            polyface = Polyface3D.from_faces(faces, tolerance)
+        except Exception:
+            raise ValueError
         lines = list(polyface.naked_edges)
         polylines = Polyline3D.join_segments(lines, tolerance)
         check_polylines = [isinstance(polyline, Polyline3D) for polyline in polylines]
