@@ -351,86 +351,6 @@ def brepface_to_face3d(brepFace, tolerance):
             return faces
         
 
-
-
-
-
-
-        # lines = []
-        # for k in range(len(mesh.TopologyEdges)):
-        #     start_pt = to_point3d(mesh.TopologyEdges.EdgeLine(k).PointAt(0.0))
-        #     end_pt = to_point3d(mesh.TopologyEdges.EdgeLine(k).PointAt(1.0))
-        #     line = LineSegment3D.from_end_points(start_pt, end_pt)
-        #     lines.append(line)
-
-        # # # Create Ladybug Polylines from the lines
-        # polylines = Polyline3D.join_segments(lines, tolerance)
-
-
-        # if len(polylines) == 1:
-        #     print("One polyline")
-        #     boundary_pts1 = remove_dup_vertices(polylines[0].vertices, tolerance)
-        #     boundary_pts = remove_dup_vertices(boundary_pts1, tolerance)
-        #     print(boundary_pts)
-        #     face3d = Face3D(boundary=boundary_pts)
-        #     print (face3d)
-        #     return []
-        #     return [face3d]
-
-        # elif len(polylines) > 1:
-        #     print("More polylines")
-        #     check_polylines = [isinstance(polyline, Polyline3D) for polyline in polylines]
-        #     if not all(check_polylines):
-        #         print("Line found in polylines")
-        #         faces = mesh_to_face3d(mesh)
-        #         return faces
-        #     else:
-        #         print("No Line at the end")
-        #         polyline_areas = [Face3D(polyline.vertices).area for polyline in polylines
-        #             if isinstance(polyline, Polyline3D)]
-
-        #         polyline_area_dict = dict(zip(polylines, polyline_areas))
-            
-        #         sorted_dict = sorted(polyline_area_dict.items(), key=lambda x: x[1], reverse=True)
-        #         sorted_polylines = [item[0] for item in sorted_dict]
-
-        #         boundary_pts = remove_dup_vertices(
-        #             sorted_polylines[0].vertices, tolerance)
-        #         # Vertices for the hole / holes
-        #         hole_pts = [remove_dup_vertices(polyline.vertices, tolerance)
-        #                     for polyline in sorted_polylines[1:]]
-        #         # Merging lists of hole vertices
-        #         total_hole_pts = [
-        #             pts for pts_lst in hole_pts for pts in pts_lst]
-        #         hole_pts_on_boundary = [
-        #             pts for pts in total_hole_pts if pts in boundary_pts]
-                
-        #         print(len(hole_pts_on_boundary), len(total_hole_pts))
-        #         # * Check 02 - If any of the hole is touching the boundary of the face
-        #         if len(hole_pts_on_boundary) == len(total_hole_pts):
-        #             print("All hole points on boundary. Faces shall be merges.")
-        #             faces = mesh_to_face3d(mesh)
-        #             polyface = Polyface3D.from_faces(faces, tolerance)
-        #             lines = list(polyface.naked_edges)
-        #             polylines = Polyline3D.join_segments(lines, tolerance)
-        #             face3d = Face3D(boundary=polylines[0].vertices)
-        #             return [face3d]
-
-        #         elif len(hole_pts_on_boundary) > 0:
-        #             print("holes touching boundary")
-        #             warnings.warn(
-        #                 'A Brep has holes that touch the boundary of the brep.'
-        #             ' This geometry will be meshed.'
-        #                 )
-        #             return []
-        #             faces = mesh_to_face3d(mesh)
-
-        #         else:
-        #             print("holes not touching boundary")
-        #             face3d = Face3D(boundary=boundary_pts, holes=hole_pts)
-        #             return [face3d]
-
-            
 def brep_to_brepface_to_face3d(brep, tolerance):
     faces = []
     for i in range(len(brep.Faces)):
@@ -472,19 +392,32 @@ def solid_to_face3d(brep, tolerance):
     return face3ds
 
 
-def extrusion_to_face3d(extrusion):
+def extrusion_to_face3d(extrusion, tolerance):
     """Get a list of Ladybug Face3D objects from a rhino3dm Extrusion.
 
     Args:
         brep: A rhino3dm Extrusion.
+    tolerance: A number for tolerance value. Tolerance will only be used for
+            converting mesh geometries.
 
     Returns:
         A list of Ladybug Face3D objects.
     """
     faces = []
     mesh = extrusion.GetMesh(rhino3dm.MeshType.Any)
-    faces.extend(mesh_to_face3d(mesh))
-
+    # Create face3ds
+    faces = mesh_to_face3d(mesh)
+    # Group faces by normal direction
+    face_normal = {face: face.normal.z for face in faces}
+    face_groups = {}
+    for i, v in face_normal.items():
+        face_groups[v] = [i] if v not in face_groups.keys() else face_groups[v] + [i]
+    for normal in face_groups:
+        polyface = Polyface3D.from_faces(face_groups[normal], tolerance)
+        lines = list(polyface.naked_edges)
+        polylines = Polyline3D.join_segments(lines, tolerance)
+        face3d = Face3D(boundary=polylines[0].vertices)
+        faces.append(face3d)
     return faces
 
 
@@ -529,7 +462,7 @@ def to_face3d(obj, tolerance, *, raise_exception=False):
 
     # If it's an extrusion
     elif isinstance(rh_geo, rhino3dm.Extrusion):
-            lb_face = extrusion_to_face3d(rh_geo)
+            lb_face = extrusion_to_face3d(rh_geo, tolerance)
 
     # If it's a mesh
     elif isinstance(rh_geo, rhino3dm.Mesh):
