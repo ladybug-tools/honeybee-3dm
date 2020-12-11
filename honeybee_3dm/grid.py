@@ -60,8 +60,13 @@ def import_grids(rhino3dm_file, layer, *, grid_controls=None, child_layer=False,
                 if face.normal.z == -1:
                     continue
                 else:
-                    mesh3d = face.mesh_grid(grid_controls[0],
-                        grid_controls[0], grid_controls[1])
+                    try:
+                        mesh3d = face.mesh_grid(grid_controls[0],
+                            grid_controls[0], grid_controls[1])
+                    except AssertionError:
+                        raise AssertionError(
+                        f'Object with ID: {obj.Attributes.Id} is not supported for grids'
+                    )
                     name = obj.Attributes.Name
                     obj_name = name or clean_and_id_string('Grid')
                     args = [clean_string(obj_name), mesh3d]
