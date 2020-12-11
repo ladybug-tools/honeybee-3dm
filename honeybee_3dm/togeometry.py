@@ -7,7 +7,6 @@
 import warnings
 import rhino3dm
 import ladybug.color as lbc
-from math import isclose
 
 from ladybug_geometry.geometry3d.pointvector import Point3D, Vector3D
 from ladybug_geometry.geometry3d.face import Face3D
@@ -222,10 +221,8 @@ def brep_to_face3d(brep, tolerance):
     # If one of the edges is curved, mesh it
     if curved:
         return [brep_to_meshed_face3d(brep, tolerance)]
-        return [brep_to_meshed_face3d(brep, tolerance)]
 
     elif len(mesh.Vertices) == 4 or len(mesh.Vertices) == 3:
-        return [brep_to_meshed_face3d(brep, tolerance)]
         return [brep_to_meshed_face3d(brep, tolerance)]
 
     else:
@@ -459,9 +456,8 @@ def solid_to_face3d(brep, tolerance):
     for i in range(len(brep.Faces)):
         mesh = brep.Faces[i].GetMesh(rhino3dm.MeshType.Any)
         faces = mesh_to_face3d(mesh)
-        # normals = set([face.normal.z for face in faces])
-        if not brep.Surfaces[i].IsPlanar(tolerance):
-        # if len(normals) > 1:
+        normals = set([face.normal.z for face in faces])
+        if len(normals) > 1:
             # It's not a planar mesh
             face3ds.extend(faces)
         # It's a planar mesh, hence create a polyface from meshes 
@@ -513,8 +509,6 @@ def to_face3d(obj, tolerance, *, raise_exception=False):
 
     """
     rh_geo = obj.Geometry
-    print (" ")
-    print(rh_geo)
 
     # if it's a Brep
     if isinstance(rh_geo, rhino3dm.Brep):
