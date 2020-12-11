@@ -103,19 +103,6 @@ class Config(BaseModel):
                 )
         return v
 
-    @validator('sources')
-    def check_mat_file(cls, v):
-        if v:
-            mat_file = v['radiance_material']
-            try:
-                modifiers_dict = mat_to_dict(mat_file)
-            except ImportError:
-                raise ValueError(
-                    f'The path {mat_file} is not a valid path. Please try'
-                    ' using double backslashes in the  file path.'
-                    )
-        return v
-
     @validator('layers')
     def check_rad(cls, v, values):
         config_layers = v
