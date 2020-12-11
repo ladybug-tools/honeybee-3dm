@@ -44,11 +44,12 @@ class LayerConfig(BaseModel):
     """Config for layer keys."""
 
     exclude_from_rad: Optional[bool] = Field(
-        description='Boolean to indicate if this layer should be excluded from '
-        'radiance model.'
+        description='Boolean to indicate if radiance material is applied to this layer.'
+            ' This is useful for layers on which grid objects are saved.'
     )
 
     include_child_layers: Optional[bool] = Field(
+        True,
         description='Boolean to indicate if objects from child layers are to be imported.'
     )
 
@@ -81,6 +82,7 @@ class Config(BaseModel):
         )
 
     layers: Dict[str, LayerConfig] = Field(
+        ...,
         description='A dictionary to indicate the config for each layer in rhino 3dm'
             ' file. The key must be a Rhino layer name and the values must be a'
             ' LayerConfig.'
@@ -88,105 +90,98 @@ class Config(BaseModel):
 
     @validator('sources')
     def check_sources(cls, v):
-        sources = list(v.keys())
-        if len(sources) != 1:
-            raise ValueError('sources can only have one key.')
+        sources = v
+        if sources:
+            sources = list(v.keys())
+            if len(sources) > 1:
+                raise ValueError('sources can only have one key.')
 
-        if sources[0] != 'radiance_material':
-            raise ValueError(
-                    f'invalid sources key: {sources[0]}.'
-                    'key must be radiance_material.'
-            )
-
+            if sources[0] != 'radiance_material':
+                raise ValueError(
+                        f'invalid sources key: {sources[0]}.'
+                        'key must be radiance_material.'
+                )
         return v
-    
 
-def check_layers(file_3dm, config):
-    """Checks if layers in the config file are layers from the rhino file.
-
-    Args:
-        file_3dm: A rhino3dm file object.
-        config: Config dictionary.
-
-    Raises:
-        KeyError: If any of the layer names mentioned in the config file is not found
-            in the layers in the rhino file.
-
-    Returns:
-        Boolean value of True if no error is raised.
-    """
-    layers = [layer.Name for layer in file_3dm.Layers]
-
-    layer_check = [layer for layer in config['layers'] if layer not in layers]
-    if layer_check:
-        raise KeyError(
-            'Only layer names from the Rhino file are allowed in the config file.'
-            f'Found invalid layer names: {layer_check}'
-            )
-    else:
-        return True
-
-
-def check_rad(config):
-    """Checks if radiance modifiers can be applied to objects on rhino layers.
-
-    Args:
-        config: Config dictionary.
-
-    Raises:
-        OSError: If the path to the radiance material file is not a valid path.
-        KeyError: If the config file does not have a key named "radiance_material" in
-            sources and a radiance material is requested in one of the layers in the
-            config file.
-        ValueError: If any of the radiance identifiers mentioned in the config file
-            are not found in the radiance materials file or do not match the identifiers
-            in the radiance material file.
-
-    Returns:
-        Boolean value of True if no error is raised.
-    """
-
-    # Check if radiance modifiers can be imported
-    radiance = False
-    for layer in config['layers']:
-        if 'radiance_material' in config['layers'][layer]:
-            radiance = True
-            break
-    if radiance:
-        if 'sources' in config and config['sources']['radiance_material']:
-            os.path.isfile(config['sources']['radiance_material'])
+    @validator('sources')
+    def check_mat_file(cls, v):
+        if v:
+            mat_file = v['radiance_material']
             try:
-                modifiers_dict = mat_to_dict(config['sources']['radiance_material'])
-            except OSError:
-                path = config['sources']['radiance_material']
-                raise OSError(
-                    f'The path {path} is not a valid path. Please try'
+                modifiers_dict = mat_to_dict(mat_file)
+            except ImportError:
+                raise ValueError(
+                    f'The path {mat_file} is not a valid path. Please try'
                     ' using double backslashes in the  file path.'
-                        )
-        else:
-            raise KeyError(
-                'Please make sure the config file has the key "radiance_material" in'
-                ' sources.'
-        )
-    else:
-        pass
-    
-    # Check if all the radiance materials are found in the .mat file
-    rad_mat = [config['layers'][layer][key] for layer in config['layers'] for key \
-        in config['layers'][layer] if key == 'radiance_material']
-    
-    rad_mat_check = [True for mat in rad_mat if mat in modifiers_dict]
-    if len(rad_mat) != rad_mat_check.count(True):
-        raise ValueError(
-            'Please make sure all the radiance materials used in the config file are'
-            ' also found in the radiance material file and names of radiance'
-            ' materials in the config file match the radiance identifiers in the'
-            ' radiance material file.'
-        )
-    else:
-        pass
+                    )
+        return v
 
-    return True
+    @validator('layers')
+    def check_rad(cls, v, values):
+        config_layers = v
+        sources = values['sources']
+
+        radiance_material_request = False
+        for layer in config_layers:
+            if config_layers[layer].radiance_material:
+                radiance_material_request = True
+                break
+
+        if radiance_material_request:
+            if sources:
+                os.path.isfile(sources['radiance_material'])
+                try:
+                    modifiers_dict = mat_to_dict(sources['radiance_material'])
+                except ImportError:
+                    mat_path = sources['radiance_material']
+                    raise ValueError(
+                        f'The path {mat_path} is not a valid path.' 
+                        ' Please try using double backslashes in the  file path.'
+                        )
+                else:
+                    rad_mat = [config_layers[layer].radiance_material for layer
+                        in config_layers if config_layers[layer].radiance_material]
+
+                    rad_mat_check = [True for mat in rad_mat if mat in modifiers_dict]
+                    if len(rad_mat) != rad_mat_check.count(True):
+                        raise ValueError(
+                            'Please make sure all the radiance materials used in'
+                            ' the config file are also found in the radiance material'
+                            ' file and names of radiance materials in the config file'
+                            ' match the radiance identifiers in the radiance material'
+                            ' file.'
+                        )
+            else:
+                raise ValueError(
+                    '"radiance_material" as a key and a valid path to to the radiance'
+                    ' material file as a value to the key to be provided in "sources".'
+                )
+        return v
+
+    def check_layers(self, file_3dm):
+        """Checks if layers in the config file are layers from the rhino file.
+
+        Args:
+            file_3dm: A rhino3dm file object.
+            config: Config dictionary.
+
+        Raises:
+            KeyError: If any of the layer names mentioned in the config file is not found
+                in the layers in the rhino file.
+
+        Returns:
+            Boolean value of True if no error is raised.
+        """
+        rhino_layers = [layer.Name for layer in file_3dm.Layers]
+
+        layer_check = [layer for layer in self.layers if layer not in rhino_layers]
+        if layer_check:
+            raise KeyError(
+                'Only layer names from the Rhino file are allowed in the config file.'
+                f' Found invalid layer names: {layer_check}'
+                )
+        else:
+            return True
 
 
 def check_config(file_3dm, config_path):
@@ -207,15 +202,8 @@ def check_config(file_3dm, config_path):
             'Not a valid json file.'
             )
     else:
-        # Validate against schema
+        # Parse config.json using config schema
         config_obj = Config.parse_file(config_path)
-        config = config_obj.dict(exclude_none=True)
-        
-        # Validate config with external binaries
-        if check_layers(file_3dm, config) and check_rad(config):
-            return config
-        else:
-            raise ValueError(
-                'Config file could not be loaded. Please make sure it is a valid'
-                ' config file.'
-                )
+        if config_obj.check_layers(file_3dm):
+            return config_obj.dict(exclude_none=True)
+
