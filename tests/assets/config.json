@@ -1,21 +1,18 @@
 
-{
-    "sources" :{
-        "radiance_material": "./tests/assets/daylight.mat"
-    },
+{  "sources": {"radiance_material": "./tests/assets/daylight.mat"},
+
     "layers":{
         "grid": {
             "exclude_from_rad" : true,
             "grid_settings": {
                 "grid_size" : 0.6,
                 "grid_offset": 0.0
-            },
-            "include_child_layers": true
+            }
         },
         "window": {
-            "radiance_material": "rad_glass_40",
             "include_child_layers": true,
-            "honeybee_face_object": "aperture" 
+            "honeybee_face_object": "aperture",
+            "radiance_material": "rad_glass_40"
         },
         "door":{
             "honeybee_face_object": "door"
@@ -23,16 +20,10 @@
         "shade":{
             "honeybee_face_object": "shade"
         },
-        "walls": {
-            "radiance_material": "rad_wall",
-            "include_child_layers": false
-        },
         "floor": {
             "honeybee_face_type": "floor"
-        },
-        "the white wall": {
-            "radiance_material": "rad_mirror"
-        }     
+        }
+    
         }
     }
 
