@@ -6,7 +6,7 @@ import rhino3dm
 from honeybee_radiance.sensorgrid import SensorGrid
 from honeybee.typing import clean_and_id_string, clean_string
 
-from .togeometry import brep_to_face3d, mesh_to_mesh3d, check_planarity
+from .togeometry import brep_to_face3d, mesh_to_mesh3d, check_planarity, solid_to_face3d, to_face3d
 from .layer import objects_on_layer, objects_on_parent_child
 
 
@@ -44,32 +44,27 @@ def import_grids(rhino3dm_file, layer, *, grid_controls=None, child_layer=False,
 
     for obj in grid_objs:
         geo = obj.Geometry
-        # If it's a Brep
-        if isinstance(geo, rhino3dm.Brep):
-            # Check if the Brep is planar
-            if check_planarity(geo, tolerance):
-                try:
-                    mesh3d = brep_to_face3d(geo, tolerance)[0].mesh_grid(grid_controls[0],
-                        grid_controls[0], grid_controls[1])
-                except AttributeError:
-                    raise AttributeError(
-                        'Please turn on the shaded mode in rhino, save the file,'
-                        ' and try again.'
-                    )
-            # Non-planar breps are not supported for grids
-            else:
-                warnings.warn(
-                    'A Non-planar Brep is not handled by Honeybee for grids.' 
-                    ' It is ignored.'
-                )
-                continue
-        # If it's a Mesh
-        elif isinstance(geo, rhino3dm.Mesh):
+        
+        # If it's a Mesh use it to create grids
+        # This is done so that if a user has created mesh with certain density
+        # the same can be used to create grids
+        if isinstance(geo, rhino3dm.Mesh):
             mesh3d = mesh_to_mesh3d(geo)
+            name = obj.Attributes.Name
+            obj_name = name or clean_and_id_string('Grid')
+            args = [clean_string(obj_name), mesh3d]
+            hb_grids.append(SensorGrid.from_mesh3d(*args))
 
-        name = obj.Attributes.Name
-        obj_name = name or clean_and_id_string('Grid')
-        args = [clean_string(obj_name), mesh3d]
-        hb_grids.append(SensorGrid.from_mesh3d(*args))
+        else:
+            for face in to_face3d(obj, tolerance):
+                if face.normal.z == -1:
+                    continue
+                else:
+                    mesh3d = face.mesh_grid(grid_controls[0],
+                        grid_controls[0], grid_controls[1])
+                    name = obj.Attributes.Name
+                    obj_name = name or clean_and_id_string('Grid')
+                    args = [clean_string(obj_name), mesh3d]
+                    hb_grids.append(SensorGrid.from_mesh3d(*args))
 
     return hb_grids
