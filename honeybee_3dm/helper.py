@@ -61,8 +61,6 @@ def grid_controls(config, layer_name):
             config['layers'][layer_name]['exclude_from_rad']:
         grid_controls = config['layers'][layer_name]['grid_settings']
         return grid_controls['grid_size'], grid_controls['grid_offset']
-    else:
-        return None
 
 
 def check_parent_in_config(file_3dm, config, layer_name, parent_layer_name):
@@ -177,45 +175,36 @@ def face3d_to_hb_object(config, face_obj, name, layer_name):
             be empty if no objects are found for that Honeybee object.
     """
 
-    hb_shades, hb_apertures, hb_doors = tuple([[] for _ in range(3)])
+    hb_shades, hb_apertures, hb_doors = ([], [], [])
 
     obj_name = name or clean_and_id_string(layer_name)
     args = [clean_string(obj_name), face_obj]
     
+    def hb_object(config, layer_name, hb_obj):
+        if 'radiance_material' in config['layers'][layer_name]:
+            radiance_modifiers = mat_to_dict(config['sources']['radiance_material'])
+            hb_obj.properties.radiance.modifier = radiance_modifiers[config[
+                'layers'][layer_name]['radiance_material']]
+            return hb_obj
+        else:
+            return hb_obj
+
     if config['layers'][layer_name]['honeybee_face_object'] == 'aperture':
         hb_aperture = Aperture(*args)
         hb_aperture.display_name = args[0]
-        
-        if 'radiance_material' in config['layers'][layer_name]:
-            radiance_modifiers = mat_to_dict(config['sources']['radiance_material'])
-            hb_aperture.properties.radiance.modifier = radiance_modifiers[config[
-                'layers'][layer_name]['radiance_material']]
-            hb_apertures.append(hb_aperture)
-        else:
-            hb_apertures.append(hb_aperture)
-    
+        hb_apertures.append(hb_object(config, layer_name, hb_aperture))
+
     elif config['layers'][layer_name]['honeybee_face_object'] == 'door':
         hb_door = Door(*args)
         hb_door.display_name = args[0]
-
-        if 'radiance_material' in config['layers'][layer_name]:
-            radiance_modifiers = mat_to_dict(config['sources']['radiance_material'])
-            hb_door.properties.radiance.modifier = radiance_modifiers[config[
-                'layers'][layer_name]['radiance_material']]
-            hb_doors.append(hb_door)
-        else:
-            hb_doors.append(hb_door)
+        hb_doors.append(hb_object(config, layer_name, hb_door))
 
     elif config['layers'][layer_name]['honeybee_face_object'] == 'shade':
         hb_shade = Shade(*args)
         hb_shade.display_name = args[0]
-
-        if 'radiance_material' in config['layers'][layer_name]:
-            radiance_modifiers = mat_to_dict(config['sources']['radiance_material'])
-            hb_door.properties.radiance.modifier = radiance_modifiers[config[
-                'layers'][layer_name]['radiance_material']]
-            hb_shades.append(hb_shade)
-        else:
-            hb_shades.append(hb_shade)
+        hb_shades.append(hb_object(config, layer_name, hb_shade))
 
     return hb_apertures, hb_shades, hb_doors
+
+
+    
