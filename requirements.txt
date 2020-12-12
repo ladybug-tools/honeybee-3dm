@@ -1,2 +1,3 @@
 lbt-honeybee==0.2.253
 rhino3dm==0.13.0
+pydantic==1.7.3
