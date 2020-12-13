@@ -1,8 +1,4 @@
 """Functions to create Ladybug Geometry objects from Rhino3dm objects."""
-# In this module, you will observe that instead of using the pythonic way of
-# iterating through a list, iterators(studs such as "i" and "j") are used. 
-# This is deliberate and it is done to bypass the wrong number of 
-# items extracted from a list when accesses throug the pythonic way.
 
 import warnings
 import rhino3dm
@@ -206,18 +202,17 @@ def brep_to_face3d(brep, tolerance):
     Returns:
         A list of Ladybug Face3D objects.
     """
-    # Getting all vertices of the face
     mesh = brep.Faces[0].GetMesh(rhino3dm.MeshType.Any)
     if not mesh:
         raise AttributeError
 
     # * Check 01 - If any of the edge is an arc
-    lines = []
     curved = False
     for i in range(len(brep.Edges)):
         if not brep.Edges[i].IsLinear(tolerance):
             curved = True
             break
+
     # If one of the edges is curved, mesh it
     if curved:
         return [brep_to_meshed_face3d(brep, tolerance)]
@@ -226,6 +221,7 @@ def brep_to_face3d(brep, tolerance):
         return [brep_to_meshed_face3d(brep, tolerance)]
 
     else:
+        lines = []
         # Create Ladybug lines from start and end points of edges
         for i in range(len(brep.Edges)):
             start_pt = to_point3d(brep.Edges[i].PointAtStart)
@@ -251,11 +247,6 @@ def brep_to_face3d(brep, tolerance):
         # In the list of the Polylines, if there's more than one polyline then
         # the face has hole / holes
         elif len(polylines) > 1:
-            # while creating polylines from lines if lines are remaining,
-            # mesh the geometry
-            if not isinstance(polylines[-1], Polyline3D):
-                return brep_to_mesh_to_face3d(brep)
-
             # while creating polylines from lines if lines are remaining,
             # mesh the geometry
             if not isinstance(polylines[-1], Polyline3D):
@@ -301,17 +292,10 @@ def brep_to_face3d(brep, tolerance):
 
 def brepface_to_face3d(brepFace, tolerance):
 
-    print(" ")
     mesh = brepFace.GetMesh(rhino3dm.MeshType.Any)
 
-    curved = False
-    for j in range(len(mesh.TopologyEdges)):
-        if not isinstance(mesh.TopologyEdges.EdgeLine(j), rhino3dm.Line):
-            curved = True
-            break
-    # If one of the edges is curved, mesh it
-    if curved:
-        print("It is curved")
+    if brepFace.UnderlyingSurface().IsPlanar(tolerance):
+        print("it is a planar brepface")
         faces = mesh_to_face3d(mesh)
         try:
             polyface = Polyface3D.from_faces(faces, tolerance)
@@ -319,36 +303,65 @@ def brepface_to_face3d(brepFace, tolerance):
             raise ValueError
         lines = list(polyface.naked_edges)
         polylines = Polyline3D.join_segments(lines, tolerance)
-        face3d = Face3D(boundary=polylines[0].vertices)
-        return [face3d]
 
-    elif len(mesh.Vertices) == 4 or len(mesh.Vertices) == 3:
-        print("It has 3 or 4 vertices")
-        faces = mesh_to_face3d(mesh)
-        try:
-            polyface = Polyface3D.from_faces(faces, tolerance)
-        except Exception:
-            raise ValueError
-        lines = list(polyface.naked_edges)
-        polylines = Polyline3D.join_segments(lines, tolerance)
-        face3d = Face3D(boundary=polylines[0].vertices)
-        return [face3d]
-
-    else:
-        print("It has entered the last option")
-        faces = mesh_to_face3d(mesh)
-        try:
-            polyface = Polyface3D.from_faces(faces, tolerance)
-        except Exception:
-            raise ValueError
-        lines = list(polyface.naked_edges)
-        polylines = Polyline3D.join_segments(lines, tolerance)
-        check_polylines = [isinstance(polyline, Polyline3D) for polyline in polylines]
-        if all(check_polylines):
+        if len(polylines) == 1:
             face3d = Face3D(boundary=polylines[0].vertices)
             return [face3d]
+
+        elif len(polylines) > 1:
+            
+            check_polylines = [isinstance(polyline, Polyline3D)
+                for polyline in polylines]
+            if not all(check_polylines):
+                try:
+                    faces = mesh_to_face3d(mesh)
+                except Exception:
+                    raise ValueError
+                else:
+                    return faces
+
+            polyline_areas = [Face3D(polyline.vertices).area for polyline in polylines
+                if isinstance(polyline, Polyline3D)]
+            polyline_area_dict = dict(zip(polylines, polyline_areas))
+
+            sorted_dict = sorted(polyline_area_dict.items(),
+                key=lambda x: x[1], reverse=True)
+            sorted_polylines = [item[0] for item in sorted_dict]
+
+            boundary_pts = remove_dup_vertices(
+                sorted_polylines[0].vertices, tolerance)
+
+            hole_pts = [remove_dup_vertices(polyline.vertices, tolerance)
+                        for polyline in sorted_polylines[1:]]
+
+            total_hole_pts = [
+                pts for pts_lst in hole_pts for pts in pts_lst]
+            hole_pts_on_boundary = [
+                pts for pts in total_hole_pts if pts in boundary_pts]
+
+            if len(hole_pts_on_boundary) > 0:
+                warnings.warn(
+                    'A Brep has holes that touch the boundary of the brep.'
+                    ' This geometry will be meshed.'
+                    )
+                try:
+                    faces = mesh_to_face3d(mesh)
+                except Exception:
+                    raise ValueError
+                else:
+                    return faces
+            else:
+                return [Face3D(boundary=boundary_pts, holes=hole_pts)]
+
+    else:
+        print("it is a non-planar brepface")
+        try:
+            faces = mesh_to_face3d(mesh)
+        except Exception:
+            raise ValueError
         else:
             return faces
+
         
 
 def brep_to_brepface_to_face3d(brep, tolerance):
@@ -376,6 +389,7 @@ def solid_to_face3d(brep, tolerance):
     for i in range(len(brep.Faces)):
         mesh = brep.Faces[i].GetMesh(rhino3dm.MeshType.Any)
         faces = mesh_to_face3d(mesh)
+        # TODO Implement tolerance in the following statement.
         normals = set([face.normal.z for face in faces])
         if len(normals) > 1:
             # It's not a planar mesh
@@ -447,16 +461,14 @@ def to_face3d(obj, tolerance, *, raise_exception=False):
     if isinstance(rh_geo, rhino3dm.Brep):
         # If it's a solid brep
         if rh_geo.IsSolid:
-            print("It is solid")
             lb_face = solid_to_face3d(rh_geo, tolerance)
         else:
             # If it's a planar brep
             if check_planarity(rh_geo, tolerance) and len(rh_geo.Faces) == 1:
-                print("it is planar")
                 lb_face = brep_to_face3d(rh_geo, tolerance)
             # If it's not a planar brep. Such as a curved wall
             else:
-                print("it is not planar")
+                # TODO: Remove once explode brep becomes available in rhino3dm
                 # lb_face = brepface_to_face3d(rh_geo, tolerance)
                 lb_face = brep_to_brepface_to_face3d(rh_geo, tolerance)
 
