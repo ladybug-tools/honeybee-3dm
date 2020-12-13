@@ -59,7 +59,7 @@ def check_planarity(brep, tolerance):
         brep: Geometry of a Rhino3dm Brep.
 
     Returns:
-        Bool. True if planar otherwise False.
+        Bool. True if planar. Otherwise False.
     """
     is_planar = [brep.Surfaces[i].IsPlanar(tolerance)
         for i in range(len(brep.Surfaces))]
@@ -191,9 +191,7 @@ def brep_to_mesh_to_face3d(brep):
 
 
 def brep_to_face3d(brep, tolerance):
-    """Get a Ladybug Face3D object from a planar rhino3dm Brep.
-
-    This function is used in translating rhino3dm planar Brep to Ladybug Face3D objects.
+    """Get a list of Ladybug Face3D objects from a planar rhino3dm Brep.
 
     Args:
         brep: A rhino3dm Brep.
@@ -206,7 +204,7 @@ def brep_to_face3d(brep, tolerance):
     if not mesh:
         raise AttributeError
 
-    # * Check 01 - If any of the edge is an arc
+    # If any of the edge is an arc
     curved = False
     for i in range(len(brep.Edges)):
         if not brep.Edges[i].IsLinear(tolerance):
@@ -217,6 +215,7 @@ def brep_to_face3d(brep, tolerance):
     if curved:
         return [brep_to_meshed_face3d(brep, tolerance)]
 
+    # If the brep has 3 or 4 vertices, mesh it
     elif len(mesh.Vertices) == 4 or len(mesh.Vertices) == 3:
         return [brep_to_meshed_face3d(brep, tolerance)]
 
@@ -232,70 +231,81 @@ def brep_to_face3d(brep, tolerance):
         # Create Ladybug Polylines from the lines
         polylines = Polyline3D.join_segments(lines, tolerance)
 
-        # In the list of the Polylines, if there's only one polyline then
-        # the face has no holes
+        # One polyline means there are no holes
         if len(polylines) == 1:
-            # When accessing the vertices for a polyline, a duplicate vertice is
-            # found in the tuple of vertices. This is fixed by using this 
-            # remove_dup_vertices method
+
             boundary_pts = remove_dup_vertices(polylines[0].vertices, tolerance)
             if len(boundary_pts) < 3:
                 raise ValueError
             else:
                 return [Face3D(boundary=boundary_pts)]
 
-        # In the list of the Polylines, if there's more than one polyline then
-        # the face has hole / holes
+        # More than one polylines means there are holes in the brep
         elif len(polylines) > 1:
+
             # while creating polylines from lines if lines are remaining,
             # mesh the geometry
-            if not isinstance(polylines[-1], Polyline3D):
-                return brep_to_mesh_to_face3d(brep)
+            check_polylines = [isinstance(polyline, Polyline3D)
+                for polyline in polylines]
+            if not all(check_polylines):
+                try:
+                    faces = brep_to_mesh_to_face3d(brep)
+                except Exception:
+                    raise ValueError
+                else:
+                    return faces
 
-            # Get the area of Face3D created by the polylines
+            # sort polylines based on area
             polyline_areas = [Face3D(polyline.vertices).area for polyline in polylines
                 if isinstance(polyline, Polyline3D)]
             polyline_area_dict = dict(zip(polylines, polyline_areas))
-            # Sort the Polylines based on area of face created from polyline vertices
-            # The longest polyline belongs to the boundary of the face
-            # The rest of the polylines belong to the holes in the face
-            # The first polyline in the list shall always be the polyline for
-            # the boundary
+
             sorted_dict = sorted(polyline_area_dict.items(),
                 key=lambda x: x[1], reverse=True)
             sorted_polylines = [item[0] for item in sorted_dict]
-            # Vertices for the boundary
-            # When accessing the vertices for a polyline, a duplicate vertice is
-            # found in the tuple of vertices. This is fixed by using this
-            # remove_dup_vertices method
+
+            # Points on boundary
             boundary_pts = remove_dup_vertices(
                 sorted_polylines[0].vertices, tolerance)
-            # Vertices for the hole / holes
+
             hole_pts = [remove_dup_vertices(polyline.vertices, tolerance)
                         for polyline in sorted_polylines[1:]]
-            # Merging lists of hole vertices
+            
+            # Points on holes
             total_hole_pts = [
                 pts for pts_lst in hole_pts for pts in pts_lst]
             hole_pts_on_boundary = [
                 pts for pts in total_hole_pts if pts in boundary_pts]
 
-            # * Check 02 - If any of the hole is touching the boundary of the face
+            # If any of the hole is touching the boundary of the face, mesh it
             if len(hole_pts_on_boundary) > 0:
                 warnings.warn(
                     'A Brep has holes that touch the boundary of the brep.'
                     ' This geometry will be meshed.'
                     )
                 return brep_to_mesh_to_face3d(brep)
+            # else create a face3d with holes
             else:
                 return [Face3D(boundary=boundary_pts, holes=hole_pts)]
 
 
 def brepface_to_face3d(brepFace, tolerance):
+    """Get a list of Ladybug Face3D objects from a rhino3dm brepFace.
 
+    Args:
+        brepFace: A rhino3dm brepFace object.
+        tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
+
+    Returns:
+        A list of Ladybug face3d objects.
+    """
     mesh = brepFace.GetMesh(rhino3dm.MeshType.Any)
 
+    # If the brepFace is planar
     if brepFace.UnderlyingSurface().IsPlanar(tolerance):
-        print("it is a planar brepface")
+
+        # Create face3ds from the brepFace, join into a Polyface and create boundary
+        # polylines
         faces = mesh_to_face3d(mesh)
         try:
             polyface = Polyface3D.from_faces(faces, tolerance)
@@ -304,10 +314,12 @@ def brepface_to_face3d(brepFace, tolerance):
         lines = list(polyface.naked_edges)
         polylines = Polyline3D.join_segments(lines, tolerance)
 
+        # If there are no holes
         if len(polylines) == 1:
             face3d = Face3D(boundary=polylines[0].vertices)
             return [face3d]
 
+        # If there are holes
         elif len(polylines) > 1:
             
             check_polylines = [isinstance(polyline, Polyline3D)
@@ -320,6 +332,7 @@ def brepface_to_face3d(brepFace, tolerance):
                 else:
                     return faces
 
+            # sort polylines based on area
             polyline_areas = [Face3D(polyline.vertices).area for polyline in polylines
                 if isinstance(polyline, Polyline3D)]
             polyline_area_dict = dict(zip(polylines, polyline_areas))
@@ -328,17 +341,20 @@ def brepface_to_face3d(brepFace, tolerance):
                 key=lambda x: x[1], reverse=True)
             sorted_polylines = [item[0] for item in sorted_dict]
 
+            # Points on boundary
             boundary_pts = remove_dup_vertices(
                 sorted_polylines[0].vertices, tolerance)
 
             hole_pts = [remove_dup_vertices(polyline.vertices, tolerance)
                         for polyline in sorted_polylines[1:]]
 
+            # Points on Holes
             total_hole_pts = [
                 pts for pts_lst in hole_pts for pts in pts_lst]
             hole_pts_on_boundary = [
                 pts for pts in total_hole_pts if pts in boundary_pts]
 
+            # If any hole touches the boundary, mesh it
             if len(hole_pts_on_boundary) > 0:
                 warnings.warn(
                     'A Brep has holes that touch the boundary of the brep.'
@@ -350,11 +366,11 @@ def brepface_to_face3d(brepFace, tolerance):
                     raise ValueError
                 else:
                     return faces
+            # else create face3d with holes
             else:
                 return [Face3D(boundary=boundary_pts, holes=hole_pts)]
 
     else:
-        print("it is a non-planar brepface")
         try:
             faces = mesh_to_face3d(mesh)
         except Exception:
@@ -362,9 +378,17 @@ def brepface_to_face3d(brepFace, tolerance):
         else:
             return faces
 
-        
 
 def brep_to_brepface_to_face3d(brep, tolerance):
+    """Get a  list of Ladybug Face3D objects from a Brep with multiple Brep faces.
+
+    Args:
+        brep: A rhino3dm Brep.
+        tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
+
+    Returns:
+        A list of Ladybug Face3D objects.
+    """
     faces = []
     for i in range(len(brep.Faces)):
         faces.extend(brepface_to_face3d(brep.Faces[i], tolerance))
@@ -421,18 +445,21 @@ def extrusion_to_face3d(extrusion, tolerance):
     mesh = extrusion.GetMesh(rhino3dm.MeshType.Any)
     # Create face3ds
     faces = mesh_to_face3d(mesh)
-    # Group faces by normal direction
-    face_normal = {face: face.normal.z for face in faces}
-    face_groups = {}
-    for i, v in face_normal.items():
-        face_groups[v] = [i] if v not in face_groups.keys() else face_groups[v] + [i]
-    for normal in face_groups:
-        polyface = Polyface3D.from_faces(face_groups[normal], tolerance)
-        lines = list(polyface.naked_edges)
-        polylines = Polyline3D.join_segments(lines, tolerance)
-        face3d = Face3D(boundary=polylines[0].vertices)
-        faces.append(face3d)
-    return faces
+    if len(faces) == 1:
+        return faces
+    else:
+        # Group faces by normal direction
+        face_normal = {face: face.normal.z for face in faces}
+        face_groups = {}
+        for i, v in face_normal.items():
+            face_groups[v] = [i] if v not in face_groups.keys() else face_groups[v] + [i]
+        for normal in face_groups:
+            polyface = Polyface3D.from_faces(face_groups[normal], tolerance)
+            lines = list(polyface.naked_edges)
+            polylines = Polyline3D.join_segments(lines, tolerance)
+            face3d = Face3D(boundary=polylines[0].vertices)
+            faces.append(face3d)
+        return faces
 
 
 def to_face3d(obj, tolerance, *, raise_exception=False):
