@@ -38,7 +38,7 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
 
     """
     # Placeholders
-    hb_faces, hb_shades, hb_apertures, hb_doors, hb_grids = tuple([[] for _ in range(5)])
+    hb_faces, hb_shades, hb_apertures, hb_doors, hb_grids = ([], [], [], [], [])
 
     # If Grids are requested for a layer
     if grid_controls(config, layer.Name):
@@ -56,7 +56,7 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
         # If child layers do not need to be included
         else:
             objects = objects_on_layer(rhino3dm_file, layer)
-    
+
         for obj in objects:
             try:
                 lb_faces = to_face3d(obj, tolerance=tolerance)
@@ -93,8 +93,8 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
                     hb_objects = face3d_to_hb_object(config, face_obj, name,
                         layer.Name)
                     hb_apertures.extend(hb_objects[0])
-                    hb_shades.extend(hb_objects[1])
-                    hb_doors.extend(hb_objects[2])
+                    hb_doors.extend(hb_objects[1])
+                    hb_shades.extend(hb_objects[2])
 
     return hb_faces, hb_shades, hb_apertures, hb_doors, hb_grids
 
@@ -133,10 +133,6 @@ def import_objects(file_3dm, layer, *, tolerance):
 
         name = obj.Attributes.Name
         for face_obj in lb_faces:
-            # If a face area is zero then ignore the face
-            if not face_obj.area > 0.0:
-                print("Face igonered")
-                continue
             obj_name = name or clean_and_id_string(layer.Name)
             args = [clean_string(obj_name), face_obj]
             hb_face = Face(*args)

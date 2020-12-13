@@ -151,11 +151,7 @@ class Config(BaseModel):
         Args:
             file_3dm: A rhino3dm file object.
             config: Config dictionary.
-
-        Raises:
-            KeyError: If any of the layer names mentioned in the config file is not found
-                in the layers in the rhino file.
-
+            
         Returns:
             Boolean value of True if no error is raised.
         """
