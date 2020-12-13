@@ -175,7 +175,7 @@ def face3d_to_hb_object(config, face_obj, name, layer_name):
             be empty if no objects are found for that Honeybee object.
     """
 
-    hb_shades, hb_apertures, hb_doors = ([], [], [])
+    hb_apertures, hb_doors, hb_shades = ([], [], [])
 
     obj_name = name or clean_and_id_string(layer_name)
     args = [clean_string(obj_name), face_obj]
@@ -204,7 +204,7 @@ def face3d_to_hb_object(config, face_obj, name, layer_name):
         hb_shade.display_name = args[0]
         hb_shades.append(hb_object(config, layer_name, hb_shade))
 
-    return hb_apertures, hb_shades, hb_doors
+    return hb_apertures, hb_doors, hb_shades
 
 
     

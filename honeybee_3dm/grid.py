@@ -1,12 +1,12 @@
 """Create Honeybee grid objects from objects in a rhino file."""
 
-import warnings
+
 import rhino3dm
 
 from honeybee_radiance.sensorgrid import SensorGrid
 from honeybee.typing import clean_and_id_string, clean_string
 
-from .togeometry import brep_to_face3d, mesh_to_mesh3d, check_planarity, solid_to_face3d, to_face3d
+from .togeometry import mesh_to_mesh3d, to_face3d
 from .layer import objects_on_layer, objects_on_parent_child
 
 
