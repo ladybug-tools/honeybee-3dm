@@ -1,6 +1,8 @@
 """Create Honeybee objects(Face, Shade, Aperture, Door, Grid) from planar geometries
 in a Rhino 3DM file."""
 
+import warnings
+
 from honeybee.face import Face
 from honeybee.typing import clean_and_id_string, clean_string
 
@@ -66,8 +68,8 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
                     f' object with ID {obj.Attributes.Id}. Please make the object'
                     ' visible on rhino canvas, switch to shaded mode, and save the file.'
                     )
-            except ValueError:
-                raise ValueError(
+            except AssertionError:
+                raise AssertionError(
                     f'Could not create a face for object of ID {obj.Attributes.Id}'
                     ' Please reduce the unit tolerance value in rhino, save the file and'
                     ' try again. You might need to repeat this more than once if the'
@@ -76,6 +78,14 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
             name = obj.Attributes.Name
 
             for face_obj in lb_faces:
+
+                if face_obj.area == 0:
+                    warnings.warn(
+                        'A face with zero area was created from object with id:'
+                        f' {obj.Attributes.Id}. This face is avoided.'
+                    )
+                    continue
+
                 # If face_type settting is employed
                 if 'honeybee_face_type' in config['layers'][layer.Name]:
                     hb_faces.append(face3d_to_hb_face_with_face_type(config, face_obj,
@@ -123,8 +133,8 @@ def import_objects(file_3dm, layer, *, tolerance):
                 f' object with ID {obj.Attributes.Id}. Please make the object'
                 ' visible on rhino canvas, switch to shaded mode, and save the file.'
                 )
-        except ValueError:
-            raise ValueError(
+        except AssertionError:
+            raise AssertionError(
                 f'Could not create a face for object of ID {obj.Attributes.Id}'
                 ' Please reduce the unit tolerance value in rhino, save the file and'
                 ' try again. You might need to repeat this more than once if the'
@@ -133,6 +143,12 @@ def import_objects(file_3dm, layer, *, tolerance):
 
         name = obj.Attributes.Name
         for face_obj in lb_faces:
+            if face_obj.area == 0:
+                warnings.warn(
+                    'A face with zero area was created from object with id:'
+                    f' {obj.Attributes.Id}. This face is avoided.'
+                )
+                continue
             obj_name = name or clean_and_id_string(layer.Name)
             args = [clean_string(obj_name), face_obj]
             hb_face = Face(*args)

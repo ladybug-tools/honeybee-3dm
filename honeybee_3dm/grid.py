@@ -65,7 +65,10 @@ def import_grids(rhino3dm_file, layer, *, grid_controls=None, child_layer=False,
                             grid_controls[0], grid_controls[1])
                     except AssertionError:
                         raise AssertionError(
-                        f'Object with ID: {obj.Attributes.Id} is not supported for grids'
+                        f'Please check object with ID: {obj.Attributes.Id}.'
+                        ' Either the object has faces too small for the grid size, or the'
+                        ' object is not supported for grids. You should try again with a'
+                        ' smaller grid size in the config file.'
                     )
                     name = obj.Attributes.Name
                     obj_name = name or clean_and_id_string('Grid')
