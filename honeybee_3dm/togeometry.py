@@ -156,10 +156,10 @@ def brep_to_meshed_face3d(brep, tolerance):
         A Ladybug Face3D object.
     """
 
-    faces = []
+
     for i in range(len(brep.Faces)):
         mesh = brep.Faces[i].GetMesh(rhino3dm.MeshType.Any)
-        faces.extend(mesh_to_face3d(mesh))
+        faces = mesh_to_face3d(mesh)
         polyface = Polyface3D.from_faces(faces, tolerance)
         lines = list(polyface.naked_edges)
         polylines = Polyline3D.join_segments(lines, tolerance)
@@ -220,7 +220,7 @@ def brep_to_face3d(brep, tolerance, obj):
             end_pt = to_point3d(brep.Edges[i].PointAtEnd)
             line = LineSegment3D.from_end_points(start_pt, end_pt)
             lines.append(line)
-
+        
         # Create Ladybug Polylines from the lines
         polylines = Polyline3D.join_segments(lines, tolerance)
 
@@ -231,11 +231,11 @@ def brep_to_face3d(brep, tolerance, obj):
 
         # More than one polylines means there are holes in the brep
         elif len(polylines) > 1:
-
             # while creating polylines from lines if lines are remaining,
             # mesh the geometry
             check_polylines = [isinstance(polyline, Polyline3D)
                 for polyline in polylines]
+
             if not all(check_polylines):
                 faces = brep_to_mesh_to_face3d(brep)
                 return faces
@@ -243,6 +243,7 @@ def brep_to_face3d(brep, tolerance, obj):
             # sort polylines based on area
             polyline_areas = [Face3D(polyline.vertices).area for polyline in polylines
                 if isinstance(polyline, Polyline3D)]
+
             polyline_area_dict = dict(zip(polylines, polyline_areas))
 
             sorted_dict = sorted(polyline_area_dict.items(),
@@ -259,6 +260,7 @@ def brep_to_face3d(brep, tolerance, obj):
             # Points on holes
             total_hole_pts = [
                 pts for pts_lst in hole_pts for pts in pts_lst]
+ 
             hole_pts_on_boundary = [
                 pts for pts in total_hole_pts if pts in boundary_pts]
 
@@ -292,8 +294,8 @@ def multiface_brep_to_face3d(brep, tolerance, obj):
         # For all the planar brep faces
         if check_planarity(face_brep, tolerance):
             faces.extend(brep_to_face3d(face_brep, tolerance, obj))
+        # For all the non-planar brep faces such as a curved face
         else:
-            # This is useful when a brep face is curved
             faces.extend(brep_to_mesh_to_face3d(face_brep))
     return faces
 
