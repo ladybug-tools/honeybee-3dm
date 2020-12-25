@@ -10,8 +10,8 @@ from .togeometry import mesh_to_mesh3d, to_face3d
 from .layer import objects_on_layer, objects_on_parent_child
 
 
-def import_grids(rhino3dm_file, layer, *, grid_controls=None, child_layer=False,
-    tolerance=None):
+def import_grids(rhino3dm_file, layer, tolerance, *, grid_controls=None,
+    child_layer=False):
     """Creates Honeybee grids from a rhino3dm file.
 
     This function assumes all the grid objects are under a layer named ``grid``.
@@ -19,13 +19,13 @@ def import_grids(rhino3dm_file, layer, *, grid_controls=None, child_layer=False,
     Args:
         rhino3dm_file: The rhino file from which Honeybee grids will be created.
         layer: A Rhino3dm layer object.
+        tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
         grid_controls: A tuple of values for grid_size and grid_offset.
             Defaults to None. This will employ the grid setting of (1.0, 1.0, 0.0)
             for grid-size-x, grid-size-y, and grid-offset respectively.
         child_layer: A bool. True will generate grids from the objects on the child layer
             of a layer in addition to the objects on the parent layer. Defaults to False.
-        tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
-            .
+        
     Returns:
         A list of Honeybee grids.
     """
@@ -57,22 +57,19 @@ def import_grids(rhino3dm_file, layer, *, grid_controls=None, child_layer=False,
 
         else:
             for face in to_face3d(obj, tolerance):
-                if face.normal.z == -1:
-                    continue
-                else:
-                    try:
-                        mesh3d = face.mesh_grid(grid_controls[0],
-                            grid_controls[0], grid_controls[1])
-                    except AssertionError:
-                        raise AssertionError(
-                        f'Please check object with ID: {obj.Attributes.Id}.'
-                        ' Either the object has faces too small for the grid size, or the'
-                        ' object is not supported for grids. You should try again with a'
-                        ' smaller grid size in the config file.'
-                    )
-                    name = obj.Attributes.Name
-                    obj_name = name or clean_and_id_string('Grid')
-                    args = [clean_string(obj_name), mesh3d]
-                    hb_grids.append(SensorGrid.from_mesh3d(*args))
+                try:
+                    mesh3d = face.mesh_grid(grid_controls[0],
+                        grid_controls[0], grid_controls[1])
+                except AssertionError:
+                    raise AssertionError(
+                    f'Please check object with ID: {obj.Attributes.Id}.'
+                    ' Either the object has faces too small for the grid size, or the'
+                    ' object is not supported for grids. You should try again with a'
+                    ' smaller grid size in the config file.'
+                )
+                name = obj.Attributes.Name
+                obj_name = name or clean_and_id_string('Grid')
+                args = [clean_string(obj_name), mesh3d]
+                hb_grids.append(SensorGrid.from_mesh3d(*args))
 
     return hb_grids
