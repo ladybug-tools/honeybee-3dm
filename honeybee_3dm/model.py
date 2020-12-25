@@ -86,7 +86,7 @@ def import_3dm(path, name=None, *, config_path=None):
             # Import objects from each layer in the config file
             elif layer.Name in config['layers']:
                 hb_objs = import_objects_with_config(
-                    rhino3dm_file, layer, tolerance=model_tolerance, config=config)
+                    rhino3dm_file, layer, model_tolerance, config=config)
                 hb_faces.extend(hb_objs[0])
                 hb_shades.extend(hb_objs[1])
                 hb_apertures.extend(hb_objs[2])
