@@ -23,6 +23,7 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
 
     Args:
         rhino3dm_file: A Rhino3DM file object.
+        layer: A rhino3dm layer object.
         tolerance: A number for model tolerance. By default the tolerance is set to
             the ModelAbsoluteTolerance value in input 3DM file.
         config: A dictionary of config settings. Defaults to None
@@ -45,9 +46,9 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
     # If Grids are requested for a layer
     if grid_controls(config, layer.Name):
 
-        hb_grids = import_grids(rhino3dm_file, layer,
+        hb_grids = import_grids(rhino3dm_file, layer, tolerance,
             grid_controls=grid_controls(config, layer.Name),
-            child_layer=child_layer_control(config, layer.Name), tolerance=tolerance)
+            child_layer=child_layer_control(config, layer.Name))
 
     # If Grids are not requested for a layer
     else:
@@ -109,14 +110,14 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
     return hb_faces, hb_shades, hb_apertures, hb_doors, hb_grids
 
 
-def import_objects(file_3dm, layer, *, tolerance):
+def import_objects(file_3dm, layer, tolerance):
     """Get default Honeybee Faces for a Rhino3dm layer.
 
     Args:
         file_3dm: A Rhino3dm file object.
         layer: A Rhino3dm layer object.
         tolerance: A number for model tolerance. By default the tolerance is set to
-            the ModelAbsoluteTolerance value in input 3DM file. Defaults to None.
+            the ModelAbsoluteTolerance value in input 3DM file.
 
     Returns:
         A list of Honeybee Face objects.

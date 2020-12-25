@@ -205,6 +205,3 @@ def face3d_to_hb_object(config, face_obj, name, layer_name):
         hb_shades.append(hb_object(config, layer_name, hb_shade))
 
     return hb_apertures, hb_doors, hb_shades
-
-
-    

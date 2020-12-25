@@ -57,6 +57,7 @@ def check_planarity(brep, tolerance):
 
     Args:
         brep: Geometry of a Rhino3dm Brep.
+        tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
 
     Returns:
         Bool. True if planar. Otherwise False.
@@ -150,7 +151,7 @@ def brep_to_meshed_face3d(brep, tolerance):
 
     Args:
         brep: A rhino3dm Brep.
-    tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
+        tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
 
     Returns:
         A Ladybug Face3D object.
@@ -192,24 +193,19 @@ def brep_to_face3d(brep, tolerance, obj):
         brep: A rhino3dm Brep.
         tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.
         obj: A rhino3dm object.
+
     Returns:
         A list of Ladybug Face3D objects.
     """
     mesh = brep.Faces[0].GetMesh(rhino3dm.MeshType.Any)
 
-    # If any of the edge is an arc
-    curved = False
+    # If any of the edge is curved, mesh it
     for i in range(len(brep.Edges)):
         if not brep.Edges[i].IsLinear(tolerance):
-            curved = True
-            break
-
-    # If one of the edges is curved, mesh it
-    if curved:
-        return [brep_to_meshed_face3d(brep, tolerance)]
+            return [brep_to_meshed_face3d(brep, tolerance)]
 
     # If the brep has 3 or 4 vertices, mesh it
-    elif len(mesh.Vertices) == 4 or len(mesh.Vertices) == 3:
+    if len(mesh.Vertices) == 4 or len(mesh.Vertices) == 3:
         return [brep_to_meshed_face3d(brep, tolerance)]
 
     else:
@@ -305,7 +301,7 @@ def extrusion_to_face3d(extrusion, tolerance):
 
     Args:
         brep: A rhino3dm Extrusion.
-    tolerance: A number for tolerance value. Tolerance will only be used for
+        tolerance: A number for tolerance value. Tolerance will only be used for
             converting mesh geometries.
 
     Returns:
@@ -348,10 +344,6 @@ def to_face3d(obj, tolerance, *, raise_exception=False):
 
     Returns:
         A list of Ladybug Face3D.
-
-    Raises:
-        ValueError if object type is not supported and raise_exception is set to True.
-
     """
     rh_geo = obj.Geometry
 
