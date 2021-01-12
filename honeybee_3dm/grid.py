@@ -56,20 +56,20 @@ def import_grids(rhino3dm_file, layer, tolerance, *, grid_controls=None,
             hb_grids.append(SensorGrid.from_mesh3d(*args))
 
         else:
-            for face in to_face3d(obj, tolerance):
-                try:
-                    mesh3d = face.mesh_grid(grid_controls[0],
-                        grid_controls[0], grid_controls[1])
-                except AssertionError:
-                    raise AssertionError(
-                    f'Please check object with ID: {obj.Attributes.Id}.'
-                    ' Either the object has faces too small for the grid size, or the'
-                    ' object is not supported for grids. You should try again with a'
-                    ' smaller grid size in the config file.'
-                )
-                name = obj.Attributes.Name
-                obj_name = name or clean_and_id_string('Grid')
-                args = [clean_string(obj_name), mesh3d]
-                hb_grids.append(SensorGrid.from_mesh3d(*args))
+            try:
+                faces = to_face3d(obj, tolerance)
+            except AssertionError:
+                raise AssertionError(
+                f'Please check object with ID: {obj.Attributes.Id}.'
+                ' Either the object has faces too small for the grid size, or the'
+                ' object is not supported for grids. You should try again with a'
+                ' smaller grid size in the config file.'
+            )
+            name = obj.Attributes.Name
+            obj_name = name or clean_and_id_string('Grid')
+            args = [
+                clean_string(obj_name), faces, grid_controls[0], grid_controls[0],
+                grid_controls[1]]
+            hb_grids.append(SensorGrid.from_face3d(*args))
 
     return hb_grids
