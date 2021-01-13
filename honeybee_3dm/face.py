@@ -70,12 +70,14 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
                     ' visible on rhino canvas, switch to shaded mode, and save the file.'
                     )
             except AssertionError:
-                raise AssertionError(
+                warnings.warn(
                     f'Could not create a face for object of ID {obj.Attributes.Id}'
                     ' Please reduce the unit tolerance value in rhino, save the file and'
                     ' try again. You might need to repeat this more than once if the'
                     ' face is too small for the unit tolerance selected.'
                     )
+                continue
+            
             name = obj.Attributes.Name
 
             for face_obj in lb_faces:
@@ -135,12 +137,13 @@ def import_objects(file_3dm, layer, tolerance):
                 ' visible on rhino canvas, switch to shaded mode, and save the file.'
                 )
         except AssertionError:
-            raise AssertionError(
+            warnings.warn(
                 f'Could not create a face for object of ID {obj.Attributes.Id}'
                 ' Please reduce the unit tolerance value in rhino, save the file and'
                 ' try again. You might need to repeat this more than once if the'
                 ' face is too small for the unit tolerance selected.'
                 )
+            continue
 
         name = obj.Attributes.Name
         for face_obj in lb_faces:
