@@ -13,7 +13,7 @@ from .helper import grid_controls, face3d_to_hb_face_with_face_type, face3d_to_h
 from .helper import face3d_to_hb_face_with_rad, child_layer_control
 
 
-tolerance_error = 'Could not create a face for object of ID {} Please reduce the unit' \
+tolerance_warning = 'Could not create a face for object of ID {} Please reduce the unit' \
 ' tolerance value in rhino, save the file and try again. You might need to repeat' \
 ' this more than once if the face is too small for the unit tolerance selected.'
 
