@@ -13,6 +13,11 @@ from .helper import grid_controls, face3d_to_hb_face_with_face_type, face3d_to_h
 from .helper import face3d_to_hb_face_with_rad, child_layer_control
 
 
+tolerance_error = 'Could not create a face for object of ID {} Please reduce the unit' \
+' tolerance value in rhino, save the file and try again. You might need to repeat' \
+' this more than once if the face is too small for the unit tolerance selected.'
+
+
 def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
     config=None, modifiers_dict=None):
     """Import Rhino planar geometry as Honeybee faces.
@@ -70,12 +75,7 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
                     ' visible on rhino canvas, switch to shaded mode, and save the file.'
                     )
             except AssertionError:
-                warnings.warn(
-                    f'Could not create a face for object of ID {obj.Attributes.Id}'
-                    ' Please reduce the unit tolerance value in rhino, save the file and'
-                    ' try again. You might need to repeat this more than once if the'
-                    ' face is too small for the unit tolerance selected.'
-                    )
+                warnings.warn(tolerance_error.format(obj.Attributes.Id))
                 continue
             
             name = obj.Attributes.Name
@@ -137,12 +137,7 @@ def import_objects(file_3dm, layer, tolerance):
                 ' visible on rhino canvas, switch to shaded mode, and save the file.'
                 )
         except AssertionError:
-            warnings.warn(
-                f'Could not create a face for object of ID {obj.Attributes.Id}'
-                ' Please reduce the unit tolerance value in rhino, save the file and'
-                ' try again. You might need to repeat this more than once if the'
-                ' face is too small for the unit tolerance selected.'
-                )
+            warnings.warn(tolerance_error.format(obj.Attributes.Id))
             continue
 
         name = obj.Attributes.Name
