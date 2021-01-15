@@ -75,7 +75,7 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
                     ' visible on rhino canvas, switch to shaded mode, and save the file.'
                     )
             except AssertionError:
-                warnings.warn(tolerance_error.format(obj.Attributes.Id))
+                warnings.warn(tolerance_warning.format(obj.Attributes.Id))
                 continue
             
             name = obj.Attributes.Name
@@ -137,7 +137,7 @@ def import_objects(file_3dm, layer, tolerance):
                 ' visible on rhino canvas, switch to shaded mode, and save the file.'
                 )
         except AssertionError:
-            warnings.warn(tolerance_error.format(obj.Attributes.Id))
+            warnings.warn(tolerance_warning.format(obj.Attributes.Id))
             continue
 
         name = obj.Attributes.Name
