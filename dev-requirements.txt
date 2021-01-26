@@ -1,12 +1,13 @@
 coverage==5.4
 coveralls==3.0.0
-pytest==6.2.2
-pytest-cov==2.11.1
+pytest==6.2.1
+pytest-cov==2.10.1
 twine==3.3.0
 Sphinx==3.4.3
 sphinx-bootstrap-theme==0.7.1
 sphinxcontrib-fulltoc==1.2.0
 sphinxcontrib-websupport==1.2.4
+sphinx-click==2.5.0
 twine==3.3.0
 wheel==0.36.2
 setuptools==52.0.0
