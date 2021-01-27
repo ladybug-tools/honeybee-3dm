@@ -18,10 +18,14 @@ setuptools.setup(
     url="https://github.com/ladybug-tools/honeybee-3dm",
     packages=setuptools.find_packages(exclude=["tests*"]),
     install_requires=requirements,
+    include_package_data=True,
+    entry_points={
+        "console_scripts": ["honeybee-3dm = honeybee_3dm.cli:main"]
+    },
     classifiers=[
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: Implementation :: CPython",
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "License :: OSI Approved :: GNU Affero General Public License v3",
         "Operating System :: OS Independent"
     ],
     license="AGPL-3.0"
