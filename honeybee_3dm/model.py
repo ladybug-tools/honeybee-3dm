@@ -111,16 +111,15 @@ def import_3dm(path, name=None, *, config_path=None):
     
     # Honeybee model name
     name = name or '.'.join(os.path.basename(path).split('.')[:-1])
-    name = clean_string(name)
 
     # Honeybee Model
     hb_model = Model(
-        name,
-        hb_rooms,
-        hb_faces,
-        hb_shades,
-        hb_apertures,
-        hb_doors,
+        identifier=name,
+        rooms=hb_rooms,
+        orphaned_faces=hb_faces,
+        orphaned_shades=hb_shades,
+        orphaned_apertures=hb_apertures,
+        orphaned_doors=hb_doors,
         units=model_unit,
         tolerance=model_tolerance,
         angle_tolerance=model_angle_tolerance
