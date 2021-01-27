@@ -10,6 +10,7 @@ jobs:
     name: Unit tests
     strategy:
       matrix:
+        python-version: [2.7, 2.7, 2.7]
         os: [macos-latest, ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
