@@ -22,8 +22,3 @@ void glass rad_glass_50
 0
 0
 3 0.50 0.50 0.50
-
-void BSDF Okalux_Kapipane_20_klems
-6 0.0 C:\ladybug\Okalux_Kapipane_20_klems.xml 0.01 0.01 1.0 .
-0
-0
