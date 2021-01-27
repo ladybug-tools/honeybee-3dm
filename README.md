@@ -18,10 +18,12 @@ import honeybee_3dm
 ## Usage
 
 ```console
-Usage: honeybee-3dm write [OPTIONS] RHINO_FILE
+Usage: honeybee-3dm translate [OPTIONS] RHINO_FILE
 
-  Write an HBJSON from a rhino file. Args:     rhino-file: Path to the
-  rhino file.
+  Translate a rhino file to HBJSON.
+
+  Args:
+      rhino-file: Path to the rhino file.
 
 Options:
   -n, --name TEXT         Name of the output HBJSON file. If not provided,
