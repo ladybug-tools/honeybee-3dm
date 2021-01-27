@@ -1,51 +1,40 @@
-[![Build Status](https://travis-ci.com/ladybug-tools/honeybee-3dm.svg?branch=master)](https://travis-ci.com/ladybug-tools/honeybee-3dm)
-[![Coverage Status](https://coveralls.io/repos/github/ladybug-tools/honeybee-3dm/badge.svg?branch=master)](https://coveralls.io/github/ladybug-tools/honeybee-3dm)
-
-[![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
 
 # honeybee-3dm
 
-Honeybee extension for translating to and from [Rhino 3dm](https://www.rhino3d.com/).
+Honeybee extension for translating from a [Rhino 3dm](https://www.rhino3d.com/) aka,
+a Rhino file.
 
 ## Installation
 
 ```console
-pip install -U honeybee-3dm
+pip install honeybee-3dm
 ```
 
 ## QuickStart
 
 ```python
 import honeybee_3dm
+```
+## Usage
 
+```console
+Usage: honeybee-3dm write [OPTIONS] RHINO_FILE
+
+  Write an HBJSON from a rhino file. Args:     rhino-file: Path to the
+  rhino file.
+
+Options:
+  -n, --name TEXT         Name of the output HBJSON file. If not provided,
+                          "unnamed" will be used.
+
+  -f, --folder DIRECTORY  Path to folder where HBJSON will be written.
+                          [default: .]
+
+  -cf, --config PATH      File Path to the config.json file.
+  --help                  Show this message and exit.
 ```
 
+After generating the hbjson, you may use
+[honeybee-vtk](https://github.com/ladybug-tools/honeybee-vtk#honeybee-vtk) to visualize
+that hbjson in a web browser.
 ## [API Documentation](http://ladybug-tools.github.io/honeybee-3dm/docs)
-
-## Local Development
-
-1. Clone this repo locally
-```console
-git clone git@github.com:ladybug-tools/honeybee-3dm
-
-# or
-
-git clone https://github.com/ladybug-tools/honeybee-3dm
-```
-2. Install dependencies:
-```console
-cd honeybee-3dm
-pip install -r dev-requirements.txt
-pip install -r requirements.txt
-```
-
-3. Run Tests:
-```console
-python -m pytest tests/
-```
-
-4. Generate Documentation:
-```console
-sphinx-apidoc -f -e -d 4 -o ./docs ./honeybee_3dm
-sphinx-build -b html ./docs ./docs/_build/docs
-```
