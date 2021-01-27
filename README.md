@@ -34,7 +34,9 @@ Options:
   --help                  Show this message and exit.
 ```
 
+## Connection
 After generating the hbjson, you may use
 [honeybee-vtk](https://github.com/ladybug-tools/honeybee-vtk#honeybee-vtk) to visualize
 that hbjson in a web browser.
+
 ## [API Documentation](http://ladybug-tools.github.io/honeybee-3dm/docs)
