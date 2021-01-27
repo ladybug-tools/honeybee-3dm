@@ -16,7 +16,7 @@ def main():
     pass
 
 
-@main.command('write')
+@main.command('translate')
 @click.argument('rhino-file')
 @click.option(
     '--name', '-n', help='Name of the output HBJSON file. If not provided, "unnamed"'
@@ -32,8 +32,9 @@ def main():
     type=click.Path(exists=True),
     default=None, show_default=True
 )
-def write_recipe(rhino_file, name, folder, config):
-    """Write an HBJSON from a rhino file.
+def translate_recipe(rhino_file, name, folder, config):
+    """Translate a rhino file to HBJSON.
+    
     \b
     Args:
         rhino-file: Path to the rhino file.
