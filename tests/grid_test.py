@@ -1,4 +1,3 @@
-import pytest
 from honeybee_radiance.sensorgrid import SensorGrid
 from honeybee_3dm.model import import_3dm
 

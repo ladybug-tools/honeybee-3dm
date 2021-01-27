@@ -1,5 +1,4 @@
 from honeybee.model import Model
-from honeybee.room import Room
 from honeybee.shade import Shade
 from honeybee.door import Door
 from honeybee.aperture import Aperture

@@ -1,4 +1,3 @@
-import pytest
 import rhino3dm
 from math import isclose
 from honeybee_3dm.model import import_3dm
