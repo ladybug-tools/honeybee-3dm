@@ -1,9 +1,9 @@
 
 # honeybee-3dm
-
 Honeybee extension for translating from a [Rhino 3dm](https://www.rhino3d.com/) aka,
 a Rhino file.
 
+[![Coverage Status](https://coveralls.io/repos/github/ladybug-tools/honeybee-3dm/badge.svg)](https://coveralls.io/github/ladybug-tools/honeybee-3dm)
 ## Installation
 
 ```console
