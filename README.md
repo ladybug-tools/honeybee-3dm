@@ -3,7 +3,10 @@
 Honeybee extension for translating from a [Rhino 3dm](https://www.rhino3d.com/) aka,
 a Rhino file.
 
+[![Build Status](https://github.com/ladybug-tools/honeybee-3dm/workflows/CI/badge.svg)](https://github.com/ladybug-tools/honeybee-3dm/actions)
 [![Coverage Status](https://coveralls.io/repos/github/ladybug-tools/honeybee-3dm/badge.svg)](https://coveralls.io/github/ladybug-tools/honeybee-3dm)
+[![Python 3.7](https://img.shields.io/badge/python-3.7-green.svg)](https://www.python.org/downloads/release/python-370/)
+
 ## Installation
 
 ```console
