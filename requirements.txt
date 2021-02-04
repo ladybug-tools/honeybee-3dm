@@ -1,4 +1,4 @@
-ladybug-geometry==1.23.1
+ladybug-geometry==1.23.2
 honeybee-core==1.42.2
 honeybee-radiance==1.29.5
 rhino3dm==0.14.0
