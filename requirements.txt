@@ -1,6 +1,4 @@
-ladybug-geometry==1.23.1
-honeybee-core==1.42.2
-honeybee-radiance==1.29.5
+lbt-honeybee==0.3.12
 rhino3dm==0.14.0
 pydantic==1.7.3
 click==7.1.2
