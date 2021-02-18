@@ -1,4 +1,4 @@
-lbt-honeybee==0.3.24
+lbt-honeybee==0.3.26
 rhino3dm==0.14.0
 pydantic==1.7.3
 click==7.1.2
