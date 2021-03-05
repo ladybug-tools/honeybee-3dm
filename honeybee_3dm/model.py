@@ -3,7 +3,6 @@ import os
 import rhino3dm
 
 from honeybee.model import Model
-from honeybee.typing import clean_string
 
 from .face import import_objects, import_objects_with_config
 from .helper import get_unit_system, check_parent_in_config

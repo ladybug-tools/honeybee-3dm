@@ -4,7 +4,7 @@ from honeybee_radiance.modifier.material import Plastic, Glass, BSDF, Mirror
 
 
 def to_string(str_lst):
-    """Get a string from a list of strings.
+    """Get a joined string from a list of strings.
 
     Args:
         str_lst: A list of strings
@@ -13,8 +13,8 @@ def to_string(str_lst):
         A string.
     """
     mat_string = ''
-    for str in str_lst:
-        mat_string += str
+    for string in str_lst:
+        mat_string += string
     return mat_string
 
 
@@ -26,9 +26,9 @@ def mat_to_dict(path):
 
     Args:
         path: A text string for the path to the .mat file
-    
+        
     Returns:
-        A dictionary with radiance identifier : modifier structure
+        A dictionary with radiance identifier to radiance modifier mapping.
     """
     try:
         with open(path) as fh:
@@ -44,12 +44,12 @@ def mat_to_dict(path):
         # Read all the materials from the .mat file
         materials = [lines[index:(index+4)] for index, line in enumerate(lines)
             if 'void' in line]
-            
+
         # Convert text string of materials into Radiance modifiers
         modifiers = [material_dict[material[0].split(' ')[1]].from_string(
                 to_string(material)) for material in materials]
 
         # Create a dictionary with identifier : modifier structure
         modifiers_dict = {modifier.identifier: modifier for modifier in modifiers}
-        
+
         return modifiers_dict

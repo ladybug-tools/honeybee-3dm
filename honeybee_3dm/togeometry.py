@@ -157,7 +157,6 @@ def brep_to_meshed_face3d(brep, tolerance):
         A Ladybug Face3D object.
     """
 
-
     for i in range(len(brep.Faces)):
         mesh = brep.Faces[i].GetMesh(rhino3dm.MeshType.Any)
         faces = mesh_to_face3d(mesh)
@@ -229,15 +228,16 @@ def brep_to_face3d(brep, tolerance, obj):
         elif len(polylines) > 1:
             # while creating polylines from lines if lines are remaining,
             # mesh the geometry
-            check_polylines = [isinstance(polyline, Polyline3D)
-                for polyline in polylines]
+            check_polylines = [
+                isinstance(polyline, Polyline3D) for polyline in polylines]
 
             if not all(check_polylines):
                 faces = brep_to_mesh_to_face3d(brep)
                 return faces
 
             # sort polylines based on area
-            polyline_areas = [Face3D(polyline.vertices).area for polyline in polylines
+            polyline_areas = [
+                Face3D(polyline.vertices).area for polyline in polylines
                 if isinstance(polyline, Polyline3D)]
 
             polyline_area_dict = dict(zip(polylines, polyline_areas))
@@ -343,7 +343,7 @@ def to_face3d(obj, tolerance, *, raise_exception=False):
             default is False.
 
     Returns:
-        A list of Ladybug Face3D.
+        A list of Ladybug Face3D objects.
     """
     rh_geo = obj.Geometry
 
@@ -358,7 +358,7 @@ def to_face3d(obj, tolerance, *, raise_exception=False):
 
     # If it's an extrusion
     elif isinstance(rh_geo, rhino3dm.Extrusion):
-            lb_face = extrusion_to_face3d(rh_geo, tolerance)
+        lb_face = extrusion_to_face3d(rh_geo, tolerance)
 
     # If it's a mesh
     elif isinstance(rh_geo, rhino3dm.Mesh):
