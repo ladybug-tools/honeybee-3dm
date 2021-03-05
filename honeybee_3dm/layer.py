@@ -50,7 +50,7 @@ def filter_objects_by_layer_index(file_3dm, layer_index):
     """
 
     return [obj for obj in file_3dm.Objects for index in layer_index
-        if obj.Attributes.LayerIndex == index and obj.Attributes.Visible]
+            if obj.Attributes.LayerIndex == index and obj.Attributes.Visible]
 
 
 def objects_on_parent_child(file_3dm, layer_name):
@@ -66,8 +66,8 @@ def objects_on_parent_child(file_3dm, layer_name):
     # Get a list of parent and child layers for the layer_name
     parent_child = parent_child_layers(file_3dm, layer_name)
 
-    layer_index = [layer.Index for layer in file_3dm.Layers
-        if layer.Name in parent_child]
+    layer_index = [
+        layer.Index for layer in file_3dm.Layers if layer.Name in parent_child]
     if not layer_index:
         raise ValueError(f'Find no layer named "{layer_name}"')
 
@@ -106,7 +106,8 @@ def visible_layers(file_3dm):
 
     for layer in file_3dm.Layers:
         layer_parent = layer.FullPath.split('::')
-        visibility_check = [False if not layer_name_to_layer[layer_name].Visible
+        visibility_check = [
+            False if not layer_name_to_layer[layer_name].Visible
             else True for layer_name in layer_parent]
         if visibility_check.count(False) == 0:
             visible_layers.append(layer)

@@ -18,8 +18,8 @@ tolerance_warning = 'Could not create a face for object of ID {} Please reduce t
 ' this more than once if the face is too small for the unit tolerance selected.'
 
 
-def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
-    config=None, modifiers_dict=None):
+def import_objects_with_config(
+        rhino3dm_file, layer, tolerance, *, config=None, modifiers_dict=None):
     """Import Rhino planar geometry as Honeybee faces.
 
     This function looks up a rhino3dm file, converts the objects
@@ -37,11 +37,13 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
 
     Returns:
         A tuple of following lists;
-        Honeybee Face objects,
-        Honeybee Shade objects,
-        Honeybee Aperture objects,
-        Honeybee Door objects,
-        Honeybee grids
+
+        -   Honeybee Face objects,
+        -   Honeybee Shade objects,
+        -   Honeybee Aperture objects,
+        -   Honeybee Door objects,
+        -   Honeybee grids.
+        
         A list wil be empty if no objects are imported from rhino file.
 
     """
@@ -51,7 +53,8 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
     # If Grids are requested for a layer
     if grid_controls(config, layer.Name):
 
-        hb_grids = import_grids(rhino3dm_file, layer, tolerance,
+        hb_grids = import_grids(
+            rhino3dm_file, layer, tolerance,
             grid_controls=grid_controls(config, layer.Name),
             child_layer=child_layer_control(config, layer.Name))
 
@@ -92,19 +95,18 @@ def import_objects_with_config(rhino3dm_file, layer, tolerance, *,
                 # If face_type settting is employed
                 if 'honeybee_face_type' in config['layers'][layer.Name]:
                     hb_faces.append(face3d_to_hb_face_with_face_type(config, face_obj,
-                        name, layer.Name))
+                                    name, layer.Name))
                 
                 # If only radiance material settting is employed
                 elif 'honeybee_face_type' not in config['layers'][layer.Name] and\
                     'honeybee_face_object' not in config['layers'][layer.Name] and\
                         'radiance_material' in config['layers'][layer.Name]:
                     hb_faces.append(face3d_to_hb_face_with_rad(config, face_obj, name,
-                        layer.Name))
+                                    layer.Name))
                 
                 # If face_object settting is employed
                 elif 'honeybee_face_object' in config['layers'][layer.Name]:
-                    hb_objects = face3d_to_hb_object(config, face_obj, name,
-                        layer.Name)
+                    hb_objects = face3d_to_hb_object(config, face_obj, name, layer.Name)
                     hb_apertures.extend(hb_objects[0])
                     hb_doors.extend(hb_objects[1])
                     hb_shades.extend(hb_objects[2])

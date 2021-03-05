@@ -10,8 +10,8 @@ from .togeometry import mesh_to_mesh3d, to_face3d
 from .layer import objects_on_layer, objects_on_parent_child
 
 
-def import_grids(rhino3dm_file, layer, tolerance, *, grid_controls=None,
-    child_layer=False):
+def import_grids(
+    rhino3dm_file, layer, tolerance, *, grid_controls=None, child_layer=False):
     """Creates Honeybee grids from a rhino3dm file.
 
     This function assumes all the grid objects are under a layer named ``grid``.

@@ -37,10 +37,18 @@ def get_unit_system(file_3dm):
 
 
 def child_layer_control(config, layer_name):
-    """Checks if child layers are requested for a layer in the config file."""
+    """Checks if child layers are requested for a layer in the config file.
+
+    Args:
+        config: A dictionary of the config settings.
+        layer_name: A text string of the layer name
+
+    Returns:
+        A bool.
+    """
 
     if 'include_child_layers' in config['layers'][layer_name] and \
-        config['layers'][layer_name]['include_child_layers']:
+            config['layers'][layer_name]['include_child_layers']:
         return True
     else:
         return False
@@ -53,8 +61,12 @@ def grid_controls(config, layer_name):
         grid_controls: A list of grid controls from the config file
 
     Returns:
-        A tuple of grid controls (grid_size, grid_offset) if valid 
-            grid settings are found in the config file or None
+        A tuple of grid controls
+
+        -   grid_size,
+        -   grid_offset.
+        
+        if valid grid settings are found in the config file or None
     """
 
     if 'grid_settings' in config['layers'][layer_name] and \
@@ -81,8 +93,8 @@ def check_parent_in_config(file_3dm, config, layer_name, parent_layer_name):
     """
 
     if parent_layer_name in config['layers'] and\
-        'include_child_layers' in config['layers'][parent_layer_name] and\
-        config['layers'][parent_layer_name]['include_child_layers']:
+            'include_child_layers' in config['layers'][parent_layer_name] and\
+            config['layers'][parent_layer_name]['include_child_layers']:
         return True
     else:
         return False
@@ -170,16 +182,20 @@ def face3d_to_hb_object(config, face_obj, name, layer_name):
         layer_name: A text string of the rhino layer name.
 
     Returns:
-        A tuple of lists. Each list contains Honeybee Aperture objects, 
-            Honeybee Shade objects, and Honeybee Door objects. List will
-            be empty if no objects are found for that Honeybee object.
+        A tuple of lists;
+
+        -   Honeybee Aperture objects,
+        -   Honeybee Shade objects,
+        -   Honeybee Door objects.
+
+        List will be empty if no objects are found for that Honeybee object.
     """
 
     hb_apertures, hb_doors, hb_shades = ([], [], [])
 
     obj_name = name or clean_and_id_string(layer_name)
     args = [clean_string(obj_name), face_obj]
-    
+
     def hb_object(config, layer_name, hb_obj):
         if 'radiance_material' in config['layers'][layer_name]:
             radiance_modifiers = mat_to_dict(config['sources']['radiance_material'])
