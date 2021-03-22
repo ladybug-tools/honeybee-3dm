@@ -79,6 +79,7 @@ jobs:
         run: |
           pip install -U .
           pip install -r dev-requirements.txt
+          python gen_schemas.py --version ${{needs.deploy.outputs.tag}}
           sphinx-apidoc -f -e -d 4 -o ./docs ./honeybee_3dm
           sphinx-build -b html ./docs ./docs/_build/docs
       - name: deploy to github pages
