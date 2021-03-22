@@ -56,8 +56,6 @@ jobs:
       - name: install semantic-release
         run:
           npm install @semantic-release/exec
-      - name: generate Honeybee-3dm Config schema
-        run: python ./gen_schemas.py
       - name: run semantic release
         run:
           npx semantic-release
