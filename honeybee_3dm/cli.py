@@ -42,7 +42,7 @@ def translate_recipe(rhino_file, name, folder, config):
     folder = pathlib.Path(folder)
     folder.mkdir(exist_ok=True)
     model = import_3dm(rhino_file, config_path=config)
-    model.to_hbjson(name=name, folder_path=folder)
+    model.to_hbjson(name=name, folder=folder)
     hbjson_file = os.path.join(folder, name + '.hbjson')
 
     try:
