@@ -7,6 +7,9 @@ a Rhino file.
 [![Coverage Status](https://coveralls.io/repos/github/ladybug-tools/honeybee-3dm/badge.svg)](https://coveralls.io/github/ladybug-tools/honeybee-3dm)
 [![Python 3.7](https://img.shields.io/badge/python-3.7-green.svg)](https://www.python.org/downloads/release/python-370/)
 
+
+## Tutorials
+[Honeybee-3dm Tutorials](https://youtube.com/playlist?list=PL8Ix1amWXqWIBuSoVX3Qn2dqwTUwY7WL2)
 ## Installation
 
 ```console
