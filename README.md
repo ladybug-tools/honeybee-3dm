@@ -7,9 +7,15 @@ a Rhino file.
 [![Coverage Status](https://coveralls.io/repos/github/ladybug-tools/honeybee-3dm/badge.svg)](https://coveralls.io/github/ladybug-tools/honeybee-3dm)
 [![Python 3.7](https://img.shields.io/badge/python-3.7-green.svg)](https://www.python.org/downloads/release/python-370/)
 
+[![Generic badge](https://img.shields.io/badge/Demo-YouTube-Green.svg)](https://youtube.com/playlist?list=PL8Ix1amWXqWIBuSoVX3Qn2dqwTUwY7WL2)
+[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/mitevpi/gh-web-ui)](https://github.com/ladybug-tools/honeybee-3dm/releases)
+[![GitHub](https://img.shields.io/github/license/mitevpi/gh-web-ui)](https://github.com/ladybug-tools/honeybee-3dm/blob/master/LICENSE)
 
-## Tutorials
-[Honeybee-3dm Tutorials](https://youtube.com/playlist?list=PL8Ix1amWXqWIBuSoVX3Qn2dqwTUwY7WL2)
+
+[![GitHub last commit](https://img.shields.io/github/last-commit/mitevpi/gh-web-ui)](https://github.com/ladybug-tools/honeybee-3dm/commits/master)
+[![GitHub issues](https://img.shields.io/github/issues/mitevpi/gh-web-ui)](https://github.com/ladybug-tools/honeybee-3dm/issues)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/mitevpi/gh-web-ui)](https://github.com/ladybug-tools/honeybee-3dm/issues?q=is%3Aissue+is%3Aclosed)
+
 ## Installation
 
 ```console
