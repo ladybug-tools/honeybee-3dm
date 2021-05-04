@@ -1,0 +1,26 @@
+honeybee\_3dm package
+=====================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   honeybee_3dm.cli
+   honeybee_3dm.config
+   honeybee_3dm.face
+   honeybee_3dm.grid
+   honeybee_3dm.helper
+   honeybee_3dm.layer
+   honeybee_3dm.material
+   honeybee_3dm.model
+   honeybee_3dm.togeometry
+
+Module contents
+---------------
+
+.. automodule:: honeybee_3dm
+   :members:
+   :undoc-members:
+   :show-inheritance:
