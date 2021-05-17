@@ -1,2 +1,2 @@
-lbt-honeybee==0.4.101
+lbt-honeybee==0.4.129
 rhino3dm==0.14.0
