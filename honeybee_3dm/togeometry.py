@@ -63,7 +63,7 @@ def check_planarity(brep, tolerance):
         Bool. True if planar. Otherwise False.
     """
     is_planar = [brep.Surfaces[i].IsPlanar(tolerance)
-        for i in range(len(brep.Surfaces))]
+                 for i in range(len(brep.Surfaces))]
 
     return all(is_planar)
 
@@ -215,7 +215,7 @@ def brep_to_face3d(brep, tolerance, obj):
             end_pt = to_point3d(brep.Edges[i].PointAtEnd)
             line = LineSegment3D.from_end_points(start_pt, end_pt)
             lines.append(line)
-        
+
         # Create Ladybug Polylines from the lines
         polylines = Polyline3D.join_segments(lines, tolerance)
 
@@ -243,7 +243,7 @@ def brep_to_face3d(brep, tolerance, obj):
             polyline_area_dict = dict(zip(polylines, polyline_areas))
 
             sorted_dict = sorted(polyline_area_dict.items(),
-                key=lambda x: x[1], reverse=True)
+                                 key=lambda x: x[1], reverse=True)
             sorted_polylines = [item[0] for item in sorted_dict]
 
             # Points on boundary
@@ -252,20 +252,20 @@ def brep_to_face3d(brep, tolerance, obj):
 
             hole_pts = [remove_dup_vertices(polyline.vertices, tolerance)
                         for polyline in sorted_polylines[1:]]
-            
+
             # Points on holes
             total_hole_pts = [
                 pts for pts_lst in hole_pts for pts in pts_lst]
- 
+
             hole_pts_on_boundary = [
                 pts for pts in total_hole_pts if pts in boundary_pts]
 
             # If any of the hole is touching the boundary of the face, mesh it
             if len(hole_pts_on_boundary) > 0:
                 warnings.warn(
-                    f'Object with id: {obj.Attributes.Id} has holes that touch the' 
+                    f'Object with id: {obj.Attributes.Id} has holes that touch the'
                     ' boundary of the object. This object will be meshed.'
-                    )
+                )
                 return brep_to_mesh_to_face3d(brep)
             # else create a face3d with holes
             else:
@@ -363,13 +363,13 @@ def to_face3d(obj, tolerance, *, raise_exception=False):
     # If it's a mesh
     elif isinstance(rh_geo, rhino3dm.Mesh):
         lb_face = mesh_to_face3d(rh_geo)
-        
+
     else:
         if raise_exception:
             raise ValueError(f'Unsupported object type: {rh_geo.ObjectType}')
         warnings.warn(
             f'Unsupported object type: {rh_geo.ObjectType} is ignored'
-            )
+        )
         lb_face = []
 
     return lb_face
