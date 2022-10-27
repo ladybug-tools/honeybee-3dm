@@ -8,7 +8,7 @@ sphinxcontrib-fulltoc==1.2.0
 sphinxcontrib-websupport==1.2.4
 sphinx-click==2.7.1
 twine==3.4.1
-wheel==0.36.2
+wheel==0.37.1
 setuptools==57.0.0
 importlib-metadata==4.3.1
 pydantic-openapi-helper==0.2.9
