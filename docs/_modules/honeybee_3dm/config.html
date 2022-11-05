@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>honeybee_3dm.config &#8212; honeybee-3dm  documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          honeybee-3dm</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../honeybee_3dm.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.cli.html">honeybee_3dm.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.config.html">honeybee_3dm.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.face.html">honeybee_3dm.face module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.grid.html">honeybee_3dm.grid module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.helper.html">honeybee_3dm.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.layer.html">honeybee_3dm.layer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.material.html">honeybee_3dm.material module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.model.html">honeybee_3dm.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.togeometry.html">honeybee_3dm.togeometry module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../honeybee_3dm.html#module-honeybee_3dm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-4">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a></li>
+</ul>
+
+        </div>
+      </div>
+    <div class="body col-md-8 content" role="main">
+      
+  <h1>Source code for honeybee_3dm.config</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Config file schema and validation.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">enum</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">.material</span> <span class="kn">import</span> <span class="n">mat_to_dict</span>
+
+
+<div class="viewcode-block" id="FaceObject"><a class="viewcode-back" href="../../honeybee_3dm.config.html#honeybee_3dm.config.FaceObject">[docs]</a><span class="k">class</span> <span class="nc">FaceObject</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;List of acceptable string names for Honeybee Face object types.&quot;&quot;&quot;</span>
+    <span class="n">door</span> <span class="o">=</span> <span class="s1">&#39;door&#39;</span>
+    <span class="n">shade</span> <span class="o">=</span> <span class="s1">&#39;shade&#39;</span>
+    <span class="n">aperture</span> <span class="o">=</span> <span class="s1">&#39;aperture&#39;</span></div>
+
+
+<div class="viewcode-block" id="FaceType"><a class="viewcode-back" href="../../honeybee_3dm.config.html#honeybee_3dm.config.FaceType">[docs]</a><span class="k">class</span> <span class="nc">FaceType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;List of acceptable string names for Honeybee face types.&quot;&quot;&quot;</span>
+    <span class="n">wall</span> <span class="o">=</span> <span class="s1">&#39;wall&#39;</span>
+    <span class="n">roof</span> <span class="o">=</span> <span class="s1">&#39;roof&#39;</span>
+    <span class="n">floor</span> <span class="o">=</span> <span class="s1">&#39;floor&#39;</span>
+    <span class="n">airwall</span> <span class="o">=</span> <span class="s1">&#39;airwall&#39;</span></div>
+
+
+<div class="viewcode-block" id="GridSettings"><a class="viewcode-back" href="../../honeybee_3dm.config.html#honeybee_3dm.config.GridSettings">[docs]</a><span class="k">class</span> <span class="nc">GridSettings</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Config for the grid-settings.&quot;&quot;&quot;</span>
+
+    <span class="n">grid_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Grid spacing to control grid density.&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">grid_offset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Offset to move grid away from the parent face by certain distance.&#39;</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LayerConfig"><a class="viewcode-back" href="../../honeybee_3dm.config.html#honeybee_3dm.config.LayerConfig">[docs]</a><span class="k">class</span> <span class="nc">LayerConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Config for layer keys.&quot;&quot;&quot;</span>
+
+    <span class="n">exclude_from_rad</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Boolean to indicate if radiance material is applied to this layer.&#39;</span>
+            <span class="s1">&#39; This is useful for layers on which grid objects are saved.&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">include_child_layers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Boolean to indicate if objects from child layers are to be imported.&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">radiance_material</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;The name of radiance modifier.&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">grid_settings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GridSettings</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Grid settings for the layer.&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">honeybee_face_object</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FaceObject</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;A text string for FaceObject to create either a Honeybee Shade,&#39;</span>
+        <span class="s1">&#39; a Honeybee Door, or a Honeybee Aperture object.&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">honeybee_face_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FaceType</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;A text string for FaceType to create either a Honeybee Wall,&#39;</span>
+        <span class="s1">&#39; a Honeybee Floor, a Honeybee Roof/Ceiling, or a Honeybee Airwall.&#39;</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../honeybee_3dm.config.html#honeybee_3dm.config.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Config file.&quot;&quot;&quot;</span>
+
+    <span class="n">sources</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Path to input sources. Currently, the config only supports&#39;</span>
+            <span class="s1">&#39; &quot;radiance_material&quot; to indicate the path to the radiance.mat file.&#39;</span>
+        <span class="p">)</span>
+
+    <span class="n">layers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">LayerConfig</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;A dictionary to indicate the config for each layer in rhino 3dm&#39;</span>
+            <span class="s1">&#39; file. The key must be a Rhino layer name and the values must be a&#39;</span>
+            <span class="s1">&#39; LayerConfig.&#39;</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Config.check_sources"><a class="viewcode-back" href="../../honeybee_3dm.config.html#honeybee_3dm.config.Config.check_sources">[docs]</a>    <span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;sources&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">check_sources</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="n">sources</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">if</span> <span class="n">sources</span><span class="p">:</span>
+            <span class="n">sources</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sources</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;sources can only have one key.&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">sources</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;radiance_material&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;invalid sources key: </span><span class="si">{</span><span class="n">sources</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">.&#39;</span>
+                        <span class="s1">&#39;key must be radiance_material.&#39;</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span></div>
+
+<div class="viewcode-block" id="Config.check_rad"><a class="viewcode-back" href="../../honeybee_3dm.config.html#honeybee_3dm.config.Config.check_rad">[docs]</a>    <span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;layers&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">check_rad</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="n">config_layers</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="n">sources</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="s1">&#39;sources&#39;</span><span class="p">]</span>
+
+        <span class="n">radiance_material_request</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">config_layers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">config_layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">radiance_material</span><span class="p">:</span>
+                <span class="n">radiance_material_request</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">radiance_material_request</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sources</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">sources</span><span class="p">[</span><span class="s1">&#39;radiance_material&#39;</span><span class="p">])</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">modifiers_dict</span> <span class="o">=</span> <span class="n">mat_to_dict</span><span class="p">(</span><span class="n">sources</span><span class="p">[</span><span class="s1">&#39;radiance_material&#39;</span><span class="p">])</span>
+                <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                    <span class="n">mat_path</span> <span class="o">=</span> <span class="n">sources</span><span class="p">[</span><span class="s1">&#39;radiance_material&#39;</span><span class="p">]</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;The path </span><span class="si">{</span><span class="n">mat_path</span><span class="si">}</span><span class="s1"> is not a valid path.&#39;</span> 
+                        <span class="s1">&#39; Please try using double backslashes in the  file path.&#39;</span>
+                        <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">rad_mat</span> <span class="o">=</span> <span class="p">[</span><span class="n">config_layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">radiance_material</span> <span class="k">for</span> <span class="n">layer</span>
+                        <span class="ow">in</span> <span class="n">config_layers</span> <span class="k">if</span> <span class="n">config_layers</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">radiance_material</span><span class="p">]</span>
+
+                    <span class="n">rad_mat_check</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span> <span class="k">for</span> <span class="n">mat</span> <span class="ow">in</span> <span class="n">rad_mat</span> <span class="k">if</span> <span class="n">mat</span> <span class="ow">in</span> <span class="n">modifiers_dict</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rad_mat</span><span class="p">)</span> <span class="o">!=</span> <span class="n">rad_mat_check</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="s1">&#39;Please make sure all the radiance materials used in&#39;</span>
+                            <span class="s1">&#39; the config file are also found in the radiance material&#39;</span>
+                            <span class="s1">&#39; file and names of radiance materials in the config file&#39;</span>
+                            <span class="s1">&#39; match the radiance identifiers in the radiance material&#39;</span>
+                            <span class="s1">&#39; file.&#39;</span>
+                        <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;&quot;radiance_material&quot; as a key and a valid path to to the radiance&#39;</span>
+                    <span class="s1">&#39; material file as a value to the key to be provided in &quot;sources&quot;.&#39;</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span></div>
+
+<div class="viewcode-block" id="Config.check_layers"><a class="viewcode-back" href="../../honeybee_3dm.config.html#honeybee_3dm.config.Config.check_layers">[docs]</a>    <span class="k">def</span> <span class="nf">check_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_3dm</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Checks if layers in the config file are layers from the rhino file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_3dm: A rhino3dm file object.</span>
+<span class="sd">            config: Config dictionary.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Boolean value of True if no error is raised.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rhino_layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">layer</span><span class="o">.</span><span class="n">Name</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">file_3dm</span><span class="o">.</span><span class="n">Layers</span><span class="p">]</span>
+
+        <span class="n">layer_check</span> <span class="o">=</span> <span class="p">[</span><span class="n">layer</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="k">if</span> <span class="n">layer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rhino_layers</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">layer_check</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+                <span class="s1">&#39;Only layer names from the Rhino file are allowed in the config file.&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39; Found invalid layer names: </span><span class="si">{</span><span class="n">layer_check</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span></div></div>
+
+
+<div class="viewcode-block" id="check_config"><a class="viewcode-back" href="../../honeybee_3dm.config.html#honeybee_3dm.config.check_config">[docs]</a><span class="k">def</span> <span class="nf">check_config</span><span class="p">(</span><span class="n">file_3dm</span><span class="p">,</span> <span class="n">config_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Validates the config file and returns it in the form of a dictionary.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_3dm: A rhino3dm file object.</span>
+<span class="sd">        config_path: A text string for the path to the config file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Config dictionary or None if any of the checks fails.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">&#39;Not a valid json file.&#39;</span>
+            <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Parse config.json using config schema</span>
+        <span class="n">config_obj</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config_obj</span><span class="o">.</span><span class="n">check_layers</span><span class="p">(</span><span class="n">file_3dm</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">config_obj</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2022, Ladybug Tools.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

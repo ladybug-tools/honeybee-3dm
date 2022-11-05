@@ -1,0 +1,7 @@
+honeybee\_3dm.grid module
+=========================
+
+.. automodule:: honeybee_3dm.grid
+   :members:
+   :undoc-members:
+   :show-inheritance:

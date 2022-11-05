@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>honeybee_3dm.togeometry &#8212; honeybee-3dm  documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          honeybee-3dm</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../honeybee_3dm.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.cli.html">honeybee_3dm.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.config.html">honeybee_3dm.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.face.html">honeybee_3dm.face module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.grid.html">honeybee_3dm.grid module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.helper.html">honeybee_3dm.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.layer.html">honeybee_3dm.layer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.material.html">honeybee_3dm.material module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.model.html">honeybee_3dm.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.togeometry.html">honeybee_3dm.togeometry module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../honeybee_3dm.html#module-honeybee_3dm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-4">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a></li>
+</ul>
+
+        </div>
+      </div>
+    <div class="body col-md-8 content" role="main">
+      
+  <h1>Source code for honeybee_3dm.togeometry</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Functions to create Ladybug Geometry objects from Rhino3dm objects.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">rhino3dm</span>
+<span class="kn">import</span> <span class="nn">ladybug.color</span> <span class="k">as</span> <span class="nn">lbc</span>
+
+<span class="kn">from</span> <span class="nn">ladybug_geometry.geometry3d.pointvector</span> <span class="kn">import</span> <span class="n">Point3D</span><span class="p">,</span> <span class="n">Vector3D</span>
+<span class="kn">from</span> <span class="nn">ladybug_geometry.geometry3d.face</span> <span class="kn">import</span> <span class="n">Face3D</span>
+<span class="kn">from</span> <span class="nn">ladybug_geometry.geometry3d.line</span> <span class="kn">import</span> <span class="n">LineSegment3D</span>
+<span class="kn">from</span> <span class="nn">ladybug_geometry.geometry3d.polyline</span> <span class="kn">import</span> <span class="n">Polyline3D</span>
+<span class="kn">from</span> <span class="nn">ladybug_geometry.geometry3d.mesh</span> <span class="kn">import</span> <span class="n">Mesh3D</span>
+<span class="kn">from</span> <span class="nn">ladybug_geometry.geometry3d.polyface</span> <span class="kn">import</span> <span class="n">Polyface3D</span>
+
+
+<div class="viewcode-block" id="to_point3d"><a class="viewcode-back" href="../../honeybee_3dm.togeometry.html#honeybee_3dm.togeometry.to_point3d">[docs]</a><span class="k">def</span> <span class="nf">to_point3d</span><span class="p">(</span><span class="n">point</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a Ladybug Point3D object from a rhino3dm point.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        point: A rhino3dm point.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Ladybug Point3D object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Point3D</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">Z</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="to_vector3d"><a class="viewcode-back" href="../../honeybee_3dm.togeometry.html#honeybee_3dm.togeometry.to_vector3d">[docs]</a><span class="k">def</span> <span class="nf">to_vector3d</span><span class="p">(</span><span class="n">vector</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a Ladybug Vector3D from a rhino3dm Vector3d.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        vector: A rhino3dm vector3d.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">         A Ladybug Vector3D object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Vector3D</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">vector</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="n">vector</span><span class="o">.</span><span class="n">Z</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="remove_dup_vertices"><a class="viewcode-back" href="../../honeybee_3dm.togeometry.html#honeybee_3dm.togeometry.remove_dup_vertices">[docs]</a><span class="k">def</span> <span class="nf">remove_dup_vertices</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove vertices from an array of Point3Ds that are equal within the tolerance.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        vertices: A list of Ladybug Point3D objects.</span>
+<span class="sd">        tolerance: A number for model tolerance. By default the tolerance is set to</span>
+<span class="sd">            the ModelAbsoluteTolerance value in input 3DM file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">         A list of Ladybug Point3D objects with duplicate points removed.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">pt</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">pt</span><span class="o">.</span><span class="n">is_equivalent</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">tolerance</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="check_planarity"><a class="viewcode-back" href="../../honeybee_3dm.togeometry.html#honeybee_3dm.togeometry.check_planarity">[docs]</a><span class="k">def</span> <span class="nf">check_planarity</span><span class="p">(</span><span class="n">brep</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check the planarity of a Brep.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        brep: Geometry of a Rhino3dm Brep.</span>
+<span class="sd">        tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Bool. True if planar. Otherwise False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">is_planar</span> <span class="o">=</span> <span class="p">[</span><span class="n">brep</span><span class="o">.</span><span class="n">Surfaces</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">IsPlanar</span><span class="p">(</span><span class="n">tolerance</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">brep</span><span class="o">.</span><span class="n">Surfaces</span><span class="p">))]</span>
+
+    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">is_planar</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="extract_mesh_faces_colors"><a class="viewcode-back" href="../../honeybee_3dm.togeometry.html#honeybee_3dm.togeometry.extract_mesh_faces_colors">[docs]</a><span class="k">def</span> <span class="nf">extract_mesh_faces_colors</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">color_by_face</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract face indices and colors from a Rhino mesh.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mesh: Rhino3dm mesh.</span>
+<span class="sd">        color_by_face: Bool. True will derive colors from mesh faces.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A tuple of mesh faces and mesh colors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">lb_faces</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">Faces</span><span class="p">)):</span>
+        <span class="n">face</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Faces</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">face</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">lb_faces</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">face</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">face</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">face</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">face</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lb_faces</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">face</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">face</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">face</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">VertexColors</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">color_by_face</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">Faces</span><span class="p">)):</span>
+                <span class="n">face</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Faces</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">col</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">VertexColors</span><span class="p">[</span><span class="n">face</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="n">colors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lbc</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">R</span><span class="p">,</span> <span class="n">col</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">col</span><span class="o">.</span><span class="n">B</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">VertexColors</span><span class="p">)):</span>
+                <span class="n">col</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">VertexColors</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">colors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lbc</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">R</span><span class="p">,</span> <span class="n">col</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">col</span><span class="o">.</span><span class="n">B</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">lb_faces</span><span class="p">,</span> <span class="n">colors</span></div>
+
+
+<div class="viewcode-block" id="mesh_to_mesh3d"><a class="viewcode-back" href="../../honeybee_3dm.togeometry.html#honeybee_3dm.togeometry.mesh_to_mesh3d">[docs]</a><span class="k">def</span> <span class="nf">mesh_to_mesh3d</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">color_by_face</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a Ladybug Mesh3D object from a Rhino3dm Mesh.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mesh: Rhino3dm mesh.</span>
+<span class="sd">        color_by_face: Bool. True will derive colors from mesh faces.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Ladybug Mesh3D object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lb_verts</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">to_point3d</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">Vertices</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">Vertices</span><span class="p">)))</span>
+    <span class="n">lb_faces</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="n">extract_mesh_faces_colors</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">color_by_face</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Mesh3D</span><span class="p">(</span><span class="n">lb_verts</span><span class="p">,</span> <span class="n">lb_faces</span><span class="p">,</span> <span class="n">colors</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="mesh_to_face3d"><a class="viewcode-back" href="../../honeybee_3dm.togeometry.html#honeybee_3dm.togeometry.mesh_to_face3d">[docs]</a><span class="k">def</span> <span class="nf">mesh_to_face3d</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a list of Ladybug Face3D objects from a rhino3dm Mesh.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mesh: A rhino3dm mesh geometry.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of Ladybug Face3D objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">faces</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">pts</span> <span class="o">=</span> <span class="p">[</span><span class="n">to_point3d</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">Vertices</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">Vertices</span><span class="p">))]</span>
+
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">Faces</span><span class="p">)):</span>
+        <span class="n">face</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Faces</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">face</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">all_verts</span> <span class="o">=</span> <span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">face</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">pts</span><span class="p">[</span><span class="n">face</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                         <span class="n">pts</span><span class="p">[</span><span class="n">face</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span> <span class="n">pts</span><span class="p">[</span><span class="n">face</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">all_verts</span> <span class="o">=</span> <span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">face</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">pts</span><span class="p">[</span><span class="n">face</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">pts</span><span class="p">[</span><span class="n">face</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+
+        <span class="n">faces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Face3D</span><span class="p">(</span><span class="n">all_verts</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">faces</span></div>
+
+
+<div class="viewcode-block" id="brep_to_meshed_face3d"><a class="viewcode-back" href="../../honeybee_3dm.togeometry.html#honeybee_3dm.togeometry.brep_to_meshed_face3d">[docs]</a><span class="k">def</span> <span class="nf">brep_to_meshed_face3d</span><span class="p">(</span><span class="n">brep</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a Ladybug Face3D object from a planar rhino3dm Brep.</span>
+
+<span class="sd">    This method meshes the brep in order to create a Ladybug</span>
+<span class="sd">    Face3D object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        brep: A rhino3dm Brep.</span>
+<span class="sd">        tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Ladybug Face3D object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">brep</span><span class="o">.</span><span class="n">Faces</span><span class="p">)):</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">brep</span><span class="o">.</span><span class="n">Faces</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">GetMesh</span><span class="p">(</span><span class="n">rhino3dm</span><span class="o">.</span><span class="n">MeshType</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span>
+        <span class="n">faces</span> <span class="o">=</span> <span class="n">mesh_to_face3d</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+        <span class="n">polyface</span> <span class="o">=</span> <span class="n">Polyface3D</span><span class="o">.</span><span class="n">from_faces</span><span class="p">(</span><span class="n">faces</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">polyface</span><span class="o">.</span><span class="n">naked_edges</span><span class="p">)</span>
+        <span class="n">polylines</span> <span class="o">=</span> <span class="n">Polyline3D</span><span class="o">.</span><span class="n">join_segments</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span>
+        <span class="n">face3d</span> <span class="o">=</span> <span class="n">Face3D</span><span class="p">(</span><span class="n">boundary</span><span class="o">=</span><span class="n">polylines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">face3d</span></div>
+
+
+<div class="viewcode-block" id="brep_to_mesh_to_face3d"><a class="viewcode-back" href="../../honeybee_3dm.togeometry.html#honeybee_3dm.togeometry.brep_to_mesh_to_face3d">[docs]</a><span class="k">def</span> <span class="nf">brep_to_mesh_to_face3d</span><span class="p">(</span><span class="n">brep</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a list of Ladybug Face3D objects from a rhino3dm Brep.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        brep: A rhino3dm Brep.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of Ladybug Face3D objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">faces</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">brep</span><span class="o">.</span><span class="n">Faces</span><span class="p">)):</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">brep</span><span class="o">.</span><span class="n">Faces</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">GetMesh</span><span class="p">(</span><span class="n">rhino3dm</span><span class="o">.</span><span class="n">MeshType</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span>
+        <span class="n">faces</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">mesh_to_face3d</span><span class="p">(</span><span class="n">mesh</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">faces</span></div>
+
+
+<div class="viewcode-block" id="brep_to_face3d"><a class="viewcode-back" href="../../honeybee_3dm.togeometry.html#honeybee_3dm.togeometry.brep_to_face3d">[docs]</a><span class="k">def</span> <span class="nf">brep_to_face3d</span><span class="p">(</span><span class="n">brep</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a list of Ladybug Face3D objects from a planar rhino3dm Brep.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        brep: A rhino3dm Brep.</span>
+<span class="sd">        tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.</span>
+<span class="sd">        obj: A rhino3dm object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of Ladybug Face3D objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">brep</span><span class="o">.</span><span class="n">Faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">GetMesh</span><span class="p">(</span><span class="n">rhino3dm</span><span class="o">.</span><span class="n">MeshType</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span>
+
+    <span class="c1"># If any of the edge is curved, mesh it</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">brep</span><span class="o">.</span><span class="n">Edges</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">brep</span><span class="o">.</span><span class="n">Edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">IsLinear</span><span class="p">(</span><span class="n">tolerance</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">brep_to_meshed_face3d</span><span class="p">(</span><span class="n">brep</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)]</span>
+
+    <span class="c1"># If the brep has 3 or 4 vertices, mesh it</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">Vertices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">Vertices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">brep_to_meshed_face3d</span><span class="p">(</span><span class="n">brep</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Create Ladybug lines from start and end points of edges</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">brep</span><span class="o">.</span><span class="n">Edges</span><span class="p">)):</span>
+            <span class="n">start_pt</span> <span class="o">=</span> <span class="n">to_point3d</span><span class="p">(</span><span class="n">brep</span><span class="o">.</span><span class="n">Edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">PointAtStart</span><span class="p">)</span>
+            <span class="n">end_pt</span> <span class="o">=</span> <span class="n">to_point3d</span><span class="p">(</span><span class="n">brep</span><span class="o">.</span><span class="n">Edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">PointAtEnd</span><span class="p">)</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">LineSegment3D</span><span class="o">.</span><span class="n">from_end_points</span><span class="p">(</span><span class="n">start_pt</span><span class="p">,</span> <span class="n">end_pt</span><span class="p">)</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="c1"># Create Ladybug Polylines from the lines</span>
+        <span class="n">polylines</span> <span class="o">=</span> <span class="n">Polyline3D</span><span class="o">.</span><span class="n">join_segments</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span>
+
+        <span class="c1"># One polyline means there are no holes</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">polylines</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">boundary_pts</span> <span class="o">=</span> <span class="n">remove_dup_vertices</span><span class="p">(</span><span class="n">polylines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">Face3D</span><span class="p">(</span><span class="n">boundary</span><span class="o">=</span><span class="n">boundary_pts</span><span class="p">)]</span>
+
+        <span class="c1"># More than one polylines means there are holes in the brep</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">polylines</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># while creating polylines from lines if lines are remaining,</span>
+            <span class="c1"># mesh the geometry</span>
+            <span class="n">check_polylines</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">polyline</span><span class="p">,</span> <span class="n">Polyline3D</span><span class="p">)</span> <span class="k">for</span> <span class="n">polyline</span> <span class="ow">in</span> <span class="n">polylines</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">check_polylines</span><span class="p">):</span>
+                <span class="n">faces</span> <span class="o">=</span> <span class="n">brep_to_mesh_to_face3d</span><span class="p">(</span><span class="n">brep</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">faces</span>
+
+            <span class="c1"># sort polylines based on area</span>
+            <span class="n">polyline_areas</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">Face3D</span><span class="p">(</span><span class="n">polyline</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span><span class="o">.</span><span class="n">area</span> <span class="k">for</span> <span class="n">polyline</span> <span class="ow">in</span> <span class="n">polylines</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">polyline</span><span class="p">,</span> <span class="n">Polyline3D</span><span class="p">)]</span>
+
+            <span class="n">polyline_area_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">polylines</span><span class="p">,</span> <span class="n">polyline_areas</span><span class="p">))</span>
+
+            <span class="n">sorted_dict</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">polyline_area_dict</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+                                 <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">sorted_polylines</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sorted_dict</span><span class="p">]</span>
+
+            <span class="c1"># Points on boundary</span>
+            <span class="n">boundary_pts</span> <span class="o">=</span> <span class="n">remove_dup_vertices</span><span class="p">(</span>
+                <span class="n">sorted_polylines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span>
+
+            <span class="n">hole_pts</span> <span class="o">=</span> <span class="p">[</span><span class="n">remove_dup_vertices</span><span class="p">(</span><span class="n">polyline</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">polyline</span> <span class="ow">in</span> <span class="n">sorted_polylines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+
+            <span class="c1"># Points on holes</span>
+            <span class="n">total_hole_pts</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">pts</span> <span class="k">for</span> <span class="n">pts_lst</span> <span class="ow">in</span> <span class="n">hole_pts</span> <span class="k">for</span> <span class="n">pts</span> <span class="ow">in</span> <span class="n">pts_lst</span><span class="p">]</span>
+
+            <span class="n">hole_pts_on_boundary</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">pts</span> <span class="k">for</span> <span class="n">pts</span> <span class="ow">in</span> <span class="n">total_hole_pts</span> <span class="k">if</span> <span class="n">pts</span> <span class="ow">in</span> <span class="n">boundary_pts</span><span class="p">]</span>
+
+            <span class="c1"># If any of the hole is touching the boundary of the face, mesh it</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hole_pts_on_boundary</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;Object with id: </span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">Id</span><span class="si">}</span><span class="s1"> has holes that touch the&#39;</span>
+                    <span class="s1">&#39; boundary of the object. This object will be meshed.&#39;</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">brep_to_mesh_to_face3d</span><span class="p">(</span><span class="n">brep</span><span class="p">)</span>
+            <span class="c1"># else create a face3d with holes</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">Face3D</span><span class="p">(</span><span class="n">boundary</span><span class="o">=</span><span class="n">boundary_pts</span><span class="p">,</span> <span class="n">holes</span><span class="o">=</span><span class="n">hole_pts</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="multiface_brep_to_face3d"><a class="viewcode-back" href="../../honeybee_3dm.togeometry.html#honeybee_3dm.togeometry.multiface_brep_to_face3d">[docs]</a><span class="k">def</span> <span class="nf">multiface_brep_to_face3d</span><span class="p">(</span><span class="n">brep</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a  list of Ladybug Face3D objects from a Brep with multiple Brep faces.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        brep: A rhino3dm Brep.</span>
+<span class="sd">        tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.</span>
+<span class="sd">        obj: A rhino3dm object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of Ladybug Face3D objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">faces</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">brep</span><span class="o">.</span><span class="n">Faces</span><span class="p">)):</span>
+        <span class="n">face_brep</span> <span class="o">=</span> <span class="n">brep</span><span class="o">.</span><span class="n">Faces</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">DuplicateFace</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># For all the planar brep faces</span>
+        <span class="k">if</span> <span class="n">check_planarity</span><span class="p">(</span><span class="n">face_brep</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+            <span class="n">faces</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">brep_to_face3d</span><span class="p">(</span><span class="n">face_brep</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">obj</span><span class="p">))</span>
+        <span class="c1"># For all the non-planar brep faces such as a curved face</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">faces</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">brep_to_mesh_to_face3d</span><span class="p">(</span><span class="n">face_brep</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">faces</span></div>
+
+
+<div class="viewcode-block" id="extrusion_to_face3d"><a class="viewcode-back" href="../../honeybee_3dm.togeometry.html#honeybee_3dm.togeometry.extrusion_to_face3d">[docs]</a><span class="k">def</span> <span class="nf">extrusion_to_face3d</span><span class="p">(</span><span class="n">extrusion</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a list of Ladybug Face3D objects from a rhino3dm Extrusion.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        brep: A rhino3dm Extrusion.</span>
+<span class="sd">        tolerance: A number for tolerance value. Tolerance will only be used for</span>
+<span class="sd">            converting mesh geometries.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of Ladybug Face3D objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">faces</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">extrusion</span><span class="o">.</span><span class="n">GetMesh</span><span class="p">(</span><span class="n">rhino3dm</span><span class="o">.</span><span class="n">MeshType</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span>
+    <span class="c1"># Create face3ds</span>
+    <span class="n">faces</span> <span class="o">=</span> <span class="n">mesh_to_face3d</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">faces</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Group faces by normal direction</span>
+        <span class="n">face_normal</span> <span class="o">=</span> <span class="p">{</span><span class="n">face</span><span class="p">:</span> <span class="n">face</span><span class="o">.</span><span class="n">normal</span><span class="o">.</span><span class="n">z</span> <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">faces</span><span class="p">}</span>
+        <span class="n">face_groups</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">face_normal</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">face_groups</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">face_groups</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="n">face_groups</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">normal</span> <span class="ow">in</span> <span class="n">face_groups</span><span class="p">:</span>
+            <span class="n">polyface</span> <span class="o">=</span> <span class="n">Polyface3D</span><span class="o">.</span><span class="n">from_faces</span><span class="p">(</span><span class="n">face_groups</span><span class="p">[</span><span class="n">normal</span><span class="p">],</span> <span class="n">tolerance</span><span class="p">)</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">polyface</span><span class="o">.</span><span class="n">naked_edges</span><span class="p">)</span>
+            <span class="n">polylines</span> <span class="o">=</span> <span class="n">Polyline3D</span><span class="o">.</span><span class="n">join_segments</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span>
+            <span class="n">face3d</span> <span class="o">=</span> <span class="n">Face3D</span><span class="p">(</span><span class="n">boundary</span><span class="o">=</span><span class="n">polylines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+            <span class="n">faces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">face3d</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">faces</span></div>
+
+
+<div class="viewcode-block" id="to_face3d"><a class="viewcode-back" href="../../honeybee_3dm.togeometry.html#honeybee_3dm.togeometry.to_face3d">[docs]</a><span class="k">def</span> <span class="nf">to_face3d</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">raise_exception</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert Rhino objects to Ladybug Face3D objects.</span>
+
+<span class="sd">    Supported object types are Brep, Extrusion and Meshes. If raise_exception is set to</span>
+<span class="sd">    True this method will raise a ValueError for unsupported object types.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj: A Rhino3dm object.</span>
+<span class="sd">        tolerance: A number for tolerance value. Tolerance will only be used for</span>
+<span class="sd">            converting mesh geometries.</span>
+<span class="sd">        raise_exception: A Boolean to raise an exception for unsupported object types.</span>
+<span class="sd">            default is False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of Ladybug Face3D objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rh_geo</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">Geometry</span>
+
+    <span class="c1"># if it&#39;s a Brep</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rh_geo</span><span class="p">,</span> <span class="n">rhino3dm</span><span class="o">.</span><span class="n">Brep</span><span class="p">):</span>
+        <span class="c1"># If it&#39;s a planar brep</span>
+        <span class="k">if</span> <span class="n">check_planarity</span><span class="p">(</span><span class="n">rh_geo</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">rh_geo</span><span class="o">.</span><span class="n">Faces</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">lb_face</span> <span class="o">=</span> <span class="n">brep_to_face3d</span><span class="p">(</span><span class="n">rh_geo</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+        <span class="c1"># If it&#39;s a brep with multiple faces</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lb_face</span> <span class="o">=</span> <span class="n">multiface_brep_to_face3d</span><span class="p">(</span><span class="n">rh_geo</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+
+    <span class="c1"># If it&#39;s an extrusion</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rh_geo</span><span class="p">,</span> <span class="n">rhino3dm</span><span class="o">.</span><span class="n">Extrusion</span><span class="p">):</span>
+        <span class="n">lb_face</span> <span class="o">=</span> <span class="n">extrusion_to_face3d</span><span class="p">(</span><span class="n">rh_geo</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span>
+
+    <span class="c1"># If it&#39;s a mesh</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rh_geo</span><span class="p">,</span> <span class="n">rhino3dm</span><span class="o">.</span><span class="n">Mesh</span><span class="p">):</span>
+        <span class="n">lb_face</span> <span class="o">=</span> <span class="n">mesh_to_face3d</span><span class="p">(</span><span class="n">rh_geo</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">raise_exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unsupported object type: </span><span class="si">{</span><span class="n">rh_geo</span><span class="o">.</span><span class="n">ObjectType</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Unsupported object type: </span><span class="si">{</span><span class="n">rh_geo</span><span class="o">.</span><span class="n">ObjectType</span><span class="si">}</span><span class="s1"> is ignored&#39;</span>
+        <span class="p">)</span>
+        <span class="n">lb_face</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">return</span> <span class="n">lb_face</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2022, Ladybug Tools.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

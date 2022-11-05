@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>honeybee_3dm.face &#8212; honeybee-3dm  documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          honeybee-3dm</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../honeybee_3dm.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.cli.html">honeybee_3dm.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.config.html">honeybee_3dm.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.face.html">honeybee_3dm.face module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.grid.html">honeybee_3dm.grid module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.helper.html">honeybee_3dm.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.layer.html">honeybee_3dm.layer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.material.html">honeybee_3dm.material module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.model.html">honeybee_3dm.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.togeometry.html">honeybee_3dm.togeometry module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../honeybee_3dm.html#module-honeybee_3dm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-4">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a></li>
+</ul>
+
+        </div>
+      </div>
+    <div class="body col-md-8 content" role="main">
+      
+  <h1>Source code for honeybee_3dm.face</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Create Honeybee objects(Face, Shade, Aperture, Door, Grid) from planar geometries</span>
+<span class="sd">in a Rhino 3DM file.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">honeybee.face</span> <span class="kn">import</span> <span class="n">Face</span>
+<span class="kn">from</span> <span class="nn">honeybee.typing</span> <span class="kn">import</span> <span class="n">clean_and_id_string</span><span class="p">,</span> <span class="n">clean_string</span>
+
+<span class="kn">from</span> <span class="nn">.togeometry</span> <span class="kn">import</span> <span class="n">to_face3d</span>
+<span class="kn">from</span> <span class="nn">.layer</span> <span class="kn">import</span> <span class="n">objects_on_layer</span><span class="p">,</span> <span class="n">objects_on_parent_child</span>
+<span class="kn">from</span> <span class="nn">.grid</span> <span class="kn">import</span> <span class="n">import_grids</span>
+<span class="kn">from</span> <span class="nn">.helper</span> <span class="kn">import</span> <span class="n">grid_controls</span><span class="p">,</span> <span class="n">face3d_to_hb_face_with_face_type</span><span class="p">,</span> <span class="n">face3d_to_hb_object</span>
+<span class="kn">from</span> <span class="nn">.helper</span> <span class="kn">import</span> <span class="n">face3d_to_hb_face_with_rad</span><span class="p">,</span> <span class="n">child_layer_control</span>
+
+
+<span class="n">tolerance_warning</span> <span class="o">=</span> <span class="s1">&#39;Could not create a face for object of ID </span><span class="si">{}</span><span class="s1"> Please reduce the unit&#39;</span> \
+<span class="s1">&#39; tolerance value in rhino, save the file and try again. You might need to repeat&#39;</span> \
+<span class="s1">&#39; this more than once if the face is too small for the unit tolerance selected.&#39;</span>
+
+
+<div class="viewcode-block" id="import_objects_with_config"><a class="viewcode-back" href="../../honeybee_3dm.face.html#honeybee_3dm.face.import_objects_with_config">[docs]</a><span class="k">def</span> <span class="nf">import_objects_with_config</span><span class="p">(</span>
+        <span class="n">rhino3dm_file</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">modifiers_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Import Rhino planar geometry as Honeybee faces.</span>
+
+<span class="sd">    This function looks up a rhino3dm file, converts the objects</span>
+<span class="sd">    on the layer name &quot;roof&quot;, &quot;wall&quot;, &quot;floor&quot;, &quot;airwall&quot;, &quot;shade&quot;, and  &quot;aperture&quot;</span>
+<span class="sd">    to Honeybee objects, and converts them to Honeybee faces.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rhino3dm_file: A Rhino3DM file object.</span>
+<span class="sd">        layer: A rhino3dm layer object.</span>
+<span class="sd">        tolerance: A number for model tolerance. By default the tolerance is set to</span>
+<span class="sd">            the ModelAbsoluteTolerance value in input 3DM file.</span>
+<span class="sd">        config: A dictionary of config settings. Defaults to None</span>
+<span class="sd">        modifiers_dict: A dictionary with radiance identifier to modifier structure.</span>
+<span class="sd">            Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A tuple of following lists;</span>
+
+<span class="sd">        -   Honeybee Face objects,</span>
+<span class="sd">        -   Honeybee Shade objects,</span>
+<span class="sd">        -   Honeybee Aperture objects,</span>
+<span class="sd">        -   Honeybee Door objects,</span>
+<span class="sd">        -   Honeybee grids.</span>
+<span class="sd">        </span>
+<span class="sd">        A list wil be empty if no objects are imported from rhino file.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Placeholders</span>
+    <span class="n">hb_faces</span><span class="p">,</span> <span class="n">hb_shades</span><span class="p">,</span> <span class="n">hb_apertures</span><span class="p">,</span> <span class="n">hb_doors</span><span class="p">,</span> <span class="n">hb_grids</span> <span class="o">=</span> <span class="p">([],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[])</span>
+
+    <span class="c1"># If Grids are requested for a layer</span>
+    <span class="k">if</span> <span class="n">grid_controls</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">):</span>
+
+        <span class="n">hb_grids</span> <span class="o">=</span> <span class="n">import_grids</span><span class="p">(</span>
+            <span class="n">rhino3dm_file</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span>
+            <span class="n">grid_controls</span><span class="o">=</span><span class="n">grid_controls</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">),</span>
+            <span class="n">child_layer</span><span class="o">=</span><span class="n">child_layer_control</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">))</span>
+
+    <span class="c1"># If Grids are not requested for a layer</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># If child layers needs to be included</span>
+        <span class="k">if</span> <span class="n">child_layer_control</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">):</span>
+            <span class="n">objects</span> <span class="o">=</span> <span class="n">objects_on_parent_child</span><span class="p">(</span><span class="n">rhino3dm_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+
+        <span class="c1"># If child layers do not need to be included</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">objects</span> <span class="o">=</span> <span class="n">objects_on_layer</span><span class="p">(</span><span class="n">rhino3dm_file</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">lb_faces</span> <span class="o">=</span> <span class="n">to_face3d</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="n">tolerance</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                    <span class="s1">&#39;Shaded mesh could not be created for&#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39; object with ID </span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">Id</span><span class="si">}</span><span class="s1">. Please make the object&#39;</span>
+                    <span class="s1">&#39; visible on rhino canvas, switch to shaded mode, and save the file.&#39;</span>
+                    <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">tolerance_warning</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">Id</span><span class="p">))</span>
+                <span class="k">continue</span>
+            
+            <span class="n">name</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">Name</span>
+
+            <span class="k">for</span> <span class="n">face_obj</span> <span class="ow">in</span> <span class="n">lb_faces</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">face_obj</span><span class="o">.</span><span class="n">area</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="s1">&#39;A face with zero area was created from object with id:&#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">Id</span><span class="si">}</span><span class="s1">. This face is avoided.&#39;</span>
+                    <span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># If face_type settting is employed</span>
+                <span class="k">if</span> <span class="s1">&#39;honeybee_face_type&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;layers&#39;</span><span class="p">][</span><span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">]:</span>
+                    <span class="n">hb_faces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">face3d_to_hb_face_with_face_type</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">face_obj</span><span class="p">,</span>
+                                    <span class="n">name</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">))</span>
+                
+                <span class="c1"># If only radiance material settting is employed</span>
+                <span class="k">elif</span> <span class="s1">&#39;honeybee_face_type&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;layers&#39;</span><span class="p">][</span><span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">]</span> <span class="ow">and</span>\
+                    <span class="s1">&#39;honeybee_face_object&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;layers&#39;</span><span class="p">][</span><span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">]</span> <span class="ow">and</span>\
+                        <span class="s1">&#39;radiance_material&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;layers&#39;</span><span class="p">][</span><span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">]:</span>
+                    <span class="n">hb_faces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">face3d_to_hb_face_with_rad</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">face_obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                                    <span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">))</span>
+                
+                <span class="c1"># If face_object settting is employed</span>
+                <span class="k">elif</span> <span class="s1">&#39;honeybee_face_object&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;layers&#39;</span><span class="p">][</span><span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">]:</span>
+                    <span class="n">hb_objects</span> <span class="o">=</span> <span class="n">face3d_to_hb_object</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">face_obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+                    <span class="n">hb_apertures</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">hb_objects</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">hb_doors</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">hb_objects</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">hb_shades</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">hb_objects</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">hb_faces</span><span class="p">,</span> <span class="n">hb_shades</span><span class="p">,</span> <span class="n">hb_apertures</span><span class="p">,</span> <span class="n">hb_doors</span><span class="p">,</span> <span class="n">hb_grids</span></div>
+
+
+<div class="viewcode-block" id="import_objects"><a class="viewcode-back" href="../../honeybee_3dm.face.html#honeybee_3dm.face.import_objects">[docs]</a><span class="k">def</span> <span class="nf">import_objects</span><span class="p">(</span><span class="n">file_3dm</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get default Honeybee Faces for a Rhino3dm layer.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_3dm: A Rhino3dm file object.</span>
+<span class="sd">        layer: A Rhino3dm layer object.</span>
+<span class="sd">        tolerance: A number for model tolerance. By default the tolerance is set to</span>
+<span class="sd">            the ModelAbsoluteTolerance value in input 3DM file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of Honeybee Face objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hb_faces</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">objects_on_layer</span><span class="p">(</span><span class="n">file_3dm</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">lb_faces</span> <span class="o">=</span> <span class="n">to_face3d</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                <span class="s1">&#39;Shaded mesh could not be created for&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39; object with ID </span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">Id</span><span class="si">}</span><span class="s1">. Please make the object&#39;</span>
+                <span class="s1">&#39; visible on rhino canvas, switch to shaded mode, and save the file.&#39;</span>
+                <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">tolerance_warning</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">Id</span><span class="p">))</span>
+            <span class="k">continue</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">Name</span>
+        <span class="k">for</span> <span class="n">face_obj</span> <span class="ow">in</span> <span class="n">lb_faces</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">face_obj</span><span class="o">.</span><span class="n">area</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s1">&#39;A face with zero area was created from object with id:&#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">Id</span><span class="si">}</span><span class="s1">. This face is avoided.&#39;</span>
+                <span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="n">obj_name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">clean_and_id_string</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">clean_string</span><span class="p">(</span><span class="n">obj_name</span><span class="p">),</span> <span class="n">face_obj</span><span class="p">]</span>
+            <span class="n">hb_face</span> <span class="o">=</span> <span class="n">Face</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+            <span class="n">hb_face</span><span class="o">.</span><span class="n">display_name</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">hb_faces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hb_face</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">hb_faces</span></div>
+    
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2022, Ladybug Tools.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

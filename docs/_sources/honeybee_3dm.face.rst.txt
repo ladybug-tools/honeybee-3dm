@@ -1,0 +1,7 @@
+honeybee\_3dm.face module
+=========================
+
+.. automodule:: honeybee_3dm.face
+   :members:
+   :undoc-members:
+   :show-inheritance:

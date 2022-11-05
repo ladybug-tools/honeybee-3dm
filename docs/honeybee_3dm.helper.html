@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>honeybee_3dm.helper module &#8212; honeybee-3dm  documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="honeybee_3dm.layer module" href="honeybee_3dm.layer.html" />
+    <link rel="prev" title="honeybee_3dm.grid module" href="honeybee_3dm.grid.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          honeybee-3dm</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="honeybee_3dm.html">honeybee_3dm package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="honeybee_3dm.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.cli.html">honeybee_3dm.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.config.html">honeybee_3dm.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.face.html">honeybee_3dm.face module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.grid.html">honeybee_3dm.grid module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">honeybee_3dm.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.layer.html">honeybee_3dm.layer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.material.html">honeybee_3dm.material module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.model.html">honeybee_3dm.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.togeometry.html">honeybee_3dm.togeometry module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee_3dm.html#module-honeybee_3dm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="honeybee_3dm.html">honeybee_3dm package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="honeybee_3dm.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.cli.html">honeybee_3dm.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.config.html">honeybee_3dm.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.face.html">honeybee_3dm.face module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.grid.html">honeybee_3dm.grid module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">honeybee_3dm.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.layer.html">honeybee_3dm.layer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.material.html">honeybee_3dm.material module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.model.html">honeybee_3dm.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.togeometry.html">honeybee_3dm.togeometry module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee_3dm.html#module-honeybee_3dm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="honeybee_3dm.grid.html" title="Previous Chapter: honeybee_3dm.grid module"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; honeybee_3dm....</span>
+    </a>
+  </li>
+  <li>
+    <a href="honeybee_3dm.layer.html" title="Next Chapter: honeybee_3dm.layer module"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">honeybee_3dm.... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/honeybee_3dm.helper.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-4">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="honeybee_3dm.html">honeybee_3dm package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="honeybee_3dm.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.cli.html">honeybee_3dm.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.config.html">honeybee_3dm.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.face.html">honeybee_3dm.face module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.grid.html">honeybee_3dm.grid module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">honeybee_3dm.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.layer.html">honeybee_3dm.layer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.material.html">honeybee_3dm.material module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.model.html">honeybee_3dm.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee_3dm.togeometry.html">honeybee_3dm.togeometry module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee_3dm.html#module-honeybee_3dm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    <div class="body col-md-8 content" role="main">
+      
+  <section id="module-honeybee_3dm.helper">
+<span id="honeybee-3dm-helper-module"></span><h1>honeybee_3dm.helper module<a class="headerlink" href="#module-honeybee_3dm.helper" title="Permalink to this headline">¶</a></h1>
+<p>A collection of general and config helper functions</p>
+<dl class="py function">
+<dt id="honeybee_3dm.helper.check_parent_in_config">
+<code class="sig-prename descclassname">honeybee_3dm.helper.</code><code class="sig-name descname">check_parent_in_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_3dm</span></em>, <em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">layer_name</span></em>, <em class="sig-param"><span class="n">parent_layer_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee_3dm/helper.html#check_parent_in_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee_3dm.helper.check_parent_in_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the parent layer of a layer is already mentioned in the config file.</p>
+<p>This function will return True if the parent layer of a layer is already mentioned
+in the config file and child layers are requested from that parent layer in the
+config file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_3dm</strong> – A rhino3dm file objects.</p></li>
+<li><p><strong>config</strong> – A dictionary of the config settings.</p></li>
+<li><p><strong>layer_name</strong> – A text string of the layer name</p></li>
+<li><p><strong>parent_layer_name</strong> – A text string of the parent layer name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A bool.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="honeybee_3dm.helper.child_layer_control">
+<code class="sig-prename descclassname">honeybee_3dm.helper.</code><code class="sig-name descname">child_layer_control</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">layer_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee_3dm/helper.html#child_layer_control"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee_3dm.helper.child_layer_control" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if child layers are requested for a layer in the config file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – A dictionary of the config settings.</p></li>
+<li><p><strong>layer_name</strong> – A text string of the layer name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A bool.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="honeybee_3dm.helper.face3d_to_hb_face_with_face_type">
+<code class="sig-prename descclassname">honeybee_3dm.helper.</code><code class="sig-name descname">face3d_to_hb_face_with_face_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">face_obj</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">layer_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee_3dm/helper.html#face3d_to_hb_face_with_face_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee_3dm.helper.face3d_to_hb_face_with_face_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Honeybee Face object with a specific face_type.</p>
+<p>This function returns a Honeybee Face object with a specific face_type requested
+in the config file and also assign a radiance material to the face if requested
+from the config file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – A dictionary of the config settings.</p></li>
+<li><p><strong>face_obj</strong> – A Ladybug Face3d object.</p></li>
+<li><p><strong>name</strong> – A text string of the name of the rhino object.</p></li>
+<li><p><strong>layer_name</strong> – A text string of the rhino layer name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Honeybee Face object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="honeybee_3dm.helper.face3d_to_hb_face_with_rad">
+<code class="sig-prename descclassname">honeybee_3dm.helper.</code><code class="sig-name descname">face3d_to_hb_face_with_rad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">face_obj</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">layer_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee_3dm/helper.html#face3d_to_hb_face_with_rad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee_3dm.helper.face3d_to_hb_face_with_rad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Honeybee Face object with a radiance material assigned to it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – A dictionary of the config settings.</p></li>
+<li><p><strong>face_obj</strong> – A Ladybug Face3d object.</p></li>
+<li><p><strong>name</strong> – A text string of the name of the rhino object.</p></li>
+<li><p><strong>layer_name</strong> – A text string of the rhino layer name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Honeybee Face object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="honeybee_3dm.helper.face3d_to_hb_object">
+<code class="sig-prename descclassname">honeybee_3dm.helper.</code><code class="sig-name descname">face3d_to_hb_object</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">face_obj</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">layer_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee_3dm/helper.html#face3d_to_hb_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee_3dm.helper.face3d_to_hb_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create Honeybee Aperture, Shade, and Door objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – A dictionary of the config settings.</p></li>
+<li><p><strong>face_obj</strong> – A Ladybug Face3d object.</p></li>
+<li><p><strong>name</strong> – A text string of the name of the rhino object.</p></li>
+<li><p><strong>layer_name</strong> – A text string of the rhino layer name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A tuple of lists;</p>
+<ul class="simple">
+<li><p>Honeybee Aperture objects,</p></li>
+<li><p>Honeybee Shade objects,</p></li>
+<li><p>Honeybee Door objects.</p></li>
+</ul>
+<p>List will be empty if no objects are found for that Honeybee object.</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="honeybee_3dm.helper.get_unit_system">
+<code class="sig-prename descclassname">honeybee_3dm.helper.</code><code class="sig-name descname">get_unit_system</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_3dm</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee_3dm/helper.html#get_unit_system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee_3dm.helper.get_unit_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get units from a 3dm file object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_3dm</strong> – A Rhino3dm file object.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Rhino3dm file unit as a string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="honeybee_3dm.helper.grid_controls">
+<code class="sig-prename descclassname">honeybee_3dm.helper.</code><code class="sig-name descname">grid_controls</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">layer_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee_3dm/helper.html#grid_controls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee_3dm.helper.grid_controls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns grid controls for a layer from the config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>grid_controls</strong> – A list of grid controls from the config file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A tuple of grid controls</p>
+<ul class="simple">
+<li><p>grid_size,</p></li>
+<li><p>grid_offset.</p></li>
+</ul>
+<p>if valid grid settings are found in the config file or None</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2022, Ladybug Tools.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

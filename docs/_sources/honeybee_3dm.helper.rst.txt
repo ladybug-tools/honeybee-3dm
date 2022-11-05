@@ -1,0 +1,7 @@
+honeybee\_3dm.helper module
+===========================
+
+.. automodule:: honeybee_3dm.helper
+   :members:
+   :undoc-members:
+   :show-inheritance:

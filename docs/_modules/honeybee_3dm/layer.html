@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>honeybee_3dm.layer &#8212; honeybee-3dm  documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          honeybee-3dm</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../honeybee_3dm.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.cli.html">honeybee_3dm.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.config.html">honeybee_3dm.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.face.html">honeybee_3dm.face module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.grid.html">honeybee_3dm.grid module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.helper.html">honeybee_3dm.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.layer.html">honeybee_3dm.layer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.material.html">honeybee_3dm.material module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.model.html">honeybee_3dm.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.togeometry.html">honeybee_3dm.togeometry module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../honeybee_3dm.html#module-honeybee_3dm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-4">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a></li>
+</ul>
+
+        </div>
+      </div>
+    <div class="body col-md-8 content" role="main">
+      
+  <h1>Source code for honeybee_3dm.layer</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Functions to work with layers in a rhino file.&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="child_parent_dict"><a class="viewcode-back" href="../../honeybee_3dm.layer.html#honeybee_3dm.layer.child_parent_dict">[docs]</a><span class="k">def</span> <span class="nf">child_parent_dict</span><span class="p">(</span><span class="n">file_3dm</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a dictionary with child layer name and parent layer name structure.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_3dm: A rhino3dm file object</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A a dictionary with child layer name and parent layer name structure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">child_parent_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">file_3dm</span><span class="o">.</span><span class="n">Layers</span><span class="p">:</span>
+        <span class="n">parent_children</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">FullPath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+        <span class="n">child_parent_dict</span><span class="p">[</span><span class="n">parent_children</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">parent_children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">child_parent_dict</span></div>
+
+
+<div class="viewcode-block" id="parent_child_layers"><a class="viewcode-back" href="../../honeybee_3dm.layer.html#honeybee_3dm.layer.parent_child_layers">[docs]</a><span class="k">def</span> <span class="nf">parent_child_layers</span><span class="p">(</span><span class="n">file_3dm</span><span class="p">,</span> <span class="n">layer_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a list of parent and child layers for a layer.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_3dm: A rhino3dm file object</span>
+<span class="sd">        layer_name: Text string of a layer name.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of parent and child layer names.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">layer_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">file_3dm</span><span class="o">.</span><span class="n">Layers</span><span class="p">:</span>
+        <span class="n">parent_children</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">FullPath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">layer_name</span> <span class="ow">in</span> <span class="n">parent_children</span><span class="p">:</span>
+            <span class="n">layer_names</span> <span class="o">+=</span> <span class="n">parent_children</span>
+
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">layer_names</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="filter_objects_by_layer_index"><a class="viewcode-back" href="../../honeybee_3dm.layer.html#honeybee_3dm.layer.filter_objects_by_layer_index">[docs]</a><span class="k">def</span> <span class="nf">filter_objects_by_layer_index</span><span class="p">(</span><span class="n">file_3dm</span><span class="p">,</span> <span class="n">layer_index</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get all the objects in a layer based on layer index.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_3dm: Input Rhino 3DM object.</span>
+<span class="sd">        layer_index: A list of indexes for Rhino layers</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of Rhino3dm objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">obj</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">file_3dm</span><span class="o">.</span><span class="n">Objects</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">layer_index</span>
+            <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">LayerIndex</span> <span class="o">==</span> <span class="n">index</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">Visible</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="objects_on_parent_child"><a class="viewcode-back" href="../../honeybee_3dm.layer.html#honeybee_3dm.layer.objects_on_parent_child">[docs]</a><span class="k">def</span> <span class="nf">objects_on_parent_child</span><span class="p">(</span><span class="n">file_3dm</span><span class="p">,</span> <span class="n">layer_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get all the objects on a layer and its child-layers.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_3dm: Input Rhino3DM object.</span>
+<span class="sd">        layer_name: Rhino layer name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of Rhino3dm objects on the layer and its child layers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get a list of parent and child layers for the layer_name</span>
+    <span class="n">parent_child</span> <span class="o">=</span> <span class="n">parent_child_layers</span><span class="p">(</span><span class="n">file_3dm</span><span class="p">,</span> <span class="n">layer_name</span><span class="p">)</span>
+
+    <span class="n">layer_index</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">layer</span><span class="o">.</span><span class="n">Index</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">file_3dm</span><span class="o">.</span><span class="n">Layers</span> <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">Name</span> <span class="ow">in</span> <span class="n">parent_child</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">layer_index</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Find no layer named &quot;</span><span class="si">{</span><span class="n">layer_name</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">filter_objects_by_layer_index</span><span class="p">(</span><span class="n">file_3dm</span><span class="p">,</span> <span class="n">layer_index</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="objects_on_layer"><a class="viewcode-back" href="../../honeybee_3dm.layer.html#honeybee_3dm.layer.objects_on_layer">[docs]</a><span class="k">def</span> <span class="nf">objects_on_layer</span><span class="p">(</span><span class="n">file_3dm</span><span class="p">,</span> <span class="n">layer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a list of objects on a layer.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_3dm: Input Rhino3DM object.</span>
+<span class="sd">        layer: A Rhino3dm layer object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of Rhino3dm objects on a layer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">layer_index</span> <span class="o">=</span> <span class="p">[</span><span class="n">layer</span><span class="o">.</span><span class="n">Index</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">filter_objects_by_layer_index</span><span class="p">(</span><span class="n">file_3dm</span><span class="p">,</span> <span class="n">layer_index</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="visible_layers"><a class="viewcode-back" href="../../honeybee_3dm.layer.html#honeybee_3dm.layer.visible_layers">[docs]</a><span class="k">def</span> <span class="nf">visible_layers</span><span class="p">(</span><span class="n">file_3dm</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a list of visible layers in the rhino file.</span>
+
+<span class="sd">    This function mimics layer visibilty in rhino. Only layers that are &quot;on&quot; in rhino</span>
+<span class="sd">    are considered visible layers.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_3dm: A rhino3dm file object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of rhino3dm layer objects for all the layers visible in rhino</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">visible_layers</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">layer_name_to_layer</span> <span class="o">=</span> <span class="p">{</span><span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">:</span> <span class="n">layer</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">file_3dm</span><span class="o">.</span><span class="n">Layers</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">file_3dm</span><span class="o">.</span><span class="n">Layers</span><span class="p">:</span>
+        <span class="n">layer_parent</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">FullPath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+        <span class="n">visibility_check</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="kc">False</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">layer_name_to_layer</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span><span class="o">.</span><span class="n">Visible</span>
+            <span class="k">else</span> <span class="kc">True</span> <span class="k">for</span> <span class="n">layer_name</span> <span class="ow">in</span> <span class="n">layer_parent</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">visibility_check</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">visible_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span>
+    
+    <span class="k">return</span> <span class="n">visible_layers</span></div>
+    
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2022, Ladybug Tools.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

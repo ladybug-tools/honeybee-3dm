@@ -1,0 +1,7 @@
+honeybee\_3dm.layer module
+==========================
+
+.. automodule:: honeybee_3dm.layer
+   :members:
+   :undoc-members:
+   :show-inheritance:

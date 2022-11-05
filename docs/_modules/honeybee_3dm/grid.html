@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>honeybee_3dm.grid &#8212; honeybee-3dm  documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          honeybee-3dm</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../honeybee_3dm.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.cli.html">honeybee_3dm.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.config.html">honeybee_3dm.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.face.html">honeybee_3dm.face module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.grid.html">honeybee_3dm.grid module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.helper.html">honeybee_3dm.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.layer.html">honeybee_3dm.layer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.material.html">honeybee_3dm.material module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.model.html">honeybee_3dm.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.togeometry.html">honeybee_3dm.togeometry module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../honeybee_3dm.html#module-honeybee_3dm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-4">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a></li>
+</ul>
+
+        </div>
+      </div>
+    <div class="body col-md-8 content" role="main">
+      
+  <h1>Source code for honeybee_3dm.grid</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Create Honeybee grid objects from objects in a rhino file.&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">rhino3dm</span>
+
+<span class="kn">from</span> <span class="nn">honeybee_radiance.sensorgrid</span> <span class="kn">import</span> <span class="n">SensorGrid</span>
+<span class="kn">from</span> <span class="nn">honeybee.typing</span> <span class="kn">import</span> <span class="n">clean_and_id_string</span><span class="p">,</span> <span class="n">clean_string</span>
+
+<span class="kn">from</span> <span class="nn">.togeometry</span> <span class="kn">import</span> <span class="n">mesh_to_mesh3d</span><span class="p">,</span> <span class="n">to_face3d</span>
+<span class="kn">from</span> <span class="nn">.layer</span> <span class="kn">import</span> <span class="n">objects_on_layer</span><span class="p">,</span> <span class="n">objects_on_parent_child</span>
+
+
+<div class="viewcode-block" id="import_grids"><a class="viewcode-back" href="../../honeybee_3dm.grid.html#honeybee_3dm.grid.import_grids">[docs]</a><span class="k">def</span> <span class="nf">import_grids</span><span class="p">(</span>
+    <span class="n">rhino3dm_file</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">grid_controls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">child_layer</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates Honeybee grids from a rhino3dm file.</span>
+
+<span class="sd">    This function assumes all the grid objects are under a layer named ``grid``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rhino3dm_file: The rhino file from which Honeybee grids will be created.</span>
+<span class="sd">        layer: A Rhino3dm layer object.</span>
+<span class="sd">        tolerance: A rhino3dm tolerance object. Tolerance set in the rhino file.</span>
+<span class="sd">        grid_controls: A tuple of values for grid_size and grid_offset.</span>
+<span class="sd">            Defaults to None. This will employ the grid setting of (1.0, 1.0, 0.0)</span>
+<span class="sd">            for grid-size-x, grid-size-y, and grid-offset respectively.</span>
+<span class="sd">        child_layer: A bool. True will generate grids from the objects on the child layer</span>
+<span class="sd">            of a layer in addition to the objects on the parent layer. Defaults to False.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of Honeybee grids.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hb_grids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># if objects on child layers are not requested</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">child_layer</span><span class="p">:</span>
+        <span class="n">grid_objs</span> <span class="o">=</span> <span class="n">objects_on_layer</span><span class="p">(</span><span class="n">rhino3dm_file</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+    
+    <span class="c1"># if objects on child layers are requested</span>
+    <span class="k">if</span> <span class="n">child_layer</span><span class="p">:</span>
+        <span class="n">grid_objs</span> <span class="o">=</span> <span class="n">objects_on_parent_child</span><span class="p">(</span><span class="n">rhino3dm_file</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+    
+    <span class="c1"># Set default grid settings if not provided</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">grid_controls</span><span class="p">:</span>
+        <span class="n">grid_controls</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">grid_objs</span><span class="p">:</span>
+        <span class="n">geo</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">Geometry</span>
+        
+        <span class="c1"># If it&#39;s a Mesh use it to create grids</span>
+        <span class="c1"># This is done so that if a user has created mesh with certain density</span>
+        <span class="c1"># the same can be used to create grids</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">geo</span><span class="p">,</span> <span class="n">rhino3dm</span><span class="o">.</span><span class="n">Mesh</span><span class="p">):</span>
+            <span class="n">mesh3d</span> <span class="o">=</span> <span class="n">mesh_to_mesh3d</span><span class="p">(</span><span class="n">geo</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">Name</span>
+            <span class="n">obj_name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">clean_and_id_string</span><span class="p">(</span><span class="s1">&#39;Grid&#39;</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">clean_string</span><span class="p">(</span><span class="n">obj_name</span><span class="p">),</span> <span class="n">mesh3d</span><span class="p">]</span>
+            <span class="n">hb_grids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SensorGrid</span><span class="o">.</span><span class="n">from_mesh3d</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">faces</span> <span class="o">=</span> <span class="n">to_face3d</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Please check object with ID: </span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">Id</span><span class="si">}</span><span class="s1">.&#39;</span>
+                <span class="s1">&#39; Either the object has faces too small for the grid size, or the&#39;</span>
+                <span class="s1">&#39; object is not supported for grids. You should try again with a&#39;</span>
+                <span class="s1">&#39; smaller grid size in the config file.&#39;</span>
+            <span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">Attributes</span><span class="o">.</span><span class="n">Name</span>
+            <span class="n">obj_name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">clean_and_id_string</span><span class="p">(</span><span class="s1">&#39;Grid&#39;</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">clean_string</span><span class="p">(</span><span class="n">obj_name</span><span class="p">),</span> <span class="n">faces</span><span class="p">,</span> <span class="n">grid_controls</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">grid_controls</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">grid_controls</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="n">hb_grids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SensorGrid</span><span class="o">.</span><span class="n">from_face3d</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">hb_grids</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2022, Ladybug Tools.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

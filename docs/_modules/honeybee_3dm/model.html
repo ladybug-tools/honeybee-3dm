@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>honeybee_3dm.model &#8212; honeybee-3dm  documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          honeybee-3dm</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../honeybee_3dm.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.cli.html">honeybee_3dm.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.config.html">honeybee_3dm.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.face.html">honeybee_3dm.face module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.grid.html">honeybee_3dm.grid module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.helper.html">honeybee_3dm.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.layer.html">honeybee_3dm.layer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.material.html">honeybee_3dm.material module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.model.html">honeybee_3dm.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../honeybee_3dm.togeometry.html">honeybee_3dm.togeometry module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../honeybee_3dm.html#module-honeybee_3dm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-4">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee_3dm.html">honeybee_3dm package</a></li>
+</ul>
+
+        </div>
+      </div>
+    <div class="body col-md-8 content" role="main">
+      
+  <h1>Source code for honeybee_3dm.model</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Creating Honeybee model objects from rhino3dm surfaces and closed volumes&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">rhino3dm</span>
+
+<span class="kn">from</span> <span class="nn">honeybee.model</span> <span class="kn">import</span> <span class="n">Model</span>
+
+<span class="kn">from</span> <span class="nn">.face</span> <span class="kn">import</span> <span class="n">import_objects</span><span class="p">,</span> <span class="n">import_objects_with_config</span>
+<span class="kn">from</span> <span class="nn">.helper</span> <span class="kn">import</span> <span class="n">get_unit_system</span><span class="p">,</span> <span class="n">check_parent_in_config</span>
+<span class="kn">from</span> <span class="nn">.layer</span> <span class="kn">import</span> <span class="n">child_parent_dict</span><span class="p">,</span> <span class="n">visible_layers</span>
+<span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">check_config</span>
+
+
+<div class="viewcode-block" id="import_3dm"><a class="viewcode-back" href="../../honeybee_3dm.model.html#honeybee_3dm.model.import_3dm">[docs]</a><span class="k">def</span> <span class="nf">import_3dm</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Import a rhino3dm file as a Honeybee model.</span>
+
+<span class="sd">    This function outputs a Honeybee model from the faces, shades, apertures, and doors</span>
+<span class="sd">    on a rhino3dm file. By default, all the rhino objects will be converted to Honeybee</span>
+<span class="sd">    Faces based on the objects normal direction. A config file can be used to assign</span>
+<span class="sd">    objects to specific Honeybee face types and Honeybee object types.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path: A text string for the path to the rhino3dm file.</span>
+<span class="sd">        name: A text string that will be used as the name of the Honeybee</span>
+<span class="sd">            model. Default will be the same as Rhino file name.</span>
+<span class="sd">        config_path: A text string path to the config file on disk.</span>
+<span class="sd">            Defaults to not using a config file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Honeybee model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># RHINO FILE</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+            <span class="s1">&#39;The path to rhino file is not valid.&#39;</span>
+            <span class="p">)</span>
+    <span class="n">rhino3dm_file</span> <span class="o">=</span> <span class="n">rhino3dm</span><span class="o">.</span><span class="n">File3dm</span><span class="o">.</span><span class="n">Read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">rhino3dm_file</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Input Rhino file: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1"> returns None object.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># CONFIG FILE</span>
+    <span class="k">if</span> <span class="n">config_path</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">config_path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="s1">&#39;The path is not a valid path.&#39;</span>
+                <span class="s1">&#39; If file exists, try using double backslashes in file path&#39;</span>
+                <span class="s1">&#39; and try again.&#39;</span>
+            <span class="p">)</span>
+        <span class="c1"># Validate the config file and get it as a directory</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="n">check_config</span><span class="p">(</span><span class="n">rhino3dm_file</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Extracting unit parameters from rhino</span>
+    <span class="n">model_tolerance</span> <span class="o">=</span> <span class="n">rhino3dm_file</span><span class="o">.</span><span class="n">Settings</span><span class="o">.</span><span class="n">ModelAbsoluteTolerance</span>
+    <span class="n">model_angle_tolerance</span> <span class="o">=</span> <span class="n">rhino3dm_file</span><span class="o">.</span><span class="n">Settings</span><span class="o">.</span><span class="n">ModelAngleToleranceDegrees</span>
+    <span class="n">model_unit</span> <span class="o">=</span> <span class="n">get_unit_system</span><span class="p">(</span><span class="n">rhino3dm_file</span><span class="p">)</span>
+
+    <span class="c1"># Place holders</span>
+    <span class="n">hb_rooms</span><span class="p">,</span> <span class="n">hb_faces</span><span class="p">,</span> <span class="n">hb_shades</span><span class="p">,</span> <span class="n">hb_apertures</span><span class="p">,</span> <span class="n">hb_doors</span><span class="p">,</span> <span class="n">hb_grids</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)])</span>
+
+    <span class="c1"># A dictionary with child layer : parent layer structure</span>
+    <span class="n">child_to_parent</span> <span class="o">=</span> <span class="n">child_parent_dict</span><span class="p">(</span><span class="n">rhino3dm_file</span><span class="p">)</span>
+
+    <span class="c1"># Get all the visible layers from rhino</span>
+    <span class="k">if</span> <span class="n">visible_layers</span><span class="p">(</span><span class="n">rhino3dm_file</span><span class="p">):</span>
+        <span class="n">rhino_visible_layers</span> <span class="o">=</span> <span class="n">visible_layers</span><span class="p">(</span><span class="n">rhino3dm_file</span><span class="p">)</span>
+        <span class="n">rhino_visible_layer_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">layer</span><span class="o">.</span><span class="n">Name</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">rhino_visible_layers</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">&#39;Please turn on the layers in rhino you wish to import objects from.&#39;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># If config is provided</span>
+    <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
+        
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">rhino3dm_file</span><span class="o">.</span><span class="n">Layers</span><span class="p">:</span>
+
+            <span class="c1"># If the layer is not in config and not &quot;on&quot; in rhino, ignore</span>
+            <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">Name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;layers&#39;</span><span class="p">]</span> <span class="ow">and</span> \
+                <span class="n">layer</span><span class="o">.</span><span class="n">Name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rhino_visible_layer_names</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Import objects from each layer in the config file</span>
+            <span class="k">elif</span> <span class="n">layer</span><span class="o">.</span><span class="n">Name</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;layers&#39;</span><span class="p">]:</span>
+                <span class="n">hb_objs</span> <span class="o">=</span> <span class="n">import_objects_with_config</span><span class="p">(</span>
+                    <span class="n">rhino3dm_file</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">model_tolerance</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+                <span class="n">hb_faces</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">hb_objs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">hb_shades</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">hb_objs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">hb_apertures</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">hb_objs</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="n">hb_doors</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">hb_objs</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                <span class="n">hb_grids</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">hb_objs</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+
+            <span class="c1"># skip child layers that might already have been imported</span>
+            <span class="k">elif</span> <span class="n">check_parent_in_config</span><span class="p">(</span><span class="n">rhino3dm_file</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
+                <span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">child_to_parent</span><span class="p">[</span><span class="n">layer</span><span class="o">.</span><span class="n">Name</span><span class="p">]):</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Import objects from each layer not in the config file</span>
+            <span class="k">elif</span> <span class="n">layer</span><span class="o">.</span><span class="n">Name</span> <span class="ow">in</span> <span class="n">rhino_visible_layer_names</span><span class="p">:</span>
+                <span class="n">hb_faces</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">import_objects</span><span class="p">(</span><span class="n">rhino3dm_file</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span>
+                    <span class="n">tolerance</span><span class="o">=</span><span class="n">model_tolerance</span><span class="p">))</span>
+    
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># If config is not provided</span>
+        <span class="c1"># Only use layers that are &quot;on&quot; in rhino</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">rhino_visible_layers</span><span class="p">:</span>
+            <span class="n">hb_faces</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">import_objects</span><span class="p">(</span><span class="n">rhino3dm_file</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span>
+                <span class="n">tolerance</span><span class="o">=</span><span class="n">model_tolerance</span><span class="p">))</span>
+    
+    <span class="c1"># Honeybee model name</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Honeybee Model</span>
+    <span class="n">hb_model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span>
+        <span class="n">identifier</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">rooms</span><span class="o">=</span><span class="n">hb_rooms</span><span class="p">,</span>
+        <span class="n">orphaned_faces</span><span class="o">=</span><span class="n">hb_faces</span><span class="p">,</span>
+        <span class="n">orphaned_shades</span><span class="o">=</span><span class="n">hb_shades</span><span class="p">,</span>
+        <span class="n">orphaned_apertures</span><span class="o">=</span><span class="n">hb_apertures</span><span class="p">,</span>
+        <span class="n">orphaned_doors</span><span class="o">=</span><span class="n">hb_doors</span><span class="p">,</span>
+        <span class="n">units</span><span class="o">=</span><span class="n">model_unit</span><span class="p">,</span>
+        <span class="n">tolerance</span><span class="o">=</span><span class="n">model_tolerance</span><span class="p">,</span>
+        <span class="n">angle_tolerance</span><span class="o">=</span><span class="n">model_angle_tolerance</span>
+    <span class="p">)</span>
+    <span class="c1"># Assigning grids to Honeybee model</span>
+    <span class="n">hb_model</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">radiance</span><span class="o">.</span><span class="n">sensor_grids</span> <span class="o">=</span> <span class="n">hb_grids</span>
+    <span class="c1"># Returning a Honeybee model</span>
+    <span class="k">return</span> <span class="n">hb_model</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2022, Ladybug Tools.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

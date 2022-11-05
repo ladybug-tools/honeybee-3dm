@@ -1,0 +1,7 @@
+honeybee\_3dm.config module
+===========================
+
+.. automodule:: honeybee_3dm.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
